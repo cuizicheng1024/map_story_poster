@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+
+maptoposter/cache/
+maptoposter/posters/
+maptoposter/fonts/cache/
+cache/
+
+map_story/storymap/examples/story_map/*.html
+map_story/storymap/examples/story_map/*.geojson
+map_story/storymap/examples/story_map/*.csv
