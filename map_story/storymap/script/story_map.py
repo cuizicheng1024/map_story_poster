@@ -53,6 +53,132 @@ if not _LOGGER.handlers:
     logging.basicConfig(level=logging.INFO)
 
 
+# ---------------------------------------------------------------------------
+# Local historical place index (JSONL) for fast/offline coordinate lookup.
+#
+# Design goal:
+# - When we can match ancient_name / modern_name from historical_places_index.jsonl,
+#   we should skip ANY external geocode requests.
+# - Keep the loading lazy + cached so it costs almost nothing per run.
+# ---------------------------------------------------------------------------
+
+_HISTORICAL_INDEX: Optional[Dict[str, Tuple[float, float]]] = None
+_HISTORICAL_INDEX_LOCK = threading.Lock()
+
+
+def _normalize_place_key(text: str) -> str:
+    """Normalize place text so different spellings can still match."""
+    s = str(text or "").strip().lower()
+    if not s:
+        return ""
+    # Remove common wrappers and punctuation, keep Chinese/letters/numbers.
+    s = re.sub(r"[\s\t\r\n]+", "", s)
+    s = re.sub(r"[（(].*?[）)]", "", s)
+    s = re.sub(r"[，,。.;；:：、】【\[\]{}<>《》\"'“”‘’·•/\\|-]+", "", s)
+    return s
+
+
+def _historical_index_candidates() -> List[str]:
+    """Return possible paths to historical_places_index.jsonl."""
+    env_path = os.getenv("HISTORICAL_PLACES_INDEX", "").strip()
+    candidates: List[str] = []
+    if env_path:
+        candidates.append(env_path)
+
+    # Typical repo layout in this workspace:
+    # map_story_poster/map_story/storymap/script/story_map.py
+    # map_story_poster/historical_places_index.jsonl
+    here = os.path.dirname(os.path.abspath(__file__))
+    candidates.extend(
+        [
+            os.path.join(here, "historical_places_index.jsonl"),
+            os.path.join(here, "..", "historical_places_index.jsonl"),
+            os.path.join(here, "..", "..", "historical_places_index.jsonl"),
+            os.path.join(here, "..", "..", "..", "historical_places_index.jsonl"),
+            os.path.join(here, "..", "..", "..", "..", "historical_places_index.jsonl"),
+        ]
+    )
+    # Also consider CWD (useful when running scripts from repo root)
+    candidates.append(os.path.join(os.getcwd(), "historical_places_index.jsonl"))
+
+    # Normalize to absolute paths and de-dup
+    abs_candidates: List[str] = []
+    seen = set()
+    for p in candidates:
+        ap = os.path.abspath(os.path.expanduser(p))
+        if ap in seen:
+            continue
+        seen.add(ap)
+        abs_candidates.append(ap)
+    return abs_candidates
+
+
+def _load_historical_places_index() -> Dict[str, Tuple[float, float]]:
+    mapping: Dict[str, Tuple[float, float]] = {}
+    index_path = ""
+    for candidate in _historical_index_candidates():
+        if os.path.exists(candidate) and os.path.isfile(candidate):
+            index_path = candidate
+            break
+    if not index_path:
+        return mapping
+
+    try:
+        with open(index_path, "r", encoding="utf-8") as f:
+            for line in f:
+                s = (line or "").strip()
+                if not s:
+                    continue
+                try:
+                    obj = json.loads(s)
+                except Exception:
+                    continue
+                if not isinstance(obj, dict):
+                    continue
+                ancient = str(obj.get("ancient_name") or "").strip()
+                modern = str(obj.get("modern_name") or "").strip()
+                lat = obj.get("lat")
+                lon = obj.get("lon")
+                try:
+                    lat_f = float(lat)
+                    lon_f = float(lon)
+                except Exception:
+                    continue
+
+                for key in [ancient, modern]:
+                    norm = _normalize_place_key(key)
+                    if not norm:
+                        continue
+                    # First win is enough; later duplicates can be ignored.
+                    if norm not in mapping:
+                        mapping[norm] = (lat_f, lon_f)
+    except Exception:
+        return {}
+
+    return mapping
+
+
+def _lookup_coords_from_historical_index(*names: str) -> Optional[Tuple[float, float]]:
+    """Try resolving coordinates from local JSONL index.
+
+    Returns (lat, lon) if found, otherwise None.
+    """
+    global _HISTORICAL_INDEX
+    with _HISTORICAL_INDEX_LOCK:
+        if _HISTORICAL_INDEX is None:
+            _HISTORICAL_INDEX = _load_historical_places_index()
+        mapping = _HISTORICAL_INDEX or {}
+
+    for name in names:
+        norm = _normalize_place_key(name)
+        if not norm:
+            continue
+        coord = mapping.get(norm)
+        if coord:
+            return coord
+    return None
+
+
 def _parse_timeline_table(md: str) -> tuple[List[str], List[List[str]]]:
     """
     解析“年份”表，返回表头与行数据。
@@ -630,6 +756,11 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
     death_text = info.get("去世", "")
     birth_date, birth_loc = _parse_date_location(birth_text, ["出生于", "生于"])
     death_date, death_loc = _parse_date_location(death_text, ["卒于", "去世于", "卒"])
+
+    # 先解析 Markdown 中的“地点坐标”表（如果用户/上游已提供），
+    # 这样可以显著减少在线地理编码调用，避免网络超时导致构建失败。
+    coords_cache = _parse_coords_table(md)
+
     loc_texts = [birth_loc, death_loc]
     loc_texts.extend([loc.get("location") or loc.get("name") or "" for loc in locations])
     # 批量拆解古称/今称，减少逐条调用
@@ -639,9 +770,24 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
     death_modern = _split_ancient_modern(death_loc, event_callback=event_callback)[1]
     birth_geo = _pick_geocode_name(birth_modern or birth_loc)
     death_geo = _pick_geocode_name(death_modern or death_loc)
-    # 出生/去世地点优先直连地理编码
-    birth_coord = geocode_city(birth_geo) if birth_geo else None
-    death_coord = geocode_city(death_geo) if death_geo else None
+
+    # 出生/去世地点优先使用：
+    # 1) Markdown 中的坐标表
+    # 2) 本地 historical_places_index.jsonl（ancient_name / modern_name）
+    # 3) 最后才触发在线地理编码
+    birth_coord = coords_cache.get(birth_geo) if birth_geo else None
+    death_coord = coords_cache.get(death_geo) if death_geo else None
+
+    if not birth_coord and birth_geo:
+        birth_coord = _lookup_coords_from_historical_index(birth_loc, birth_modern, birth_geo)
+        if not birth_coord:
+            birth_coord = geocode_city(birth_geo)
+
+    if not death_coord and death_geo:
+        death_coord = _lookup_coords_from_historical_index(death_loc, death_modern, death_geo)
+        if not death_coord:
+            death_coord = geocode_city(death_geo)
+
     dynasty = (info.get("时代", "") or info.get("朝代", "")).strip()
     avatar = ""
     person = {
@@ -666,7 +812,7 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
         },
         "lifespan": lifespan,
     }
-    coords_cache = _parse_coords_table(md)
+    # coords_cache 已在上方解析过，这里直接复用
     loc_items: List[Dict[str, object]] = []
     for loc in locations:
         loc_text = loc.get("location") or loc.get("name") or ""
@@ -683,7 +829,16 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
         if not coord and loc.get("name"):
             coord = coords_cache.get(_pick_geocode_name(loc.get("name") or ""))
         if not coord and geo_name:
-            # 坐标表缺失时才触发在线地理编码
+            # 坐标表缺失时，优先从本地 historical_places_index.jsonl 兜底
+            coord = _lookup_coords_from_historical_index(
+                ancient,
+                modern,
+                loc_text,
+                loc.get("name") or "",
+                geo_name,
+            )
+        if not coord and geo_name:
+            # 本地索引仍未命中时才触发在线地理编码
             coord = geocode_city(geo_name)
         if not coord:
             continue
@@ -906,7 +1061,10 @@ def build_points(places: List[Dict[str, str]], events: List[Dict[str, str]]) -> 
         name = p.get("modern") or p.get("ancient") or ""
         if not name:
             continue
-        coord = geocode_city(name)
+        # Prefer local historical place index; only fallback to online geocode when missing.
+        coord = _lookup_coords_from_historical_index(p.get("ancient") or "", p.get("modern") or "", name)
+        if not coord:
+            coord = geocode_city(name)
         if not coord:
             continue
         lat, lon = coord

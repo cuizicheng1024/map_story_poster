@@ -128,6 +128,43 @@ def _render_placeholder(
     plt.close(fig)
 
 
+def _run_in_subprocess_with_timeout(func, kwargs: dict, timeout_s: int) -> None:
+    """Run a function in a subprocess so we can hard-timeout and kill it.
+
+    This is mainly to guard against OSMnx/Overpass hanging for too long.
+    """
+    import multiprocessing as mp
+
+    def _worker(q):
+        try:
+            func(**kwargs)
+            q.put({"ok": True})
+        except Exception as exc:  # pragma: no cover
+            q.put({"ok": False, "error": repr(exc)})
+
+    q: "mp.Queue" = mp.Queue()
+    p = mp.Process(target=_worker, args=(q,))
+    p.daemon = True
+    p.start()
+    p.join(timeout_s)
+    if p.is_alive():
+        try:
+            p.terminate()
+        except Exception:
+            pass
+        p.join(2)
+        raise TimeoutError(f"poster generation timeout after {timeout_s}s")
+
+    result = None
+    try:
+        if not q.empty():
+            result = q.get_nowait()
+    except Exception:
+        result = None
+    if isinstance(result, dict) and not result.get("ok", False):
+        raise RuntimeError(result.get("error") or "poster generation failed")
+
+
 def generate_pack(
     md_path: str,
     theme: str,
@@ -196,19 +233,24 @@ def generate_pack(
         out_file = _ensure_ext(os.path.join(out_dir, out_name), output_format)
         if force or not os.path.exists(out_file):
             try:
-                mp.create_poster(
-                    city=city_label,
-                    country="China",
-                    point=(lat_f, lng_f),
-                    dist=distance,
-                    output_file=out_file,
-                    output_format=output_format,
-                    width=width,
-                    height=height,
-                    country_label="中国",
-                    display_city=city_label,
-                    display_country="中国",
-                    fonts=fonts,
+                timeout_s = int(os.getenv("MAPTOPSTER_POSTER_TIMEOUT", "40"))
+                _run_in_subprocess_with_timeout(
+                    mp.create_poster,
+                    {
+                        "city": city_label,
+                        "country": "China",
+                        "point": (lat_f, lng_f),
+                        "dist": distance,
+                        "output_file": out_file,
+                        "output_format": output_format,
+                        "width": width,
+                        "height": height,
+                        "country_label": "中国",
+                        "display_city": city_label,
+                        "display_country": "中国",
+                        "fonts": fonts,
+                    },
+                    timeout_s=timeout_s,
                 )
             except Exception:
                 if output_format == "png":

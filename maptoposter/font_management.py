@@ -136,17 +136,42 @@ def download_google_font(font_family: str, weights: list = None) -> Optional[dic
 
 
 def load_fonts(font_family: Optional[str] = None) -> Optional[dict]:
-    """
-    Load fonts from local directory or download from Google Fonts.
-    Returns dict with font paths for different weights.
+    """Load fonts for poster rendering.
 
-    :param font_family: Google Fonts family name (e.g., 'Noto Sans JP', 'Open Sans').
-                       If None, uses local Roboto fonts.
-    :return: Dict with 'bold', 'regular', 'light' keys mapping to font file paths,
-             or None if all loading methods fail
+    Priority order:
+    1) If `font_family` is provided, first try to resolve a *local system font* by
+       family name (e.g. "Source Han Sans SC", "Noto Serif CJK SC"). This is the
+       most reliable way to render Chinese text in offline / restricted networks.
+    2) If local resolution fails, try Google Fonts download (when network allows).
+    3) Fallback to bundled Roboto fonts.
+
+    Returns a dict with 'bold'/'regular'/'light' keys mapping to font file paths.
     """
-    # If custom font family specified, try to download from Google Fonts
-    if font_family and font_family.lower() != "roboto":
+
+    # 0) If user passes an absolute/relative font file path, use it directly
+    if font_family and isinstance(font_family, str):
+        path = font_family.strip()
+        if path and ("/" in path or path.lower().endswith((".ttf", ".ttc", ".otf"))) and os.path.exists(path):
+            fonts = {"bold": path, "regular": path, "light": path}
+            print(f"✓ Using font file: {path}")
+            return fonts
+
+    # 1) Prefer system fonts (works well for CJK fonts in many Linux images)
+    if font_family and font_family.strip() and font_family.lower() != "roboto":
+        try:
+            from matplotlib.font_manager import FontProperties, findfont
+
+            fp = FontProperties(family=font_family)
+            resolved = findfont(fp, fallback_to_default=False)
+            if resolved and os.path.exists(resolved):
+                fonts = {"bold": resolved, "regular": resolved, "light": resolved}
+                print(f"✓ Using local system font: {font_family} -> {resolved}")
+                return fonts
+        except Exception:
+            # ignore and fall through to Google Fonts / Roboto
+            pass
+
+        # 2) Try Google Fonts download
         print(f"Loading Google Font: {font_family}")
         fonts = download_google_font(font_family)
         if fonts:
@@ -155,14 +180,13 @@ def load_fonts(font_family: Optional[str] = None) -> Optional[dict]:
 
         print(f"⚠ Failed to load '{font_family}', falling back to local Roboto")
 
-    # Default: Load local Roboto fonts
+    # 3) Default: Load bundled Roboto fonts
     fonts = {
         "bold": os.path.join(FONTS_DIR, "Roboto-Bold.ttf"),
         "regular": os.path.join(FONTS_DIR, "Roboto-Regular.ttf"),
         "light": os.path.join(FONTS_DIR, "Roboto-Light.ttf"),
     }
 
-    # Verify fonts exist
     for _weight, path in fonts.items():
         if not os.path.exists(path):
             print(f"⚠ Font not found: {path}")
