@@ -26,6 +26,7 @@ from auto_generate import _strip_md_fence, call_openai_compatible
 
 DEFAULT_BATCH_GLOB = "batch_runs/246audit_fixed_20260415_*"
 DEFAULT_INDEX_FILE = "historical_places_index.jsonl"
+DEFAULT_CACHE_FILE = ".tmp/historical_dead_names_resolved.jsonl"
 FAIL_LOG_RE = re.compile(r"geocode_failed name=(.*?) error=")
 VALID_CONFIDENCE = {"high", "medium", "low"}
 
@@ -135,6 +136,52 @@ def collect_dead_names(batch_glob: str) -> Tuple[List[str], Dict[str, int]]:
 def _chunked(items: Sequence[str], size: int) -> Iterable[List[str]]:
     for start in range(0, len(items), size):
         yield list(items[start : start + size])
+
+
+def _load_cached_resolved_places(cache_path: Path) -> Dict[str, ResolvedPlace]:
+    if not cache_path.exists():
+        return {}
+
+    cached: Dict[str, ResolvedPlace] = {}
+    for line in cache_path.read_text(encoding="utf-8").splitlines():
+        text = line.strip()
+        if not text:
+            continue
+        payload = json.loads(text)
+        if not isinstance(payload, dict):
+            continue
+        ancient_name = _clean_name(payload.get("ancient_name"))
+        modern_name = _clean_name(payload.get("modern_name"))
+        confidence = _clean_name(payload.get("confidence")).lower()
+        lon, lat = _validate_coords(payload.get("coords"))
+        if not ancient_name or not modern_name or confidence not in VALID_CONFIDENCE:
+            continue
+        cached[ancient_name] = ResolvedPlace(
+            ancient_name=ancient_name,
+            modern_name=modern_name,
+            lon=lon,
+            lat=lat,
+            confidence=confidence,
+        )
+    return cached
+
+
+def _append_cached_resolved_places(cache_path: Path, places: Sequence[ResolvedPlace]) -> None:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    with cache_path.open("a", encoding="utf-8") as handle:
+        for place in places:
+            handle.write(
+                json.dumps(
+                    {
+                        "ancient_name": place.ancient_name,
+                        "modern_name": place.modern_name,
+                        "coords": [place.lon, place.lat],
+                        "confidence": place.confidence,
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
 
 
 def _load_llm_config() -> Dict[str, object]:
@@ -249,14 +296,24 @@ def _parse_resolved_places(raw: str, expected_names: Sequence[str]) -> List[Reso
     return [resolved_map[name] for name in expected_names]
 
 
-def resolve_places_with_llm(names: Sequence[str], chunk_size: int) -> List[ResolvedPlace]:
+def resolve_places_with_llm(
+    names: Sequence[str],
+    chunk_size: int,
+    cache_path: Path,
+) -> List[ResolvedPlace]:
     config = _load_llm_config()
-    resolved: List[ResolvedPlace] = []
+    cached_map = _load_cached_resolved_places(cache_path)
+    resolved: List[ResolvedPlace] = [cached_map[name] for name in names if name in cached_map]
+    pending_names = [name for name in names if name not in cached_map]
 
-    for idx, chunk in enumerate(_chunked(names, chunk_size), start=1):
+    if resolved:
+        print(f"[CACHE] loaded={len(resolved)} pending={len(pending_names)}", flush=True)
+
+    for idx, chunk in enumerate(_chunked(pending_names, chunk_size), start=1):
         messages = _build_resolve_messages(chunk)
         last_error: Exception | None = None
         for attempt in range(1, 4):
+            raw = ""
             try:
                 raw = call_openai_compatible(
                     messages=messages,
@@ -267,6 +324,9 @@ def resolve_places_with_llm(names: Sequence[str], chunk_size: int) -> List[Resol
                     temperature=0.0,
                 )
                 batch_items = _parse_resolved_places(raw, chunk)
+                _append_cached_resolved_places(cache_path, batch_items)
+                for item in batch_items:
+                    cached_map[item.ancient_name] = item
                 resolved.extend(batch_items)
                 print(
                     f"[LLM] batch={idx} size={len(chunk)} attempt={attempt} ok",
@@ -281,7 +341,7 @@ def resolve_places_with_llm(names: Sequence[str], chunk_size: int) -> List[Resol
                     flush=True,
                 )
                 messages = messages + [
-                    {"role": "assistant", "content": raw if 'raw' in locals() else ""},
+                    {"role": "assistant", "content": raw},
                     {
                         "role": "user",
                         "content": "上一个输出不符合要求。请严格按指定 schema 重新输出可直接 json.loads 的 JSON，覆盖全部输入地名。",
@@ -290,7 +350,7 @@ def resolve_places_with_llm(names: Sequence[str], chunk_size: int) -> List[Resol
         if last_error is not None:
             raise RuntimeError(f"第 {idx} 个批次解析失败: {last_error}") from last_error
 
-    return resolved
+    return [cached_map[name] for name in names]
 
 
 def _load_index_records(index_path: Path) -> List[Dict[str, object]]:
@@ -373,6 +433,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="批量修补 historical_places_index.jsonl")
     parser.add_argument("--batch-glob", default=DEFAULT_BATCH_GLOB, help="批跑目录 glob")
     parser.add_argument("--index-file", default=DEFAULT_INDEX_FILE, help="索引文件路径（相对仓库根目录）")
+    parser.add_argument("--cache-file", default=DEFAULT_CACHE_FILE, help="LLM 解析缓存文件（相对仓库根目录）")
     parser.add_argument("--chunk-size", type=int, default=25, help="单批送给 LLM 的地名数量")
     parser.add_argument("--scan-only", action="store_true", help="只扫描死地名，不调用 LLM，不落盘")
     return parser
@@ -400,7 +461,11 @@ def main() -> int:
         print("[OK] 没有发现需要补丁的死地名。")
         return 0
 
-    resolved_places = resolve_places_with_llm(dead_names, max(1, args.chunk_size))
+    resolved_places = resolve_places_with_llm(
+        dead_names,
+        max(1, args.chunk_size),
+        (repo_root() / args.cache_file).resolve(),
+    )
     low_confidence = [item.ancient_name for item in resolved_places if item.confidence == "low"]
 
     index_path = (repo_root() / args.index_file).resolve()
