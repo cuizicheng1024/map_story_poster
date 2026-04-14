@@ -1,7 +1,7 @@
 """
 简要说明：
 - 读取人物生平 Markdown，解析“年份”表中的地点与事件列
-- 调用 geocode_city 获取 GCJ-02 坐标
+- 调用 geocode_city 获取 WGS84 坐标（若来源为高德 GCJ-02 则会自动转换）
 - 生成可交互 HTML 地图：支持行政/地形/Esri 多种底图，连线展示顺序，Markdown 弹窗显示大事
 """
 import argparse
@@ -306,6 +306,35 @@ def _parse_overview(md: str) -> str:
                 continue
             buf.append(t)
     return "".join(buf).strip()
+
+
+def _parse_textbook_points(md: str) -> str:
+    """Extract content under `## 人教版教材知识点` section.
+
+    Returns markdown text WITHOUT the section title line itself.
+    """
+    if not isinstance(md, str) or not md.strip():
+        return ""
+    lines = md.splitlines()
+    start_idx: Optional[int] = None
+    for i, line in enumerate(lines):
+        if line.strip() == "## 人教版教材知识点":
+            start_idx = i + 1
+            break
+    if start_idx is None:
+        return ""
+
+    buf: List[str] = []
+    for line in lines[start_idx:]:
+        # Stop at the next level-2 heading.
+        if line.strip().startswith("## "):
+            break
+        buf.append(line.rstrip())
+
+    # Strip leading/trailing blank lines.
+    text = "\n".join(buf)
+    text = text.strip("\n").strip()
+    return text
 
 
 def _extract_works(text: str) -> List[str]:
@@ -867,6 +896,8 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
         if quote_lines:
             person["quote"] = quote_lines[0]
             break
+    textbook_points = _parse_textbook_points(md)
+
     map_style = {
         "pathColor": "#1e40af",
         "markers": {
@@ -884,7 +915,12 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
             },
         },
     }
-    return {"person": person, "locations": loc_items, "mapStyle": map_style}
+    return {
+        "person": person,
+        "locations": loc_items,
+        "mapStyle": map_style,
+        "textbookPoints": textbook_points,
+    }
 
 
 def parse_places(md: str) -> List[Dict[str, str]]:

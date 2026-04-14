@@ -21,6 +21,7 @@ import argparse
 import os
 import sys
 import time
+import webbrowser
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -130,6 +131,13 @@ def main() -> None:
 
     print(f"HTML: {html_path}")
     print(f"Open: {file_url}")
+
+    # 自动在默认浏览器中打开 HTML 地图
+    try:
+        webbrowser.open(f"file://{os.path.abspath(html_path)}")
+    except Exception:
+        pass
+
     d = result.get("duration") or {}
     print(f"耗时：解析 {d.get('parse')}，渲染 {d.get('render')}，写入 {d.get('write')}，总计 {d.get('total')}")
 

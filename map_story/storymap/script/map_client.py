@@ -1,12 +1,13 @@
 """
 map_client
 职责：与地图与地理计算相关的通用能力层，供 story_map 集成调用。
-- 地理编码：优先通过 QVeris 接入的高德工具，失败回退 OSM（并做 WGS84→GCJ-02 转换）
+- 地理编码：优先通过 QVeris 接入的高德工具（AMap/GCJ-02），拿到结果后统一转换为 WGS84；失败回退 OSM（原生 WGS84）
 - 距离计算：本地 Haversine
 - 地图渲染：通过 QVeris 提供的高德地图渲染接口生成 HTML 片段
 依赖环境变量：QVERIS_API_URL/QVERIS_BASE_URL、QVERIS_API_KEY（可选）
 """
 import json
+import math
 import logging
 import os
 import re
@@ -209,6 +210,62 @@ def _is_inside_china(lat: object, lon: object) -> bool:
     return 17.5 <= lat_f <= 55.5 and 72.0 <= lon_f <= 136.5
 
 
+# ---------------------------------------------------------------------------
+# Coordinate system conversion
+# - AMap (Gaode) geocoding result is typically GCJ-02.
+# - Leaflet + most public tiles are aligned to WGS84.
+# We therefore normalize coordinates to WGS84 as early as possible.
+# ---------------------------------------------------------------------------
+
+_PI = math.pi
+_A = 6378245.0
+_EE = 0.00669342162296594323
+
+
+def _transform_lat(x: float, y: float) -> float:
+    ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * math.sqrt(abs(x))
+    ret += (20.0 * math.sin(6.0 * x * _PI) + 20.0 * math.sin(2.0 * x * _PI)) * 2.0 / 3.0
+    ret += (20.0 * math.sin(y * _PI) + 40.0 * math.sin(y / 3.0 * _PI)) * 2.0 / 3.0
+    ret += (160.0 * math.sin(y / 12.0 * _PI) + 320 * math.sin(y * _PI / 30.0)) * 2.0 / 3.0
+    return ret
+
+
+def _transform_lon(x: float, y: float) -> float:
+    ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * math.sqrt(abs(x))
+    ret += (20.0 * math.sin(6.0 * x * _PI) + 20.0 * math.sin(2.0 * x * _PI)) * 2.0 / 3.0
+    ret += (20.0 * math.sin(x * _PI) + 40.0 * math.sin(x / 3.0 * _PI)) * 2.0 / 3.0
+    ret += (150.0 * math.sin(x / 12.0 * _PI) + 300.0 * math.sin(x / 30.0 * _PI)) * 2.0 / 3.0
+    return ret
+
+
+def _gcj02_to_wgs84(lat: float, lon: float) -> Tuple[float, float]:
+    """Convert GCJ-02 -> WGS84.
+
+    Notes:
+    - The conversion is only meaningful inside mainland China; outside China we return input.
+    - This is the commonly used approximate inverse transform.
+    """
+
+    if not _is_inside_china(lat, lon):
+        return lat, lon
+
+    d_lat = _transform_lat(lon - 105.0, lat - 35.0)
+    d_lon = _transform_lon(lon - 105.0, lat - 35.0)
+
+    rad_lat = lat / 180.0 * _PI
+    magic = math.sin(rad_lat)
+    magic = 1 - _EE * magic * magic
+    sqrt_magic = math.sqrt(magic)
+
+    d_lat = (d_lat * 180.0) / (((_A * (1 - _EE)) / (magic * sqrt_magic)) * _PI)
+    d_lon = (d_lon * 180.0) / ((_A / sqrt_magic) * math.cos(rad_lat) * _PI)
+
+    mg_lat = lat + d_lat
+    mg_lon = lon + d_lon
+
+    return lat * 2.0 - mg_lat, lon * 2.0 - mg_lon
+
+
 def _looks_chinese(text: str) -> bool:
     return bool(re.search(r"[\u4e00-\u9fff]", text or ""))
 
@@ -347,9 +404,10 @@ def _get_qveris_client_class():
 
 
 def geocode_city(name: str) -> Optional[Tuple[float, float]]:
-    """
-    城市/地址字符串 → GCJ-02 经纬度。
-    仅使用 QVeris 接入的高德地理编码工具。
+    """城市/地址字符串 → WGS84 经纬度。
+
+    - 若命中 QVeris 接入的高德地理编码（通常为 GCJ-02），则在落库/渲染前统一转换为 WGS84。
+    - 若回退公共地理编码（OSM 系），则其结果本身即为 WGS84。
     """
     name = str(name or "").strip()
     if not name:
@@ -372,11 +430,14 @@ def geocode_city(name: str) -> Optional[Tuple[float, float]]:
                 client = QVC(api_url=api_url, api_key=api_key)
                 res = client.geocode(cand)
                 if res:
+                    lat, lon = res
                     # 中文地址默认要求落在国内范围，避免解析到海外同名地点
-                    if not looks_cn or _is_inside_china(res[0], res[1]):
-                        _geocode_cache_set(name, res)
-                        _geocode_cache_set(cand, res)
-                        return res
+                    if not looks_cn or _is_inside_china(lat, lon):
+                        # 高德地理编码结果通常为 GCJ-02，这里在落库/渲染前统一纠偏到 WGS84
+                        res_wgs84 = _gcj02_to_wgs84(lat, lon)
+                        _geocode_cache_set(name, res_wgs84)
+                        _geocode_cache_set(cand, res_wgs84)
+                        return res_wgs84
             except Exception:
                 pass
     for cand in candidates:

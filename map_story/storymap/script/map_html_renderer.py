@@ -2,6 +2,8 @@ import json
 from typing import Dict, List
 
 
+
+
 def build_info_panel_html(title: str, fields: Dict[str, str]) -> str:
     """
     构建基础地图页左上角的信息面板。
@@ -120,13 +122,14 @@ body {
   <button class="export-btn" data-export="csv">CSV</button>
   <button class="export-btn" data-export="markdown">Markdown</button>
   <button class="export-btn" data-export="share">分享链接</button>
-</div>
-<div id="root"></div>
-<script type="text/babel" data-presets="env,react">
-const { useState, useEffect, useRef, useMemo } = React;
-const data = __DATA__;
-window.__EXPORT_DATA__ = data;
+    </div>
+    <div id="root"></div>
+    <script type="text/babel" data-presets="env,react">
+      const { useState, useEffect, useRef, useMemo } = React;
+      const data = __DATA__;
+      window.__EXPORT_DATA__ = data;
 const locations = data.locations || [];
+const textbookPoints = String(data.textbookPoints || '').trim();
 const mapStyle = data.mapStyle || {};
 const markerStyles = mapStyle.markers || {};
 const defaultMarkerStyles = {
@@ -158,6 +161,92 @@ const extractYear = (text) => {
   const match = String(text).match(/(\\d{3,4})\\s*年/);
   return match ? parseInt(match[1], 10) : null;
 };
+
+const renderInline = (text) => {
+  const raw = String(text || '');
+  // 支持 Markdown 的 **加粗**（非贪婪匹配，避免跨段落/跨多段加粗误吞）
+  const parts = raw.split(/(\*\*.*?\*\*)/g).filter(Boolean);
+  return parts.map((p, idx) => {
+    const m = p.match(/^\*\*(.+?)\*\*$/);
+    if (m) {
+      return <strong key={idx} className="font-semibold text-gray-800">{m[1]}</strong>;
+    }
+    return <span key={idx}>{p}</span>;
+  });
+};
+
+const renderTextbookPoints = (raw) => {
+  // 兼容两种换行输入：
+  // 1) 真实换行：LF / CRLF / CR
+  // 2) 字面量换行：反斜杠 + n（可能出现 1 个或多个反斜杠）
+  // 说明：这段 JS 位于 Python 三引号字符串里，为避免 Python 对转义序列做预解析，
+  // 这里用 charCode 构造换行/反斜杠字符，再用正则 split 一次性切分。
+  const LF = String.fromCharCode(10); // line feed
+  const CR = String.fromCharCode(13); // carriage return
+  const BS = String.fromCharCode(92); // backslash
+
+  // 用 RegExp 构造器 split：匹配 CRLF / CR / LF / (一个或多个反斜杠 + n)
+  const BS_RE = BS + BS;
+  const splitRe = new RegExp(`${CR}${LF}|${CR}|${LF}|${BS_RE}+n`, 'g');
+
+  const lines = String(raw || '').split(splitRe);
+  return lines.map((line, idx) => {
+    const rawLine = String(line || '');
+    const leadingSpaces = rawLine.match(/^\\s*/)[0].length;
+    const t = rawLine.trim();
+    if (!t) return <div key={idx} className="h-2" />;
+
+    // Markdown 列表层级：0-1 空格为一级，2-3 空格为二级，4+ 空格为三级
+    const level = leadingSpaces >= 4 ? 3 : (leadingSpaces >= 2 ? 2 : 1);
+    const indentClass = level === 1 ? 'ml-0' : (level === 2 ? 'ml-4' : 'ml-8');
+
+    if (t.startsWith('### ')) {
+      const heading = t.replace(/^###\s*/, '');
+      return (
+        <h3 key={idx} className="mt-2 text-base font-bold text-[#7c2d12]">
+          {renderInline(heading)}
+        </h3>
+      );
+    }
+
+    if (t.startsWith('#### ')) {
+      const heading = t.replace(/^####\s*/, '');
+      return (
+        <h4 key={idx} className="mt-2 text-sm font-semibold text-gray-700">
+          {renderInline(heading)}
+        </h4>
+      );
+    }
+
+    if (t.startsWith('- ')) {
+      const body = t.slice(2).trim();
+      const bullet = level === 1 ? '•' : (level === 2 ? '◦' : '▪');
+      return (
+        <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+          <span className="mt-[2px] text-[#c0392b]">{bullet}</span>
+          <div>{renderInline(body)}</div>
+        </div>
+      );
+    }
+
+    const ordered = t.match(/^(\d+)\.\s+(.*)$/);
+    if (ordered) {
+      return (
+        <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+          <span className="mt-[2px] text-gray-500">{ordered[1]}.</span>
+          <div>{renderInline(ordered[2])}</div>
+        </div>
+      );
+    }
+
+    return (
+      <p key={idx} className="text-sm leading-relaxed text-gray-700">
+        {renderInline(t)}
+      </p>
+    );
+  });
+};
+
 const App = () => {
   const [selectedLoc, setSelectedLoc] = useState(locations[0] || null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -557,9 +646,25 @@ const App = () => {
             <p className="text-[10px] text-gray-400 uppercase">重要事迹</p>
           </div>
         </div>
+
+        {textbookPoints ? (
+          <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-amber-50/40">
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <h2 className="text-lg font-bold text-[#7c2d12]">人教版教材知识点</h2>
+              <span className="text-[10px] text-gray-500">文学 / 历史价值梳理</span>
+            </div>
+            <div className="space-y-1">
+              {renderTextbookPoints(textbookPoints)}
+            </div>
+          </section>
+        ) : null}
       </div>
       <footer className="text-center text-gray-400 text-[10px] py-8 border-t border-gray-200">
-        <p>build by cuicheng</p>
+        <p>
+          built by cuicheng (
+          <a className="underline hover:text-gray-600" href="mailto:cuizicheng.1024@gmail.com">cuizicheng.1024@gmail.com</a>
+          )
+        </p>
       </footer>
     </div>
   );
@@ -654,7 +759,7 @@ setTimeout(setupExports, 0);
 </script>
 </body>
 </html>"""
-    return html.replace("__TITLE__", title).replace("__DATA__", payload)
+    return html.replace("__TITLE__", title).replace("__DATA__", payload.replace('</script>', '<\\/script>'))
 
 
 def render_multi_html(data: Dict[str, object]) -> str:
@@ -836,7 +941,7 @@ document.querySelectorAll('[data-export]').forEach(btn => {
 </script>
 </body>
 </html>"""
-    return html.replace("__TITLE__", title).replace("__DATA__", payload)
+    return html.replace("__TITLE__", title).replace("__DATA__", payload.replace('</script>', '<\\/script>'))
 
 
 def render_osm_html(title: str, points: List[Dict[str, object]], info_panel_html: str = "") -> str:
