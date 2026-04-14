@@ -220,8 +220,10 @@ def extract_historical_figures(llm: "StoryAgentLLM", text: str) -> List[str]:
         if isinstance(data, list):
             names = [str(x).strip() for x in data if str(x).strip()]
             return list(dict.fromkeys(names))
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"⚠️ 解析人物列表失败 (JSON解析异常): {e}. 尝试将原文视为单个人名。")
+        if llm and hasattr(llm, "_emit"):
+            llm._emit(f"⚠️ 解析人物列表失败: {e}")
     cleaned = raw.strip()
     return [cleaned] if cleaned else []
 

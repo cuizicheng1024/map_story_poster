@@ -252,7 +252,8 @@ def generate_pack(
                     },
                     timeout_s=timeout_s,
                 )
-            except Exception:
+            except Exception as e:
+                print(f"⚠️ 海报生成失败 ({city_label}): {e}. 正在生成占位图...")
                 if output_format == "png":
                     _render_placeholder(
                         output_file=out_file,

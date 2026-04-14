@@ -438,8 +438,9 @@ def geocode_city(name: str) -> Optional[Tuple[float, float]]:
                         _geocode_cache_set(name, res_wgs84)
                         _geocode_cache_set(cand, res_wgs84)
                         return res_wgs84
-            except Exception:
-                pass
+            except Exception as e:
+                _LOGGER.warning("QVeris 地理编码调用失败 (candidate=%s): %s", cand, e)
+                continue
     for cand in candidates:
         res = _geocode_nominatim(cand, force_cn=looks_cn and not looks_foreign)
         if res:
@@ -461,7 +462,7 @@ def _clean_place_name(text: str) -> str:
 
 def extract_places_in_order(md: str) -> List[str]:
     """
-    从“年份”表解析“现称”列，按出现顺序返回地点列表（去重保序）。
+    从“年份/生平时间线”表解析地点，优先使用“现代搜索地名”列，按出现顺序返回地点列表（去重保序）。
     """
     if not isinstance(md, str):
         return []
@@ -469,49 +470,52 @@ def extract_places_in_order(md: str) -> List[str]:
     in_loc = False
     table_started = False
     header_seen = False
-    col_indices = None
+    display_idx = None
+    search_idx = None
     places: List[str] = []
     for line in lines:
         if line.strip().startswith("## "):
             title = line.strip().lstrip("#").strip()
-            if title.startswith("年份"):
+            if title.startswith("年份") or "生平时间线" in title:
                 in_loc = True
                 table_started = False
                 header_seen = False
-                col_indices = None
+                display_idx = None
+                search_idx = None
                 continue
             else:
                 in_loc = False
         if not in_loc:
             continue
         if line.strip().startswith("|") and not table_started:
-            # 读取表头行并确定“现称”列索引
             table_started = True
             header_cells = [c.strip() for c in line.strip().strip("|").split("|")]
-            idx = None
             for j, c in enumerate(header_cells):
-                if "现称" in c:
-                    idx = j
-                    break
-            if idx is None:
-                idx = len(header_cells) - 1
-            col_indices = idx
+                if search_idx is None and "现代搜索地名" in c:
+                    search_idx = j
+                if display_idx is None and ("现称" in c or "地点" in c):
+                    display_idx = j
+            if display_idx is None and search_idx is None:
+                display_idx = len(header_cells) - 1
             continue
         if table_started:
-            if _TABLE_SEPARATOR_RE.match(line.strip()):
+            stripped = line.strip()
+            if _TABLE_SEPARATOR_RE.match(stripped):
                 header_seen = True
                 continue
-            if header_seen and line.strip().startswith("|"):
-                # 读取数据行
-                cells = [c.strip() for c in line.strip().strip("|").split("|")]
-                if cells and col_indices is not None and col_indices < len(cells):
-                    cell = cells[col_indices]
-                    if cell:
-                        if "：" in cell:
-                            cell = cell.split("：", 1)[-1].strip()
-                        clean = _clean_place_name(cell)
-                        if clean and clean != "—":
-                            places.append(clean)
+            if stripped.startswith("|"):
+                cells = [c.strip() for c in stripped.strip("|").split("|")]
+                cell = ""
+                if search_idx is not None and search_idx < len(cells):
+                    cell = cells[search_idx]
+                if not cell and display_idx is not None and display_idx < len(cells):
+                    cell = cells[display_idx]
+                if cell:
+                    if "：" in cell:
+                        cell = cell.split("：", 1)[-1].strip()
+                    clean = _clean_place_name(cell)
+                    if clean and clean != "—":
+                        places.append(clean)
             else:
                 break
     if not places:
@@ -547,12 +551,12 @@ def append_coords_section(md: str) -> str:
     section = []
     section.append("")
     section.append("## 地点坐标（自动地理编码）")
-    section.append("| 现称 | 纬度 | 经度 |")
-    section.append("| --- | --- | --- |")
+    section.append("| 现称 | 现代搜索地名 | 纬度 | 经度 |")
+    section.append("| --- | --- | --- | --- |")
     for p in places:
         if p in coords:
             lat, lon = coords[p]
-            section.append(f"| {p} | {lat:.6f} | {lon:.6f} |")
+            section.append(f"| {p} | {p} | {lat:.6f} | {lon:.6f} |")
     return "\n".join(lines + section)
 
 

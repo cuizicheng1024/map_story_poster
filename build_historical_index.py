@@ -198,17 +198,19 @@ def resolve_coords(
     modern_name: str,
     fallback: Dict[str, Tuple[float, float]],
 ) -> Tuple[float, float]:
-    """获取坐标：优先 geocode，失败则 fallback（绝不抛异常）。"""
+    """获取坐标：优先 geocode，失败则 fallback。"""
 
     coords = try_geocode(modern_name)
     if coords is not None:
         return coords
 
     if modern_name in fallback:
+        print(f"Warning: Geocoding failed for '{modern_name}', using hardcoded fallback.")
         return fallback[modern_name]
 
     # 极限兜底：如果某条遗漏了 fallback，也给出一个“有效但明显是兜底”的坐标
     # 这样可以保证文件不为空/任务不崩。
+    print(f"Warning: No fallback for '{modern_name}', using (0.0, 0.0).")
     return (0.0, 0.0)
 
 

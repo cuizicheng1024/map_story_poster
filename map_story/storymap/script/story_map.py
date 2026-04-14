@@ -89,12 +89,13 @@ def _historical_index_candidates() -> List[str]:
     # map_story_poster/map_story/storymap/script/story_map.py
     # map_story_poster/historical_places_index.jsonl
     here = os.path.dirname(os.path.abspath(__file__))
+    repo_root = os.path.abspath(os.path.join(here, "..", "..", ".."))
     candidates.extend(
         [
             os.path.join(here, "historical_places_index.jsonl"),
             os.path.join(here, "..", "historical_places_index.jsonl"),
             os.path.join(here, "..", "..", "historical_places_index.jsonl"),
-            os.path.join(here, "..", "..", "..", "historical_places_index.jsonl"),
+            os.path.join(repo_root, "historical_places_index.jsonl"),
             os.path.join(here, "..", "..", "..", "..", "historical_places_index.jsonl"),
         ]
     )
@@ -152,7 +153,8 @@ def _load_historical_places_index() -> Dict[str, Tuple[float, float]]:
                     # First win is enough; later duplicates can be ignored.
                     if norm not in mapping:
                         mapping[norm] = (lat_f, lon_f)
-    except Exception:
+    except Exception as e:
+        _LOGGER.warning("加载古地名索引库失败: %s", e)
         return {}
 
     return mapping
@@ -177,6 +179,20 @@ def _lookup_coords_from_historical_index(*names: str) -> Optional[Tuple[float, f
         if coord:
             return coord
     return None
+
+
+def _is_table_separator(line: str) -> bool:
+    """Return True if the line is a Markdown table separator (e.g. `| --- | --- |`)."""
+    stripped = (line or "").strip()
+    if not stripped.startswith("|"):
+        return False
+    inner = stripped.strip("|").strip()
+    if not inner:
+        return False
+    cells = [c.strip() for c in inner.split("|")]
+    if not cells:
+        return False
+    return all(re.fullmatch(r":?-{3,}:?", c) is not None for c in cells)
 
 
 def _parse_timeline_table(md: str) -> tuple[List[str], List[List[str]]]:
@@ -207,11 +223,13 @@ def _parse_timeline_table(md: str) -> tuple[List[str], List[List[str]]]:
             table_started = True
             continue
         if table_started:
-            if re.match(r"^\|\s*-{3,}\s*\|", line.strip()):
+            stripped = line.strip()
+            if _is_table_separator(stripped):
                 header_seen = True
                 continue
-            if header_seen and line.strip().startswith("|"):
-                rows.append([c.strip() for c in line.strip().strip("|").split("|")])
+            if stripped.startswith("|"):
+                # 即使缺少分隔线，只要仍在表格块内就继续解析数据行
+                rows.append([c.strip() for c in stripped.strip("|").split("|")])
             else:
                 # 遇到非表格行即停止，避免越界读取
                 break
@@ -227,11 +245,12 @@ def _parse_timeline_table(md: str) -> tuple[List[str], List[List[str]]]:
             table_started = True
             continue
         if table_started:
-            if re.match(r"^\|\s*-{3,}\s*\|", line.strip()):
+            stripped = line.strip()
+            if _is_table_separator(stripped):
                 header_seen = True
                 continue
-            if header_seen and line.strip().startswith("|"):
-                rows.append([c.strip() for c in line.strip().strip("|").split("|")])
+            if stripped.startswith("|"):
+                rows.append([c.strip() for c in stripped.strip("|").split("|")])
             else:
                 if header and rows and any(
                     any(k in c for k in ("现称", "事件", "年号", "公元")) for c in header
@@ -462,8 +481,8 @@ def _parse_split_json(raw: str) -> Tuple[str, str]:
             ancient = str(data.get("ancient", "")).strip()
             modern = str(data.get("modern", "")).strip()
             return ancient, modern
-    except Exception:
-        pass
+    except Exception as e:
+        _LOGGER.warning("解析地名拆解 JSON 失败: %s (Raw: %s)", e, raw[:100])
     return "", ""
 
 
@@ -552,7 +571,8 @@ def _batch_split_ancient_modern(
             return {t: _SPLIT_CACHE[t] for t in ordered if t in _SPLIT_CACHE}
     try:
         client = _get_llm_client(event_callback=event_callback)
-    except Exception:
+    except Exception as e:
+        _LOGGER.warning("LLM 客户端初始化失败，回退至启发式拆解逻辑: %s", e)
         with _CACHE_LOCK:
             for text in pending:
                 if text in _SPLIT_CACHE:
@@ -614,7 +634,8 @@ def _split_ancient_modern(loc_text: str, event_callback: Optional[callable] = No
         return cached
     try:
         client = _get_llm_client(event_callback=event_callback)
-    except Exception:
+    except Exception as e:
+        _LOGGER.warning("LLM 客户端初始化失败，回退至启发式拆解逻辑: %s", e)
         result = _split_ancient_modern_heuristic(loc_text)
         with _CACHE_LOCK:
             _SPLIT_CACHE[loc_text] = result
@@ -735,11 +756,12 @@ def _parse_coords_table(md: str) -> Dict[str, tuple[float, float]]:
                     idx_lon = i
             continue
         if table_started:
-            if re.match(r"^\|\s*-{3,}\s*\|", line.strip()):
+            stripped = line.strip()
+            if _is_table_separator(stripped):
                 header_seen = True
                 continue
-            if header_seen and line.strip().startswith("|"):
-                row = [c.strip() for c in line.strip().strip("|").split("|")]
+            if stripped.startswith("|"):
+                row = [c.strip() for c in stripped.strip("|").split("|")]
                 if idx_name is None or idx_lat is None or idx_lon is None:
                     continue
                 if idx_name >= len(row) or idx_lat >= len(row) or idx_lon >= len(row):
@@ -749,12 +771,130 @@ def _parse_coords_table(md: str) -> Dict[str, tuple[float, float]]:
                     lat = float(row[idx_lat])
                     lon = float(row[idx_lon])
                 except Exception:
+                    _LOGGER.warning("解析坐标行失败: %s", row)
                     continue
                 if name:
                     coords[name] = (lat, lon)
             else:
                 break
     return coords
+
+
+def _parse_coords_search_map(md: str) -> Dict[str, str]:
+    """解析“地点坐标”表中的“现代搜索地名”列，返回 {标准名称: 搜索地名} 映射。"""
+    if not isinstance(md, str):
+        return {}
+    lines = md.splitlines()
+    in_section = False
+    table_started = False
+    header_seen = False
+    idx_name = None
+    idx_search = None
+    search_map: Dict[str, str] = {}
+    for line in lines:
+        if line.strip().startswith("## "):
+            title = line.strip().lstrip("#").strip()
+            in_section = "地点坐标" in title
+            table_started = False
+            header_seen = False
+            idx_name = None
+            idx_search = None
+            continue
+        if not in_section:
+            continue
+        if line.strip().startswith("|") and not table_started:
+            table_started = True
+            header = [c.strip() for c in line.strip().strip("|").split("|")]
+            for i, c in enumerate(header):
+                if "现称" in c or "地点" in c:
+                    idx_name = i
+                if "现代搜索地名" in c:
+                    idx_search = i
+            continue
+        if table_started:
+            stripped = line.strip()
+            if _is_table_separator(stripped):
+                header_seen = True
+                continue
+            if stripped.startswith("|"):
+                row = [c.strip() for c in stripped.strip("|").split("|")]
+                if idx_name is None or idx_search is None:
+                    continue
+                if idx_name >= len(row) or idx_search >= len(row):
+                    continue
+                name = _pick_geocode_name(row[idx_name])
+                search = _pick_geocode_name(row[idx_search])
+                if name and search:
+                    search_map[name] = search
+            else:
+                break
+    return search_map
+
+
+def _normalize_markdown_tables(md: str) -> str:
+    """自动修复大模型生成 Markdown 中“生平时间线”和“地点坐标”表格缺失分隔线的问题。
+
+    在检测到表头行后，如果下一行是数据行但不是 `| --- |` 形式的分隔线，则自动补齐。
+    """
+    if not isinstance(md, str):
+        return md
+    lines = md.splitlines()
+    out: List[str] = []
+    current_h2 = ""
+    timeline_fixed = False
+    coords_fixed = False
+    i = 0
+    n = len(lines)
+    while i < n:
+        line = lines[i]
+        stripped = line.strip()
+        if stripped.startswith("## "):
+            current_h2 = stripped.lstrip("#").strip()
+            out.append(line)
+            i += 1
+            continue
+        if stripped.startswith("|"):
+            header_cells = [c.strip() for c in stripped.strip("|").split("|")]
+            is_timeline_section = ("生平时间线" in current_h2) or current_h2.startswith("年份")
+            is_coords_section = "地点坐标" in current_h2
+            if is_timeline_section and not timeline_fixed:
+                has_year = any("年份" in c for c in header_cells)
+                has_event = any("事件" in c for c in header_cells)
+                if has_year and has_event:
+                    out.append(line)
+                    if i + 1 < n:
+                        next_line = lines[i + 1]
+                        next_stripped = next_line.strip()
+                        if not _is_table_separator(next_stripped) and next_stripped.startswith("|"):
+                            sep = "| " + " | ".join("---" for _ in header_cells) + " |"
+                            out.append(sep)
+                    else:
+                        sep = "| " + " | ".join("---" for _ in header_cells) + " |"
+                        out.append(sep)
+                    timeline_fixed = True
+                    i += 1
+                    continue
+            if is_coords_section and not coords_fixed:
+                has_name = any(("现称" in c) or ("地点" in c) for c in header_cells)
+                has_lat = any(("纬度" in c) or ("lat" in c.lower()) for c in header_cells)
+                has_lon = any(("经度" in c) or ("lon" in c.lower()) or ("lng" in c.lower()) for c in header_cells)
+                if has_name and has_lat and has_lon:
+                    out.append(line)
+                    if i + 1 < n:
+                        next_line = lines[i + 1]
+                        next_stripped = next_line.strip()
+                        if not _is_table_separator(next_stripped) and next_stripped.startswith("|"):
+                            sep = "| " + " | ".join("---" for _ in header_cells) + " |"
+                            out.append(sep)
+                    else:
+                        sep = "| " + " | ".join("---" for _ in header_cells) + " |"
+                        out.append(sep)
+                    coords_fixed = True
+                    i += 1
+                    continue
+        out.append(line)
+        i += 1
+    return "\n".join(out)
 
 
 def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> Optional[Dict[str, object]]:
@@ -789,6 +929,7 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
     # 先解析 Markdown 中的“地点坐标”表（如果用户/上游已提供），
     # 这样可以显著减少在线地理编码调用，避免网络超时导致构建失败。
     coords_cache = _parse_coords_table(md)
+    coords_search_map = _parse_coords_search_map(md)
 
     loc_texts = [birth_loc, death_loc]
     loc_texts.extend([loc.get("location") or loc.get("name") or "" for loc in locations])
@@ -857,18 +998,37 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
             coord = coords_cache.get(_pick_geocode_name(loc_text))
         if not coord and loc.get("name"):
             coord = coords_cache.get(_pick_geocode_name(loc.get("name") or ""))
-        if not coord and geo_name:
-            # 坐标表缺失时，优先从本地 historical_places_index.jsonl 兜底
-            coord = _lookup_coords_from_historical_index(
-                ancient,
-                modern,
-                loc_text,
-                loc.get("name") or "",
-                geo_name,
-            )
-        if not coord and geo_name:
-            # 本地索引仍未命中时才触发在线地理编码
-            coord = geocode_city(geo_name)
+        search_name = ""
+        for candidate_key in [
+            geo_name,
+            _pick_geocode_name(modern) if modern else "",
+            _pick_geocode_name(loc_text) if loc_text else "",
+            _pick_geocode_name(loc.get("name") or "") if loc.get("name") else "",
+        ]:
+            if candidate_key and candidate_key in coords_search_map:
+                search_name = coords_search_map[candidate_key]
+                break
+        geocode_candidates = []
+        if search_name:
+            geocode_candidates.append(search_name)
+        if geo_name and geo_name not in geocode_candidates:
+            geocode_candidates.append(geo_name)
+        if not coord:
+            for candidate in geocode_candidates:
+                coord = _lookup_coords_from_historical_index(
+                    ancient,
+                    modern,
+                    loc_text,
+                    loc.get("name") or "",
+                    candidate,
+                )
+                if coord:
+                    break
+        if not coord:
+            for candidate in geocode_candidates:
+                coord = geocode_city(candidate)
+                if coord:
+                    break
         if not coord:
             continue
         works = _extract_works(" ".join([loc.get("event", ""), loc.get("significance", "")]))
@@ -1319,6 +1479,7 @@ def run_interactive() -> None:
                 print(f"未取得：{person}")
                 stats["failed"] += 1
                 continue
+            md = _normalize_markdown_tables(md)
             km = compute_total_distance_km(md)
             if isinstance(km, float):
                 md = insert_distance_intro(md, km)
@@ -1394,6 +1555,7 @@ def _generate_for_person(
     t_md = time.perf_counter() - t_step
     if not md:
         return {"ok": False, "person": person, "error": "未取得内容"}
+    md = _normalize_markdown_tables(md)
     km = compute_total_distance_km(md)
     if isinstance(km, float):
         md = insert_distance_intro(md, km)
