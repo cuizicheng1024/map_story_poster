@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { extractHistoricalFigures, generateHistoricalMarkdown } from './utils/ai';
 import { parseMarkdown } from './utils/markdownParser';
 import { geocodeCity } from './utils/geocoder';
 import StoryMap from './components/StoryMap';
+import HomeGraph from './components/HomeGraph';
+import peopleNames from './data/pep_people_merged.json';
 
 const MAX_INPUT_LEN = 200;
 const historyItems = ["曹操", "李白", "苏轼", "康熙", "唐三藏"];
@@ -17,8 +19,15 @@ export default function App() {
     }
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [homeSearch, setHomeSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
+
+  const quickResults = useMemo(() => {
+    const q = homeSearch.trim();
+    if (!q) return peopleNames.slice(0, 10);
+    return peopleNames.filter((x) => String(x).includes(q)).slice(0, 10);
+  }, [homeSearch]);
 
   useEffect(() => {
     if (chatEndRef.current) {
@@ -135,6 +144,42 @@ export default function App() {
       {/* Chat Area */}
       <main className="flex-1 overflow-y-auto p-4 custom-scrollbar">
         <div className="max-w-3xl mx-auto space-y-6">
+          <section className="bg-white border border-amber-100 rounded-xl p-4 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-800 mb-2">首页入口：搜索 + 人物知识图谱</h2>
+            <div className="flex gap-2 mb-3">
+              <input
+                type="text"
+                value={homeSearch}
+                onChange={(e) => setHomeSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && quickResults.length) handleGenerate(quickResults[0]);
+                }}
+                placeholder="搜索人教版人物（例如：吴道子、玄奘、文天祥）"
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              />
+              <button
+                onClick={() => quickResults.length && handleGenerate(quickResults[0])}
+                disabled={!quickResults.length || isLoading}
+                className="px-4 py-2 rounded-lg bg-amber-500 text-white disabled:opacity-50"
+              >
+                生成地图
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {quickResults.map((name) => (
+                <button
+                  key={name}
+                  onClick={() => handleGenerate(name)}
+                  disabled={isLoading}
+                  className="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-800 hover:bg-amber-200 disabled:opacity-50"
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+            <HomeGraph names={peopleNames} query={homeSearch} onSelect={handleGenerate} />
+          </section>
+
           {messages.map((msg) => (
             <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[90%] md:max-w-[80%] rounded-2xl p-4 shadow-sm ${
