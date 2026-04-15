@@ -86,3 +86,15 @@ python3 auto_generate.py --name "辛弃疾"
 
 ### 🔗 参考来源
 感谢开源项目的启发：[map_story](https://github.com/cuizicheng1024/map_story)
+
+---
+
+### 👩‍💻 给开发者
+技术路线与目录结构说明见：`README_TECH.md`
+
+### 📂 人教版人物名单（已内置）
+为方便评审与复现，仓库已内置人教版相关人物名单数据（`data/` 目录）：
+- `data/pep_people_merged.json`：合并去重名单（推荐直接使用）
+- `data/pep_history_figures_sample.json`：历史人物名单
+- `data/pep_junior_all_people.json`：初中阶段“所有人物”名单
+- `data/*_by_book.json`：按教材分组的人名信息
