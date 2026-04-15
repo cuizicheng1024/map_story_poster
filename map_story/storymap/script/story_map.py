@@ -336,8 +336,15 @@ def _parse_textbook_points(md: str) -> str:
         return ""
     lines = md.splitlines()
     start_idx: Optional[int] = None
+    titles = {
+        "## 人教版教材知识点",
+        "## 教材知识点",
+        "## 教材知识点与考点",
+        "## 教材知识点和考点",
+    }
     for i, line in enumerate(lines):
-        if line.strip() == "## 人教版教材知识点":
+        t = line.strip()
+        if any(t == x or t.startswith(x + "（") or t.startswith(x + "(") for x in titles):
             start_idx = i + 1
             break
     if start_idx is None:
@@ -354,6 +361,75 @@ def _parse_textbook_points(md: str) -> str:
     text = "\n".join(buf)
     text = text.strip("\n").strip()
     return text
+
+
+def _parse_exam_points(md: str) -> str:
+    if not isinstance(md, str) or not md.strip():
+        return ""
+    lines = md.splitlines()
+    titles = {
+        "## 初高中阶段考点",
+        "## 初高中考点",
+        "## 初高中阶段考点信息",
+        "## 考点",
+        "## 教材考点",
+        "## 中考考点",
+        "## 高考考点",
+    }
+    start_idx: Optional[int] = None
+    for i, line in enumerate(lines):
+        t = line.strip()
+        if any(t == x or t.startswith(x + "（") or t.startswith(x + "(") for x in titles):
+            start_idx = i + 1
+            break
+    if start_idx is None:
+        return ""
+    buf: List[str] = []
+    for line in lines[start_idx:]:
+        if line.strip().startswith("## "):
+            break
+        buf.append(line.rstrip())
+    text = "\n".join(buf)
+    return text.strip("\n").strip()
+
+
+def _derive_exam_points_from_textbook_points(textbook_points: str) -> str:
+    t = (textbook_points or "").strip()
+    if not t:
+        return ""
+    t = re.sub(r"^###\s*初中阶段\s*$", "### 初中阶段考点", t, flags=re.M)
+    t = re.sub(r"^###\s*高中阶段\s*$", "### 高中阶段考点", t, flags=re.M)
+    if "### 初中阶段考点" not in t and "### 高中阶段考点" not in t:
+        return "### 考点\n" + t
+    return t
+
+
+def _parse_historical_reviews(md: str) -> List[str]:
+    if not isinstance(md, str) or not md.strip():
+        return []
+    lines = md.splitlines()
+    start_idx: Optional[int] = None
+    for i, line in enumerate(lines):
+        if line.strip() == "### 历史评价":
+            start_idx = i + 1
+            break
+    if start_idx is None:
+        return []
+    buf: List[str] = []
+    for line in lines[start_idx:]:
+        s = line.strip()
+        if not s:
+            continue
+        if s.startswith("### ") or s.startswith("## "):
+            break
+        if s.startswith("-"):
+            s = s.lstrip("-").strip()
+        s = re.sub(r"^\d+\.\s*", "", s).strip()
+        if s:
+            buf.append(s)
+        if len(buf) >= 3:
+            break
+    return buf
 
 
 def _extract_works(text: str) -> List[str]:
@@ -981,6 +1057,14 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
             "lng": death_coord[1] if death_coord else None,
         },
         "lifespan": lifespan,
+        "highlights": {
+            "honor": title,
+            "status": (info.get("历史地位", "") or "").strip(),
+            "identities": (info.get("主要身份", "") or "").strip(),
+            "achievements": (info.get("主要成就", "") or "").strip(),
+            "works": works,
+            "reviews": _parse_historical_reviews(md),
+        },
     }
     # coords_cache 已在上方解析过，这里直接复用
     loc_items: List[Dict[str, object]] = []
@@ -1057,6 +1141,9 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
             person["quote"] = quote_lines[0]
             break
     textbook_points = _parse_textbook_points(md)
+    exam_points = _parse_exam_points(md)
+    if not exam_points and textbook_points:
+        exam_points = _derive_exam_points_from_textbook_points(textbook_points)
 
     map_style = {
         "pathColor": "#1e40af",
@@ -1080,6 +1167,7 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
         "locations": loc_items,
         "mapStyle": map_style,
         "textbookPoints": textbook_points,
+        "examPoints": exam_points,
     }
 
 

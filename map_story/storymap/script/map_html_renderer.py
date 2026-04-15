@@ -130,7 +130,9 @@ body {
       window.__EXPORT_DATA__ = data;
 const locations = data.locations || [];
 const textbookPoints = String(data.textbookPoints || '').trim();
+const examPoints = String(data.examPoints || '').trim();
 const mapStyle = data.mapStyle || {};
+const mergedTeachingPoints = [textbookPoints, examPoints].filter(Boolean).join('\n\n');
 const markerStyles = mapStyle.markers || {};
 const defaultMarkerStyles = {
   normal: {
@@ -146,6 +148,7 @@ const defaultMarkerStyles = {
     color: '#e74c3c'
   }
 };
+const highlights = data.person?.highlights || {};
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -259,6 +262,11 @@ const App = () => {
   const avatarUrl = data.person?.avatar || '';
   const description = data.person?.description || '';
   const quoteText = data.person?.quote || data.person?.title || '';
+  const relatedWorks = Array.isArray(highlights.works) ? highlights.works : [];
+  const relatedReviews = Array.isArray(highlights.reviews) ? highlights.reviews : [];
+  const relatedHonor = String(highlights.honor || data.person?.title || '').trim();
+  const relatedStatus = String(highlights.status || '').trim();
+  const relatedIdentities = String(highlights.identities || '').trim();
   const descSegments = useMemo(() => {
     if (!description) return [];
     const parts = description.split(/([。！？])/);
@@ -279,12 +287,20 @@ const App = () => {
       );
     }
     const regions = new Set(locations.map(l => (l.modernName || l.name || '').split(/[\\s/]/)[0]).filter(Boolean));
-    const years = parseInt((data.person?.lifespan || '').replace(/\\D/g, ''), 10) || 0;
+    const lifespanDigits = parseInt((data.person?.lifespan || '').replace(/\\D/g, ''), 10);
+    const b = extractYear(data.person?.birth?.date || '');
+    const d = extractYear(data.person?.death?.date || '');
+    let yearsValue = Number.isFinite(lifespanDigits) && lifespanDigits > 0 ? lifespanDigits : null;
+    if (yearsValue === null && b && d && d >= b && (d - b) < 200) {
+      yearsValue = d - b + 1;
+    }
+    const yearsLabel = yearsValue === null ? '存疑' : String(yearsValue);
     return {
       distance: Math.round(totalDist),
       regions: regions.size,
       events: locations.length,
-      years: years
+      yearsValue,
+      yearsLabel
     };
   }, []);
   const birthDate = data.person?.birth?.date || '';
@@ -535,7 +551,17 @@ const App = () => {
                     }`}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <span className="font-bold text-sm">{loc.name}</span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm truncate">{loc.name}</span>
+                          {loc.type === 'birth' ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">出生</span>
+                          ) : loc.type === 'death' ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">去世</span>
+                          ) : null}
+                        </div>
+                        <div className="text-[10px] text-gray-400 truncate">{loc.ancientName} → {loc.modernName}</div>
+                      </div>
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
                         {loc.time || '未知'}
                       </span>
@@ -632,7 +658,9 @@ const App = () => {
           </div>
           <div className="glass-panel p-4 rounded-xl text-center">
             <p className="text-2xl mb-1">⏱️</p>
-            <p className="text-xl font-bold">{stats.years} <span className="text-xs font-normal">年</span></p>
+            <p className="text-xl font-bold">
+              {stats.yearsLabel}{stats.yearsValue === null ? null : <span className="text-xs font-normal">年</span>}
+            </p>
             <p className="text-[10px] text-gray-400 uppercase">生命跨度</p>
           </div>
           <div className="glass-panel p-4 rounded-xl text-center">
@@ -647,15 +675,61 @@ const App = () => {
           </div>
         </div>
 
-        {textbookPoints ? (
+        {mergedTeachingPoints ? (
           <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-amber-50/40">
             <div className="flex items-center justify-between gap-4 mb-3">
-              <h2 className="text-lg font-bold text-[#7c2d12]">人教版教材知识点</h2>
-              <span className="text-[10px] text-gray-500">文学 / 历史价值梳理</span>
+              <h2 className="text-lg font-bold text-[#7c2d12]">教材知识点与考点</h2>
+              <span className="text-[10px] text-gray-500">面向教学</span>
             </div>
             <div className="space-y-1">
-              {renderTextbookPoints(textbookPoints)}
+              {renderTextbookPoints(mergedTeachingPoints)}
             </div>
+          </section>
+        ) : null}
+
+        {(relatedHonor || relatedStatus || relatedIdentities || relatedWorks.length || relatedReviews.length) ? (
+          <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-white/70">
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <h2 className="text-lg font-bold text-[#7c2d12]">人物要点</h2>
+              <span className="text-[10px] text-gray-500">强相关速览</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {relatedHonor ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{relatedHonor}</span> : null}
+              {data.person?.dynasty ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{data.person.dynasty}</span> : null}
+              {data.person?.lifespan ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{data.person.lifespan}</span> : null}
+            </div>
+            {relatedStatus ? (
+              <div className="mb-3">
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">历史地位</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{relatedStatus}</p>
+              </div>
+            ) : null}
+            {relatedIdentities ? (
+              <div className="mb-3">
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">身份</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{relatedIdentities}</p>
+              </div>
+            ) : null}
+            {relatedWorks.length ? (
+              <div className="mb-3">
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">代表作</p>
+                <div className="flex flex-wrap gap-2">
+                  {relatedWorks.slice(0, 6).map((w, idx) => (
+                    <span key={idx} className="text-[11px] px-2 py-1 rounded bg-gray-50 border border-gray-200">《{w}》</span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {relatedReviews.length ? (
+              <div>
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">他人评价 / 史料</p>
+                <ul className="space-y-1">
+                  {relatedReviews.slice(0, 3).map((t, idx) => (
+                    <li key={idx} className="text-sm text-gray-700 leading-relaxed">- {t}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </section>
         ) : null}
       </div>

@@ -12,6 +12,7 @@ import logging
 import os
 import re
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, Iterable, List, Optional, Tuple
 from urllib.parse import quote
@@ -35,6 +36,70 @@ if not _LOGGER.handlers:
 
 _GEOCODE_CACHE: Dict[str, Tuple[float, float]] = {}
 _GEOCODE_CACHE_LOCK = threading.Lock()
+_GEOCODE_CACHE_PATH: Optional[str] = None
+_GEOCODE_CACHE_LAST_SAVE_TS = 0.0
+
+
+def _resolve_geocode_cache_path() -> Optional[str]:
+    env = (os.getenv("MAP_STORY_GEOCODE_CACHE") or "").strip()
+    if env:
+        return os.path.abspath(os.path.expanduser(env))
+    root = _project_root()
+    return os.path.join(root, ".cache", "map_story_geocode_cache.json")
+
+
+def _load_geocode_cache() -> None:
+    global _GEOCODE_CACHE_PATH
+    _GEOCODE_CACHE_PATH = _resolve_geocode_cache_path()
+    p = _GEOCODE_CACHE_PATH
+    if not p or not os.path.exists(p):
+        return
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict):
+            return
+        with _GEOCODE_CACHE_LOCK:
+            for k, v in data.items():
+                if not isinstance(k, str):
+                    continue
+                if isinstance(v, list) and len(v) >= 2:
+                    try:
+                        lat = float(v[0])
+                        lon = float(v[1])
+                    except Exception:
+                        continue
+                    if _is_valid_coord(lat, lon):
+                        _GEOCODE_CACHE[k] = (lat, lon)
+                elif isinstance(v, dict) and "lat" in v and ("lon" in v or "lng" in v):
+                    try:
+                        lat = float(v.get("lat"))
+                        lon = float(v.get("lon", v.get("lng")))
+                    except Exception:
+                        continue
+                    if _is_valid_coord(lat, lon):
+                        _GEOCODE_CACHE[k] = (lat, lon)
+    except Exception:
+        return
+
+
+def _save_geocode_cache(force: bool = False) -> None:
+    global _GEOCODE_CACHE_LAST_SAVE_TS
+    p = _GEOCODE_CACHE_PATH or _resolve_geocode_cache_path()
+    if not p:
+        return
+    now = time.time()
+    if (not force) and (now - _GEOCODE_CACHE_LAST_SAVE_TS < 2.0):
+        return
+    try:
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with _GEOCODE_CACHE_LOCK:
+            data = {k: [v[0], v[1]] for k, v in _GEOCODE_CACHE.items()}
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        _GEOCODE_CACHE_LAST_SAVE_TS = now
+    except Exception:
+        return
 
 
 def _geocode_cache_get(name: str) -> Optional[Tuple[float, float]]:
@@ -49,7 +114,7 @@ def _geocode_cache_set(name: str, coord: Tuple[float, float]) -> None:
         return
     with _GEOCODE_CACHE_LOCK:
         _GEOCODE_CACHE[name] = coord
-
+    _save_geocode_cache(force=False)
 
 def _project_root() -> str:
     return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
@@ -58,6 +123,7 @@ def _project_root() -> str:
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env)
 load_dotenv(dotenv_path=os.path.join(_project_root(), ".env"))
+_load_geocode_cache()
 
 
 def _http_post_json(url: str, headers: Dict[str, str], body: Dict[str, object]) -> Optional[object]:
@@ -332,6 +398,21 @@ def _build_geocode_candidates(name: str) -> List[str]:
         return []
     seen = set()
     items = [base]
+    paren = re.findall(r"[（(]([^）)]+)[）)]", base)
+    for p in paren:
+        p = p.strip()
+        if not p:
+            continue
+        if p.startswith("今") and len(p) > 1:
+            items.append(p[1:].strip())
+        items.append(p)
+    split_markers = ["、", "，", ",", "；", ";", "和", "及", " / ", "/"]
+    for m in split_markers:
+        if m in base:
+            left = base.split(m, 1)[0].strip()
+            if left:
+                items.append(left)
+            break
     if (
         _looks_chinese(base)
         and "中国" not in base
