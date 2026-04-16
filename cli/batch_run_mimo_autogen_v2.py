@@ -105,6 +105,7 @@ class RunResult:
     api: ApiAttempt
     fact_check_api: ApiAttempt
     fact_check: Dict[str, Any]
+    fact_check_pass: bool
     markdown_raw_checks: Dict[str, Any]
     markdown_after_ensure_checks: Dict[str, Any]
     storymap_parse: Dict[str, Any]
@@ -585,6 +586,7 @@ def run_one_full(
     timeout_s: int,
     retries: int,
     retry_backoff_s: float,
+    enable_fact_check: bool,
 ) -> RunResult:
     run_dir = out_dir / "runs" / person
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -656,7 +658,7 @@ def run_one_full(
     fact_check_api = ApiAttempt(ok=False, status_code=None, error_type="not_run", error_message="", duration_s=0.0, usage=None)
     fact_check: Dict[str, Any] = {}
     fact_pass = False
-    if api_attempt.ok and raw_md.strip() and api_key:
+    if enable_fact_check and api_attempt.ok and raw_md.strip() and api_key:
         fact_check, fact_check_api = fact_check_with_mimo(
             person=person,
             markdown=raw_md,
@@ -678,15 +680,15 @@ def run_one_full(
     )
 
     duration_s = time.perf_counter() - t_all0
-    ok_final = bool(ok_e2e and fact_pass)
 
     result = RunResult(
         person=person,
-        ok_end_to_end=ok_final,
+        ok_end_to_end=bool(ok_e2e),
         duration_s=duration_s,
         api=api_attempt,
         fact_check_api=fact_check_api,
         fact_check=fact_check,
+        fact_check_pass=bool(fact_pass) if enable_fact_check else False,
         markdown_raw_checks=raw_checks,
         markdown_after_ensure_checks=ensure_checks,
         storymap_parse=parse_info,
@@ -734,6 +736,7 @@ def load_existing_results(out_dir: Path) -> Dict[str, RunResult]:
                 api=api,
                 fact_check_api=fact_check_api,
                 fact_check=data.get("fact_check") if isinstance(data.get("fact_check"), dict) else {},
+                fact_check_pass=bool(data.get("fact_check_pass")) if "fact_check_pass" in data else bool((data.get("fact_check") or {}).get("pass")),
                 markdown_raw_checks=data.get("markdown_raw_checks") or {},
                 markdown_after_ensure_checks=data.get("markdown_after_ensure_checks") or {},
                 storymap_parse=data.get("storymap_parse") or {},
@@ -921,6 +924,7 @@ def main() -> int:
     parser.add_argument("--retry-backoff", type=float, default=float(os.getenv("BATCH_RETRY_BACKOFF_S", "2")), help="重试退避基数（秒）")
     parser.add_argument("--sleep", type=float, default=float(os.getenv("BATCH_SLEEP_S", "0.8")), help="每个人之间 sleep 秒数")
     parser.add_argument("--concurrency", type=int, default=int(os.getenv("BATCH_CONCURRENCY", "1")), help="并发 worker 数（建议 1-10）")
+    parser.add_argument("--fact-check", action="store_true", help="生成后做事实核查（默认关闭）")
     parser.add_argument("--skip-done", action="store_true", help="如果 runs/<person>/result.json 已存在，则跳过")
     args = parser.parse_args()
 
@@ -1024,6 +1028,7 @@ def main() -> int:
             timeout_s=args.timeout,
             retries=args.retries,
             retry_backoff_s=args.retry_backoff,
+            enable_fact_check=bool(args.fact_check),
         )
 
     done_count = 0
