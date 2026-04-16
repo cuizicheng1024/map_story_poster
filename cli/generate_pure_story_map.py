@@ -9,10 +9,10 @@
 - 不依赖 / 不触发任何 OSMnx、matplotlib 等静态海报逻辑
 
 用法示例：
-  python3 cli/generate_pure_story_map.py --md map_story/storymap/examples/story/苏轼.md
+  python3 cli/generate_pure_story_map.py --md main/storymap/examples/story/苏轼.md
   python3 cli/generate_pure_story_map.py --person 苏轼
 
-输出：默认写入 map_story/storymap/examples/story_map/ 目录。
+输出：默认写入 main/storymap/examples/story_map/ 目录。
 """
 
 from __future__ import annotations
@@ -29,17 +29,22 @@ from urllib.parse import quote
 
 
 def _repo_root() -> str:
-    return os.path.abspath(os.path.dirname(__file__))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 
 def _add_import_paths() -> None:
     root = _repo_root()
-    sys.path.insert(0, os.path.join(root, "map_story", "storymap", "script"))
+    # Prefer new layout: main/storymap/script
+    new_path = os.path.join(root, "main", "storymap", "script")
+    old_path = os.path.join(root, "map_story", "storymap", "script")
+    for p in [new_path, old_path]:
+        if p not in sys.path:
+            sys.path.insert(0, p)
 
 
 def _default_md_path(person: str) -> str:
     root = _repo_root()
-    return os.path.join(root, "map_story", "storymap", "examples", "story", f"{person}.md")
+    return os.path.join(root, "main", "storymap", "examples", "story", f"{person}.md")
 
 
 def _read_text(path: str) -> str:
@@ -90,7 +95,7 @@ def generate_pure_html(md_path: str, out_path: Optional[str] = None) -> dict:
     t2 = time.perf_counter()
 
     if not out_path:
-        out_dir = os.path.join(_repo_root(), "map_story", "storymap", "examples", "story_map")
+        out_dir = os.path.join(_repo_root(), "main", "storymap", "examples", "story_map")
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         out_path = os.path.join(out_dir, f"{person_name}__pure__{ts}.html")
 

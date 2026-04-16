@@ -27,7 +27,7 @@
 说明
 ----
 - LLM：使用仓库根目录 `.env` 的 `API_KEY/BASE_URL/MODEL`（MiMo 的 OpenAI-compatible）。
-- 地理编码：由 `map_story/storymap/script/map_client.py` 决定。
+- 地理编码：由 `main/storymap/script/map_client.py` 决定。
   - 若存在 `QVERIS_API_URL/QVERIS_API_KEY`：可能走 QVeris→高德→GCJ02→WGS84
   - 否则：走 OSM 公共地理编码回退链路
 
@@ -53,9 +53,9 @@ import requests
 from dotenv import load_dotenv
 
 
-REPO_ROOT = Path(__file__).resolve().parent
-STORYMAP_SCRIPT_DIR = REPO_ROOT / "map_story" / "storymap" / "script"
-STORY_SYSTEM_PROMPT_PATH = REPO_ROOT / "map_story" / "storymap" / "docs" / "story_system_prompt.md"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+STORYMAP_SCRIPT_DIR = REPO_ROOT / "main" / "storymap" / "script"
+STORY_SYSTEM_PROMPT_PATH = REPO_ROOT / "main" / "storymap" / "docs" / "story_system_prompt.md"
 
 
 DEFAULT_PEOPLE: List[str] = [
