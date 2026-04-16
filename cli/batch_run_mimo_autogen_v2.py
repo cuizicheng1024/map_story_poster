@@ -103,6 +103,8 @@ class RunResult:
     ok_end_to_end: bool
     duration_s: float
     api: ApiAttempt
+    fact_check_api: ApiAttempt
+    fact_check: Dict[str, Any]
     markdown_raw_checks: Dict[str, Any]
     markdown_after_ensure_checks: Dict[str, Any]
     storymap_parse: Dict[str, Any]
@@ -312,6 +314,59 @@ def strip_md_fence(text: str) -> str:
         s = re.sub(r"^```[a-zA-Z0-9_-]*\n", "", s)
         s = re.sub(r"\n```\s*$", "", s)
     return s.strip()
+
+
+def strip_json_fence(text: str) -> str:
+    s = (text or "").strip()
+    if not s:
+        return ""
+    if s.startswith("```"):
+        s = re.sub(r"^```[a-zA-Z0-9_-]*\n", "", s)
+        s = re.sub(r"\n```\s*$", "", s)
+    return s.strip()
+
+
+def fact_check_with_mimo(
+    *,
+    person: str,
+    markdown: str,
+    api_key: str,
+    model: str,
+    base_url: str,
+    timeout_s: int,
+    retries: int,
+    retry_backoff_s: float,
+) -> Tuple[Dict[str, Any], ApiAttempt]:
+    sys_msg = (
+        "你是严谨的历史人物事实核查员。你将收到一段关于某位历史人物的中文 Markdown 生平。"
+        "请基于你所掌握的公开知识进行事实核查，只输出 JSON。"
+        "要求：\n"
+        "1) 只输出 JSON，不要输出其它内容；\n"
+        "2) 重点检查：朝代/生卒年/主要身份/关键事件是否存在明显错误或自相矛盾；\n"
+        "3) 输出字段：pass(boolean), risk_level('low'|'medium'|'high'), issues(array), corrected_facts(object), notes(string)。\n"
+        "issues 中每条包含：field, claim, correction, confidence(0-1), reason。\n"
+    )
+    user_msg = f"人物：{person}\n\n生平 Markdown：\n{markdown}\n"
+    content, api_attempt = call_openai_compatible_with_meta(
+        messages=[{"role": "system", "content": sys_msg}, {"role": "user", "content": user_msg}],
+        api_key=api_key,
+        model=model,
+        base_url=base_url,
+        timeout_s=timeout_s,
+        temperature=0.0,
+        max_retries=retries,
+        retry_backoff_s=retry_backoff_s,
+    )
+    if content is None:
+        return {"pass": False, "risk_level": "high", "issues": [], "corrected_facts": {}, "notes": "empty_response"}, api_attempt
+    raw = strip_json_fence(content)
+    try:
+        data = json.loads(raw)
+        if not isinstance(data, dict):
+            return {"pass": False, "risk_level": "high", "issues": [], "corrected_facts": {}, "notes": "non_dict_json"}, api_attempt
+        return data, api_attempt
+    except Exception as exc:
+        return {"pass": False, "risk_level": "high", "issues": [], "corrected_facts": {}, "notes": f"json_parse_failed: {exc}"}, api_attempt
 
 
 def ensure_required_sections(md: str) -> str:
@@ -598,6 +653,24 @@ def run_one_full(
     write_text(run_dir / "raw_markdown.md", raw_md)
     write_text(run_dir / "api_attempt.json", json.dumps(asdict(api_attempt), ensure_ascii=False, indent=2))
 
+    fact_check_api = ApiAttempt(ok=False, status_code=None, error_type="not_run", error_message="", duration_s=0.0, usage=None)
+    fact_check: Dict[str, Any] = {}
+    fact_pass = False
+    if api_attempt.ok and raw_md.strip() and api_key:
+        fact_check, fact_check_api = fact_check_with_mimo(
+            person=person,
+            markdown=raw_md,
+            api_key=api_key,
+            model=model,
+            base_url=base_url,
+            timeout_s=min(timeout_s, 120),
+            retries=max(1, min(2, retries)),
+            retry_backoff_s=retry_backoff_s,
+        )
+        write_text(run_dir / "fact_check.json", json.dumps(fact_check, ensure_ascii=False, indent=2))
+        write_text(run_dir / "fact_check_api_attempt.json", json.dumps(asdict(fact_check_api), ensure_ascii=False, indent=2))
+        fact_pass = bool(fact_check.get("pass"))
+
     ok_e2e, raw_checks, ensure_checks, parse_info, geocode_summary = run_pipeline_only(
         person=person,
         raw_md=raw_md,
@@ -605,12 +678,15 @@ def run_one_full(
     )
 
     duration_s = time.perf_counter() - t_all0
+    ok_final = bool(ok_e2e and fact_pass)
 
     result = RunResult(
         person=person,
-        ok_end_to_end=ok_e2e,
+        ok_end_to_end=ok_final,
         duration_s=duration_s,
         api=api_attempt,
+        fact_check_api=fact_check_api,
+        fact_check=fact_check,
         markdown_raw_checks=raw_checks,
         markdown_after_ensure_checks=ensure_checks,
         storymap_parse=parse_info,
@@ -643,11 +719,21 @@ def load_existing_results(out_dir: Path) -> Dict[str, RunResult]:
         try:
             data = json.loads(result_path.read_text(encoding="utf-8"))
             api = ApiAttempt(**data.get("api"))
+            fact_check_api = ApiAttempt(**data.get("fact_check_api")) if isinstance(data.get("fact_check_api"), dict) else ApiAttempt(
+                ok=False,
+                status_code=None,
+                error_type="not_run",
+                error_message="",
+                duration_s=0.0,
+                usage=None,
+            )
             rr = RunResult(
                 person=data.get("person") or person,
                 ok_end_to_end=bool(data.get("ok_end_to_end")),
                 duration_s=float(data.get("duration_s") or 0),
                 api=api,
+                fact_check_api=fact_check_api,
+                fact_check=data.get("fact_check") if isinstance(data.get("fact_check"), dict) else {},
                 markdown_raw_checks=data.get("markdown_raw_checks") or {},
                 markdown_after_ensure_checks=data.get("markdown_after_ensure_checks") or {},
                 storymap_parse=data.get("storymap_parse") or {},
@@ -829,6 +915,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="批量跑 MiMo auto_generate 并生成排障报告（可断点续跑）")
     parser.add_argument("--out-dir", type=str, default="", help="指定输出目录（用于断点续跑）；不填则新建 batch_runs/<ts>")
     parser.add_argument("--people", type=str, default="", help="逗号分隔的人物列表；不填则用内置 16 人")
+    parser.add_argument("--people-json", type=str, default="", help="读取人物列表的 JSON 文件（数组）")
     parser.add_argument("--timeout", type=int, default=int(os.getenv("TIMEOUT", "300")), help="单次 API timeout（秒）")
     parser.add_argument("--retries", type=int, default=int(os.getenv("BATCH_RETRIES", "3")), help="API 最大重试次数")
     parser.add_argument("--retry-backoff", type=float, default=float(os.getenv("BATCH_RETRY_BACKOFF_S", "2")), help="重试退避基数（秒）")
@@ -849,7 +936,15 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # people
-    if args.people.strip():
+    if args.people_json.strip():
+        people_path = Path(args.people_json)
+        if not people_path.is_absolute():
+            people_path = REPO_ROOT / args.people_json
+        data = json.loads(people_path.read_text(encoding="utf-8"))
+        if not isinstance(data, list):
+            raise SystemExit("--people-json must be a JSON array")
+        people = [str(x).strip() for x in data if str(x).strip()]
+    elif args.people.strip():
         people = [p.strip() for p in args.people.split(",") if p.strip()]
     else:
         people = DEFAULT_PEOPLE[:]
