@@ -69,10 +69,14 @@ def _render_md(
     ok: int,
     fail: int,
     latest: List[Dict[str, Any]],
+    interval_s: int,
 ) -> str:
     pct = 0.0 if total <= 0 else (done / total * 100.0)
     lines: List[str] = []
-    lines.append(f"# 批量进度（每 5 分钟刷新）")
+    if interval_s % 60 == 0:
+        lines.append(f"# 批量进度（每 {interval_s // 60} 分钟刷新）")
+    else:
+        lines.append(f"# 批量进度（每 {interval_s} 秒刷新）")
     lines.append("")
     lines.append(f"- out_dir: `{out_dir}`")
     lines.append(f"- time: `{_now()}`")
@@ -98,20 +102,37 @@ def main() -> int:
     p.add_argument("--out-dir", required=True)
     p.add_argument("--total", type=int, default=10)
     p.add_argument("--interval", type=int, default=300)
+    p.add_argument("--out-file", type=str, default="")
     args = p.parse_args()
 
     out_dir = Path(args.out_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
-    md_path = out_dir / "progress_5min.md"
+    interval_s = max(30, int(args.interval))
+    if args.out_file.strip():
+        md_path = Path(args.out_file)
+        if not md_path.is_absolute():
+            md_path = out_dir / args.out_file
+    else:
+        if interval_s % 60 == 0:
+            md_path = out_dir / f"progress_{interval_s // 60}min.md"
+        else:
+            md_path = out_dir / f"progress_{interval_s}s.md"
 
     while True:
         done, ok, fail, latest = _scan_runs(out_dir)
-        md = _render_md(out_dir=out_dir, total=int(args.total), done=done, ok=ok, fail=fail, latest=latest)
+        md = _render_md(
+            out_dir=out_dir,
+            total=int(args.total),
+            done=done,
+            ok=ok,
+            fail=fail,
+            latest=latest,
+            interval_s=interval_s,
+        )
         md_path.write_text(md, encoding="utf-8")
         print(md.strip())
-        time.sleep(max(30, int(args.interval)))
+        time.sleep(interval_s)
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
