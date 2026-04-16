@@ -919,8 +919,8 @@ def main() -> int:
         pending_total = len(pending)
 
     conc = max(1, int(args.concurrency))
-    if conc > 20:
-        conc = 20
+    if conc > 50:
+        conc = 50
 
     def _run_one(p: str) -> RunResult:
         return run_one_full(
