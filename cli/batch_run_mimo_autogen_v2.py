@@ -37,6 +37,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import json
 import logging
 import os
@@ -832,6 +833,7 @@ def main() -> int:
     parser.add_argument("--retries", type=int, default=int(os.getenv("BATCH_RETRIES", "3")), help="API 最大重试次数")
     parser.add_argument("--retry-backoff", type=float, default=float(os.getenv("BATCH_RETRY_BACKOFF_S", "2")), help="重试退避基数（秒）")
     parser.add_argument("--sleep", type=float, default=float(os.getenv("BATCH_SLEEP_S", "0.8")), help="每个人之间 sleep 秒数")
+    parser.add_argument("--concurrency", type=int, default=int(os.getenv("BATCH_CONCURRENCY", "1")), help="并发 worker 数（建议 1-10）")
     parser.add_argument("--skip-done", action="store_true", help="如果 runs/<person>/result.json 已存在，则跳过")
     args = parser.parse_args()
 
@@ -903,28 +905,70 @@ def main() -> int:
             results[person] = rr
 
     # 跑剩余的（调用 LLM）
-    for i, person in enumerate(people, 1):
+    pending: List[str] = []
+    for person in people:
         if args.skip_done and (out_dir / "runs" / person / "result.json").exists():
             continue
         if person in results and args.skip_done:
             continue
-        if person in results and not args.skip_done:
-            # 已有结果但不 skip：允许重跑覆盖
-            pass
+        pending.append(person)
 
-        print(f"[{i}/{len(people)}] ▶ {person} ...")
-        rr = run_one_full(
-            person=person,
+    if not pending:
+        pending_total = 0
+    else:
+        pending_total = len(pending)
+
+    conc = max(1, int(args.concurrency))
+    if conc > 20:
+        conc = 20
+
+    def _run_one(p: str) -> RunResult:
+        return run_one_full(
+            person=p,
             out_dir=out_dir,
             timeout_s=args.timeout,
             retries=args.retries,
             retry_backoff_s=args.retry_backoff,
         )
-        results[person] = rr
-        print(
-            f"    API={'OK' if rr.api.ok else 'FAIL'} HTTP={rr.api.status_code} | e2e={'OK' if rr.ok_end_to_end else 'FAIL'} | {rr.duration_s:.1f}s"
-        )
-        time.sleep(args.sleep)
+
+    done_count = 0
+    if pending_total:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=conc) as ex:
+            future_to_person: Dict[concurrent.futures.Future[RunResult], str] = {}
+            for p in pending:
+                print(f"[submit] ▶ {p}")
+                future_to_person[ex.submit(_run_one, p)] = p
+                if args.sleep > 0:
+                    time.sleep(args.sleep)
+
+            for fut in concurrent.futures.as_completed(future_to_person):
+                p = future_to_person.get(fut, "")
+                done_count += 1
+                try:
+                    rr = fut.result()
+                except Exception as exc:
+                    rr = RunResult(
+                        person=p or "unknown",
+                        ok_end_to_end=False,
+                        duration_s=0.0,
+                        api=ApiAttempt(
+                            ok=False,
+                            status_code=None,
+                            error_type="worker_exception",
+                            error_message=_safe_str(exc),
+                            duration_s=0.0,
+                            usage=None,
+                        ),
+                        markdown_raw_checks={},
+                        markdown_after_ensure_checks={},
+                        storymap_parse={"exception": _safe_str(exc)},
+                        geocode={},
+                        output={"run_dir": str(out_dir / "runs" / (p or "unknown"))},
+                    )
+                results[rr.person] = rr
+                print(
+                    f"[{done_count}/{pending_total}] ✅ {rr.person} | API={'OK' if rr.api.ok else 'FAIL'} HTTP={rr.api.status_code} | e2e={'OK' if rr.ok_end_to_end else 'FAIL'} | {rr.duration_s:.1f}s"
+                )
 
     # 汇总
     ordered_results = [results[p] for p in people if p in results]
