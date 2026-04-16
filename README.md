@@ -15,6 +15,9 @@
 - **📚 跨学科教学**：契合“大语文”、“大历史”教学理念，在地图中讲诗词，在地理中读历史。
 - **✨ 吸引学生注意力**：生成可交互网页，支持时间轴联动和事件弹窗，让课堂更有参与感。
 
+### 📸 演示截图（图文版）
+- 魔乐社区帖子（含完整截图与讲解）：https://modelers.cn/blogs/cuicheng/317/issues?blogId=317
+- GitHub 项目主页（代码与数据）：https://github.com/cuizicheng1024/map_story_poster
 
 ### ⚙️ 后台自动流程
 项目在后台通过一套智能化的流程，为您打理好一切：
@@ -28,11 +31,28 @@
 
 ### 🚀 如何开始使用
 
-点击这里可以使用。
+#### ✅ 本地一键体验（推荐）
+1) 启动生成服务（用于“输入人名 → 自动生成 HTML”）：
+```bash
+python3 main/storymap/script/story_map.py --serve --port 8765
+```
+
+2) 启动静态文件服务并打开主页：
+```bash
+python3 -m http.server 8000
+```
+浏览器打开：
+- `http://localhost:8000/outputs/output_batch_storymap_pep_history/`
+
+#### 🧪 示例人物（可直接输入体验）
+- 苏轼
+- 李白
+- 辛弃疾
 
 
 
 ### ✅ 小测试
+猜猜这些名句是谁写的？
 猜猜这些名句是谁写的？
 1. “峨眉山月半轮秋，影入平羌江水流”
 2. “问余平生事业，黄州惠州儋州”
