@@ -140,6 +140,7 @@ def _mask_token(token: str) -> str:
 def load_env() -> None:
     load_dotenv(REPO_ROOT / ".env")
     load_dotenv(STORYMAP_SCRIPT_DIR / ".env")
+    load_dotenv(REPO_ROOT.parent.parent / ".env")
 
 
 def init_storymap_imports() -> None:
