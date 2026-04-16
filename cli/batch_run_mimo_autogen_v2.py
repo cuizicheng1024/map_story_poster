@@ -413,7 +413,8 @@ def run_pipeline_only(
     write_text(run_dir / "ensured_markdown.md", md_after_ensure)
 
     md_path = default_story_md_path(person)
-    write_text(md_path, md_after_ensure)
+    if not bool(raw_checks.get("empty")):
+        write_text(md_path, md_after_ensure)
 
     init_storymap_imports()
     import map_client
@@ -447,6 +448,7 @@ def run_pipeline_only(
 
     parse_info: Dict[str, Any] = {}
     html_path = ""
+    html_preview_path = ""
     html_error = ""
 
     try:
@@ -470,10 +472,14 @@ def run_pipeline_only(
             person_name = person
             html = story_map.render_html(person_name, points, md_after_ensure)
 
-        out_story_map_dir = REPO_ROOT / "main" / "storymap" / "examples" / "story_map"
+        html_preview_path = str(run_dir / "preview.html")
         ts = _now_ts()
-        html_path = str(out_story_map_dir / f"{_safe_filename(person)}__pure__{ts}.html")
-        write_text(Path(html_path), html)
+        write_text(Path(html_preview_path), html)
+        has_bio = not bool(ensure_checks.get("empty"))
+        if has_bio:
+            out_story_map_dir = REPO_ROOT / "main" / "storymap" / "examples" / "story_map"
+            html_path = str(out_story_map_dir / f"{_safe_filename(person)}__pure__{ts}.html")
+            write_text(Path(html_path), html)
 
     except Exception as exc:
         html_error = f"{type(exc).__name__}: {exc}"
@@ -499,7 +505,6 @@ def run_pipeline_only(
         "qveris_api_key_present": bool((os.getenv("QVERIS_API_KEY") or "").strip()),
     }
 
-    has_bio = not bool(ensure_checks.get("empty"))
     loc_count = int(parse_info.get("locations_count") or 0)
     places_rows = int(parse_info.get("places_rows") or 0)
     ok_e2e = bool(html_path) and not html_error and has_bio and (loc_count > 0 or places_rows > 0)
@@ -507,6 +512,8 @@ def run_pipeline_only(
     # 额外把 html_path 写进 parse_info，便于汇总
     if html_path:
         parse_info["html_path"] = html_path
+    if html_preview_path:
+        parse_info["html_preview_path"] = html_preview_path
 
     return ok_e2e, raw_checks, ensure_checks, parse_info, geocode_summary
 
