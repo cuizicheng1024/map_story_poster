@@ -18,6 +18,10 @@
 注意：脚本会尽量避免打印/落盘明文 token。
 """
 
+raise SystemExit(
+    "该脚本已弃用：请改用 batch_run_mimo_autogen_v2.py（支持断点续跑与统一报告）。"
+)
+
 from __future__ import annotations
 
 import json

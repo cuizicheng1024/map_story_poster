@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李世民的人生足迹地图</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" onerror="if(!this.dataset.f){this.dataset.f='1';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='1'){this.dataset.f='2';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}"></script>
+<script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/react@18/umd/react.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';}"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/react-dom@18/umd/react-dom.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js';}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/@babel/standalone@7.24.7/babel.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js';}"></script>
+<style>
+body {
+  font-family: 'Noto Serif SC', serif;
+  background-color: #fdf6e3;
+  color: #2c3e50;
+}
+#map {
+  height: 620px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c0392b;
+  border-radius: 10px;
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(200, 180, 150, 0.3);
+}
+.desc-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.age-marker {
+  background: transparent;
+  border: none;
+}
+.age-badge {
+  background: rgba(255, 255, 255, 0.65);
+  color: #7c2d12;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  border: 1px solid rgba(200, 180, 150, 0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  white-space: nowrap;
+}
+.export-bar {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 9999;
+}
+.export-btn {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(200, 180, 150, 0.5);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #7c2d12;
+  cursor: pointer;
+}
+.export-btn:hover {
+  background: rgba(255, 255, 255, 0.98);
+}
+</style>
+</head>
+<body class="p-4 md:p-8">
+<div class="export-bar">
+  <button class="export-btn" data-export="geojson">GeoJSON</button>
+  <button class="export-btn" data-export="csv">CSV</button>
+  <button class="export-btn" data-export="markdown">Markdown</button>
+  <button class="export-btn" data-export="share">分享链接</button>
+    </div>
+    <div id="root"></div>
+    <script type="text/babel" data-presets="env,react">
+      const { useState, useEffect, useRef, useMemo } = React;
+      const data = {"person": {"name": "李世民", "title": "贞观之治", "description": "李世民是唐高祖李渊次子，生于隋末乱世。他自幼聪慧果敢，擅长骑射。隋朝大业十三年（617年），他力劝并协助父亲李渊在晋阳起兵，随后率军南下，攻克长安。唐朝建立后，他被封为秦王，作为统帅亲自指挥了平定薛仁杲、刘武周、王世充、窦建德等割据势力的关键战役，为唐朝统一天下立下赫赫战功。武德九年（626年），他发动“玄武门之变”，杀死太子李建成与齐王李元吉，随后被立为皇太子，不久即皇帝位，年号“贞观”。在位期间，他励精图治，虚心纳谏（以魏征为代表），轻徭薄赋，发展生产，完善制度，开疆拓土，使社会出现了安定繁荣的局面，史称“贞观之治”。晚年亲征高句丽未果，但其文治武功为后世所称颂。", "quote": "《帝京篇十首·其一》：“秦川雄帝宅，函谷壮皇居。”", "dynasty": "唐朝", "birthplace": "武功别馆（今陕西省咸阳市武功县）", "avatar": "", "birth": {"date": "598年", "location": "武功别馆（今陕西省咸阳市武功县）", "lat": 34.291111, "lng": 108.1775}, "death": {"date": "649年", "location": "终南山翠微宫含风殿（今陕西省西安市长安区）", "lat": 34.1598597, "lng": 108.9023547}, "lifespan": "52岁", "highlights": {"honor": "贞观之治", "status": "唐朝的奠基者与开创者之一，在位期间开创了著名的“贞观之治”，为盛唐奠定基础。", "identities": "政治家、军事家、战略家、诗人、唐朝第二位皇帝", "achievements": "统一全国、开创“贞观之治”、完善三省六部制与科举制、推行均田制与租庸调制、促进民族融合（被尊为“天可汗”）。", "works": [], "reviews": ["**《旧唐书》**：“臣观文皇帝，发迹多奇，聪明神武。拔人物则不私于党，负志业则咸尽其才。所以屈突、尉迟，由仇敌而愿倾心膂；马周、刘洎，自疏远而卒委钧衡。终平泰阶，谅由斯道。尝试论之：础润云兴，虫鸣螽跃。虽尧、舜之圣，不能用檮杌、穷奇而治平；伊、吕之贤，不能为夏桀、殷辛而昌盛。君臣之际，遭遇斯难，以至抉目剖心，虫流筋擢，良由遭值之异也。以房、魏之智，不逾于丘、轲，遂能尊主庇民者，遭时也。”", "**《新唐书》**：“甚矣，至治之君不世出也！禹有天下，传十有六王，而少康有中兴之业。汤有天下，传二十八王，而其甚盛者，号称三宗。武王有天下，传三十六王，而成、康之治与宣之功，其余无所称焉。虽《诗》《书》所载，时有阙略，然三代千有七百余年，传七十余君，其卓然著见于后世者，此六七君而已。呜呼，可谓难得也！”", "**毛泽东评价**：“自古能军无出李世民之右者，其次则朱元璋耳。”（强调其军事才能）"]}}, "locations": [{"name": "武功别馆", "ancientName": "武功别馆", "modernName": "隋武功县（今陕西省咸阳市武功县）", "lat": 34.291111, "lng": 108.1775, "type": "birth", "event": "在此出生并度过童年。", "time": "公元598年", "duration": "幼年时期", "significance": "人生的起点，李唐家族的发迹之地附近。", "works": [], "quoteLines": []}, {"name": "晋阳", "ancientName": "隋太原郡治所", "modernName": "山西省太原市", "lat": 37.7427704, "lng": 112.4587318, "type": "normal", "event": "随父李渊在此驻守，密谋并最终发动“晋阳起兵”，是唐朝建立的起点。", "time": "约615年—617年", "duration": "约2年", "significance": "事业的起点，从这里迈出了夺取天下的第一步。", "works": [], "quoteLines": []}, {"name": "长安", "ancientName": "长安", "modernName": "隋大兴城，唐长安城（今陕西省西安市）", "lat": 34.261004, "lng": 108.9423363, "type": "normal", "event": "617年随军攻占；唐朝建立后，作为秦王经营“天策府”，招揽人才；626年发动玄武门之变，即位为帝；在此主持朝政，推行贞观之治。", "time": "617年—626年（征战与秦王时期）；626年—649年（统治核心）", "duration": "主要政治生涯的核心舞台，累计居住约30年。", "significance": "唐朝都城，其政治、军事权力中心，一生最重要的活动舞台。", "works": [], "quoteLines": ["《帝京篇十首·其一》：“秦川雄帝宅，函谷壮皇居。”"]}, {"name": "洛阳", "ancientName": "隋唐东都", "modernName": "河南省洛阳市", "lat": 34.6196539, "lng": 112.4477046, "type": "normal", "event": "指挥著名的“洛阳-虎牢关之战”，一举击败王世充与窦建德两大势力，取得决定性胜利。", "time": "621年", "duration": "短期征战", "significance": "军事生涯的巅峰之战，基本奠定唐朝统一全国的基础。", "works": [], "quoteLines": ["《还陕述怀》：“慨然抚长剑，济世岂邀名。”"]}, {"name": "虎牢关", "ancientName": "隋唐虎牢关", "modernName": "河南省荥阳市汜水镇", "lat": 35.1041468, "lng": 112.9415432, "type": "normal", "event": "以少胜多，率三千精锐玄甲军大破窦建德十万大军，并迫降王世充。", "time": "621年", "duration": "短期决战", "significance": "其卓越军事指挥艺术的集中体现，一战擒两王，威震天下。", "works": [], "quoteLines": []}, {"name": "灵州", "ancientName": "唐灵州", "modernName": "宁夏回族自治区吴忠市", "lat": 38.08889, "lng": 106.32814, "type": "normal", "event": "在击败东突厥后，亲赴灵州，接受回纥等北方各部族首领的朝见，被尊为“天可汗”。", "time": "630年", "duration": "短期巡幸", "significance": "其民族政策成功的顶峰，标志着唐朝成为当时东亚世界的共主。", "works": [], "quoteLines": ["《饮马长城窟行》：“塞外悲风切，交河冰已结。”"]}, {"name": "辽东（安市城）", "ancientName": "高句丽辽东地区", "modernName": "辽宁省辽阳市、鞍山市一带", "lat": 41.2742898, "lng": 123.1695757, "type": "normal", "event": "亲征高句丽，虽攻克数城，但在安市城下受阻，最终因天气转寒而班师。", "time": "645年", "duration": "数月", "significance": "其晚年最重要的一次军事行动，未能达成战略目标，成为其功业中的一个遗憾。", "works": [], "quoteLines": []}, {"name": "终南山翠微宫", "ancientName": "唐长安城南终南山", "modernName": "陕西省西安市长安区", "lat": 34.1598597, "lng": 108.9023547, "type": "normal", "event": "晚年因病在此疗养，并最终于此地驾崩。", "time": "649年", "duration": "晚年最后数月", "significance": "生命终结之地。", "works": [], "quoteLines": []}, {"name": "含风殿（翠微宫内）", "ancientName": "终南山翠微宫内", "modernName": "陕西省西安市长安区", "lat": 34.1598597, "lng": 108.9023547, "type": "death", "event": "贞观二十三年，李世民因服用“天竺方士”的丹药导致病情恶化，最终在含风殿驾崩。", "time": "公元649年5月", "duration": "生命最后阶段", "significance": "生命的终点，一个伟大时代的落幕。", "works": [], "quoteLines": ["《赐萧瑀》：“疾风知劲草，板荡识诚臣。”"]}], "mapStyle": {"pathColor": "#1e40af", "markers": {"normal": {"iconUrl": "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", "color": "#3498db"}, "birth": {"iconUrl": "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", "color": "#2ecc71"}, "death": {"iconUrl": "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", "color": "#e74c3c"}}}, "textbookPoints": "### 初中阶段\n- **时代背景**：**隋末农民起义**，社会动荡，为唐朝建立提供契机。\n- **关键事件**：**晋阳起兵**（李渊为主，李世民参与谋划）；**唐朝建立**（618年，李渊称帝）；**玄武门之变**（626年，李世民夺权）；**贞观之治**（李世民年号，唐朝第一个盛世）。\n- **主要贡献**：**吸取隋亡教训**，认识到人民力量；**轻徭薄赋**，发展生产；**虚心纳谏**（重用**魏征**等）；**完善三省六部制**和**科举制**。\n- **民族关系**：击败**东突厥**，被尊为**“天可汗”**；将**文成公主**嫁给吐蕃**松赞干布**（唐太宗时期）。\n- **易混点**：区分**唐高祖李渊**（建立者）与**唐太宗李世民**（治世开创者）；“贞观之治”是“治”（治理），非“之”（到达）。\n\n### 高中阶段\n- **制度创新**：**三省六部制**的成熟与运作（中书省决策、门下省审议、尚书省执行）；**科举制**的完善（进士科日益重要）；经济制度**均田制**与**租庸调制**的推行。\n- **统治思想**：**“水能载舟，亦能覆舟”**的民本思想；**“以铜为镜，可以正衣冠；以古为镜，可以知兴替；以人为镜，可以明得失”**的纳谏思想。\n- **历史地位**：唐朝**第二位皇帝**，其统治是唐朝从“打天下”到“治天下”的关键转折点，为**“开元盛世”**奠定坚实基础。\n- **边疆与民族**：**羁縻府州**政策的实施；**安西都护府**的设立（经营西域）。\n- **对比点**：与**隋文帝**（制度开创）、**唐玄宗**（盛世顶峰）的对比；其“夺嫡”行为与儒家伦理的冲突。\n- **评价辨析**：认识其作为**杰出政治家**的主流评价，同时理解**玄武门之变**在其个人品格与政治合法性上带来的争议。\n\n---", "examPoints": "### 初中阶段考点\n1.  唐朝的建立者是**唐高祖李渊**，时间**618年**，都城**长安**。\n2.  **唐太宗李世民**的年号是**“贞观”**。\n3.  “贞观之治”的主要原因：吸取**隋亡教训**；**轻徭薄赋**，发展生产；**勤于政事**，**虚心纳谏**（大臣**魏征**前后进谏二百多次）；**知人善任**（房玄龄、杜如晦等）。\n4.  唐太宗完善**三省六部制**和**科举制**（以**进士科**最为重要）。\n5.  唐太宗实行**开明的民族政策**：击败**东突厥**，被北方各族尊称为**“天可汗”**；**文成公主入藏**（嫁给吐蕃赞普**松赞干布**），密切了唐蕃关系。\n6.  唐太宗时期，**玄奘西行**天竺求取佛经，促进了中印文化交流。\n\n### 高中阶段考点\n1.  **玄武门之变**的性质是统治集团内部争夺皇位继承权的政变，反映了**嫡长子继承制**与现实政治实力的冲突。\n2.  **贞观之治**的具体表现：政治清明，社会安定，经济恢复发展，国力增强，人口增长。\n3.  **三省六部制**的运作机制及其对**皇权的制约**与**提高行政效率**的作用。\n4.  **科举制**在唐太宗时期的发展及其对**扩大统治基础**、**促进社会阶层流动**、**推动文化教育**的意义。\n5.  **均田制**与**租庸调制**的内容及其对**恢复农业生产**、**保证国家赋税**的作用。\n6.  唐太宗的民族政策（**战而后和**、**羁縻府州**、**和亲**等）及其对**统一多民族国家发展**的贡献。\n7.  对唐太宗的评价：应全面看待其**文治武功**与**个人权谋**（玄武门之变），他是**中国历史上最杰出的皇帝之一**，其统治为盛唐奠定了基础。\n8.  **存疑/说法不一**：关于李世民在晋阳起兵中的实际主导作用，史书记载有其自我美化的成分；玄武门之变的具体细节，不同史书记载略有出入。", "markdown": "# 人物 生平传记与足迹\n\n## 一、人物档案\n\n### 基本信息\n- **姓名**：李世民（名“世民”，取“济世安民”之意）\n- **时代**：唐朝\n- **出生**：公元598年（隋开皇十八年），武功别馆（今陕西省咸阳市武功县）\n- **去世**：公元649年（贞观二十三年），终南山翠微宫含风殿（今陕西省西安市长安区）\n- **享年**：52岁\n- **主要身份**：政治家、军事家、战略家、诗人、唐朝第二位皇帝\n- **历史地位**：唐朝的奠基者与开创者之一，在位期间开创了著名的“贞观之治”，为盛唐奠定基础。\n- **主要成就**：统一全国、开创“贞观之治”、完善三省六部制与科举制、推行均田制与租庸调制、促进民族融合（被尊为“天可汗”）。\n\n### 生平概述\n李世民是唐高祖李渊次子，生于隋末乱世。他自幼聪慧果敢，擅长骑射。隋朝大业十三年（617年），他力劝并协助父亲李渊在晋阳起兵，随后率军南下，攻克长安。唐朝建立后，他被封为秦王，作为统帅亲自指挥了平定薛仁杲、刘武周、王世充、窦建德等割据势力的关键战役，为唐朝统一天下立下赫赫战功。武德九年（626年），他发动“玄武门之变”，杀死太子李建成与齐王李元吉，随后被立为皇太子，不久即皇帝位，年号“贞观”。在位期间，他励精图治，虚心纳谏（以魏征为代表），轻徭薄赋，发展生产，完善制度，开疆拓土，使社会出现了安定繁荣的局面，史称“贞观之治”。晚年亲征高句丽未果，但其文治武功为后世所称颂。\n\n---\n\n## 二、人生足迹地图说明\n- 🗺️ **行程概览**：以关中（长安）为核心，征战足迹遍及中原、华北、江南，并北至灵州接受各族朝拜。\n- ⏱️ **时间跨度**：公元598年—649年，共51年。\n- 📍 **地理范围**：大致覆盖今陕西、山西、河南、河北、山东、江苏、甘肃、宁夏及辽宁部分地区。\n- 🌟 **重要节点数量**：10个核心地点。\n\n---\n\n## 三、人生历程与重要地点（按时间顺序）\n\n### 🟢 出生地：武功别馆\n- **公元纪年**：公元598年\n- **停留时间**：幼年时期\n- **位置**：隋武功县（今陕西省咸阳市武功县）\n- **事迹**：在此出生并度过童年。\n- **意义**：人生的起点，李唐家族的发迹之地附近。\n\n### 📍 重要地点：晋阳\n- **公元纪年**：约615年—617年\n- **停留时间**：约2年\n- **位置**：隋太原郡治所（今山西省太原市）\n- **事迹**：随父李渊在此驻守，密谋并最终发动“晋阳起兵”，是唐朝建立的起点。\n- **意义**：事业的起点，从这里迈出了夺取天下的第一步。\n\n### 📍 重要地点：长安\n- **公元纪年**：617年—626年（征战与秦王时期）；626年—649年（统治核心）\n- **停留时间**：主要政治生涯的核心舞台，累计居住约30年。\n- **位置**：隋大兴城，唐长安城（今陕西省西安市）\n- **事迹**：617年随军攻占；唐朝建立后，作为秦王经营“天策府”，招揽人才；626年发动玄武门之变，即位为帝；在此主持朝政，推行贞观之治。\n- **意义**：唐朝都城，其政治、军事权力中心，一生最重要的活动舞台。\n- **名篇名句**：《帝京篇十首·其一》：“秦川雄帝宅，函谷壮皇居。”\n\n### 📍 重要地点：洛阳\n- **公元纪年**：621年\n- **停留时间**：短期征战\n- **位置**：隋唐东都（今河南省洛阳市）\n- **事迹**：指挥著名的“洛阳-虎牢关之战”，一举击败王世充与窦建德两大势力，取得决定性胜利。\n- **意义**：军事生涯的巅峰之战，基本奠定唐朝统一全国的基础。\n- **名篇名句**：《还陕述怀》：“慨然抚长剑，济世岂邀名。”\n\n### 📍 重要地点：虎牢关\n- **公元纪年**：621年\n- **停留时间**：短期决战\n- **位置**：隋唐虎牢关（今河南省荥阳市汜水镇）\n- **事迹**：以少胜多，率三千精锐玄甲军大破窦建德十万大军，并迫降王世充。\n- **意义**：其卓越军事指挥艺术的集中体现，一战擒两王，威震天下。\n\n### 📍 重要地点：灵州\n- **公元纪年**：630年\n- **停留时间**：短期巡幸\n- **位置**：唐灵州（今宁夏回族自治区吴忠市）\n- **事迹**：在击败东突厥后，亲赴灵州，接受回纥等北方各部族首领的朝见，被尊为“天可汗”。\n- **意义**：其民族政策成功的顶峰，标志着唐朝成为当时东亚世界的共主。\n- **名篇名句**：《饮马长城窟行》：“塞外悲风切，交河冰已结。”\n\n### 📍 重要地点：辽东（安市城）\n- **公元纪年**：645年\n- **停留时间**：数月\n- **位置**：高句丽辽东地区（今辽宁省辽阳市、鞍山市一带）\n- **事迹**：亲征高句丽，虽攻克数城，但在安市城下受阻，最终因天气转寒而班师。\n- **意义**：其晚年最重要的一次军事行动，未能达成战略目标，成为其功业中的一个遗憾。\n\n### 📍 重要地点：终南山翠微宫\n- **公元纪年**：649年\n- **停留时间**：晚年最后数月\n- **位置**：唐长安城南终南山（今陕西省西安市长安区）\n- **事迹**：晚年因病在此疗养，并最终于此地驾崩。\n- **意义**：生命终结之地。\n\n### 🔴 去世地：含风殿（翠微宫内）\n- **公元纪年**：公元649年5月\n- **停留时间**：生命最后阶段\n- **位置**：终南山翠微宫内（今陕西省西安市长安区）\n- **经过**：贞观二十三年，李世民因服用“天竺方士”的丹药导致病情恶化，最终在含风殿驾崩。\n- **意义**：生命的终点，一个伟大时代的落幕。\n- **名篇名句**：《赐萧瑀》：“疾风知劲草，板荡识诚臣。”\n\n---\n\n## 四、生平时间线\n\n| 年份 | 年龄 | 关键事件 |\n| :--- | :--- | :--- |\n| 公元598年 | 0岁 | 出生于武功别馆。 |\n| 公元617年 | 20岁 | 劝父李渊于晋阳起兵，率军攻占长安。 |\n| 公元618年 | 21岁 | 唐朝建立，被封为秦王。 |\n| 公元618-621年 | 21-24岁 | 统帅唐军，平定薛仁杲、刘武周、王世充、窦建德等势力。 |\n| 公元621年 | 24岁 | 指挥虎牢关之战，一战擒两王，威震天下。 |\n| 公元626年 | 29岁 | 发动“玄武门之变”，杀太子李建成、齐王李元吉；被立为皇太子，随后即皇帝位，年号贞观。 |\n| 公元627-649年 | 30-52岁 | 在位期间，任用贤良，虚怀纳谏，推行一系列政治、经济、军事改革，开创“贞观之治”。 |\n| 公元630年 | 33岁 | 派李靖灭亡东突厥，被西北各族尊为“天可汗”。 |\n| 公元645年 | 48岁 | 亲征高句丽，未竟全功。 |\n| 公元649年 | 52岁 | 驾崩于终南山翠微宫含风殿，庙号太宗，葬于昭陵。 |\n\n---\n\n## 五、历史影响\n\n### 对当时的影响\n李世民通过卓越的军事才能帮助唐朝完成了统一，又通过开明的政治实践（“贞观之治”）迅速医治了战争创伤，使社会经济得以恢复和发展，人口增长，国力强盛。他完善了隋朝创立的三省六部制和科举制，奠定了唐朝乃至后世数百年的政治制度基础。其开明的民族政策促进了各民族的融合与交流，使唐朝成为当时世界上最强大、最开放的国家之一。\n\n### 对后世的影响\n1.  **“贞观之治”成为后世治国典范**：其“以民为本”、“从谏如流”、“任人唯贤”的执政理念，被历代统治者和政治家所推崇和效仿。\n2.  **制度遗产影响深远**：其完善的三省六部制、科举制、均田制与租庸调制，成为唐朝强盛的制度基石，并为后世王朝所继承和发展。\n3.  **塑造了开放包容的盛唐气象**：其推行的民族融合与对外开放政策，为唐朝成为世界性帝国奠定了基调，促进了中外文化交流。\n4.  **帝王楷模与争议并存**：其“明君”形象深入人心，但“玄武门之变”也成为其人生污点，为后世关于权力与伦理的讨论提供了永恒案例。\n\n### 历史评价\n1.  **《旧唐书》**：“臣观文皇帝，发迹多奇，聪明神武。拔人物则不私于党，负志业则咸尽其才。所以屈突、尉迟，由仇敌而愿倾心膂；马周、刘洎，自疏远而卒委钧衡。终平泰阶，谅由斯道。尝试论之：础润云兴，虫鸣螽跃。虽尧、舜之圣，不能用檮杌、穷奇而治平；伊、吕之贤，不能为夏桀、殷辛而昌盛。君臣之际，遭遇斯难，以至抉目剖心，虫流筋擢，良由遭值之异也。以房、魏之智，不逾于丘、轲，遂能尊主庇民者，遭时也。”\n2.  **《新唐书》**：“甚矣，至治之君不世出也！禹有天下，传十有六王，而少康有中兴之业。汤有天下，传二十八王，而其甚盛者，号称三宗。武王有天下，传三十六王，而成、康之治与宣之功，其余无所称焉。虽《诗》《书》所载，时有阙略，然三代千有七百余年，传七十余君，其卓然著见于后世者，此六七君而已。呜呼，可谓难得也！”\n3.  **毛泽东评价**：“自古能军无出李世民之右者，其次则朱元璋耳。”（强调其军事才能）\n\n---\n\n## 人教版教材知识点\n\n### 初中阶段\n- **时代背景**：**隋末农民起义**，社会动荡，为唐朝建立提供契机。\n- **关键事件**：**晋阳起兵**（李渊为主，李世民参与谋划）；**唐朝建立**（618年，李渊称帝）；**玄武门之变**（626年，李世民夺权）；**贞观之治**（李世民年号，唐朝第一个盛世）。\n- **主要贡献**：**吸取隋亡教训**，认识到人民力量；**轻徭薄赋**，发展生产；**虚心纳谏**（重用**魏征**等）；**完善三省六部制**和**科举制**。\n- **民族关系**：击败**东突厥**，被尊为**“天可汗”**；将**文成公主**嫁给吐蕃**松赞干布**（唐太宗时期）。\n- **易混点**：区分**唐高祖李渊**（建立者）与**唐太宗李世民**（治世开创者）；“贞观之治”是“治”（治理），非“之”（到达）。\n\n### 高中阶段\n- **制度创新**：**三省六部制**的成熟与运作（中书省决策、门下省审议、尚书省执行）；**科举制**的完善（进士科日益重要）；经济制度**均田制**与**租庸调制**的推行。\n- **统治思想**：**“水能载舟，亦能覆舟”**的民本思想；**“以铜为镜，可以正衣冠；以古为镜，可以知兴替；以人为镜，可以明得失”**的纳谏思想。\n- **历史地位**：唐朝**第二位皇帝**，其统治是唐朝从“打天下”到“治天下”的关键转折点，为**“开元盛世”**奠定坚实基础。\n- **边疆与民族**：**羁縻府州**政策的实施；**安西都护府**的设立（经营西域）。\n- **对比点**：与**隋文帝**（制度开创）、**唐玄宗**（盛世顶峰）的对比；其“夺嫡”行为与儒家伦理的冲突。\n- **评价辨析**：认识其作为**杰出政治家**的主流评价，同时理解**玄武门之变**在其个人品格与政治合法性上带来的争议。\n\n---\n\n## 初高中阶段考点\n\n### 初中阶段考点\n1.  唐朝的建立者是**唐高祖李渊**，时间**618年**，都城**长安**。\n2.  **唐太宗李世民**的年号是**“贞观”**。\n3.  “贞观之治”的主要原因：吸取**隋亡教训**；**轻徭薄赋**，发展生产；**勤于政事**，**虚心纳谏**（大臣**魏征**前后进谏二百多次）；**知人善任**（房玄龄、杜如晦等）。\n4.  唐太宗完善**三省六部制**和**科举制**（以**进士科**最为重要）。\n5.  唐太宗实行**开明的民族政策**：击败**东突厥**，被北方各族尊称为**“天可汗”**；**文成公主入藏**（嫁给吐蕃赞普**松赞干布**），密切了唐蕃关系。\n6.  唐太宗时期，**玄奘西行**天竺求取佛经，促进了中印文化交流。\n\n### 高中阶段考点\n1.  **玄武门之变**的性质是统治集团内部争夺皇位继承权的政变，反映了**嫡长子继承制**与现实政治实力的冲突。\n2.  **贞观之治**的具体表现：政治清明，社会安定，经济恢复发展，国力增强，人口增长。\n3.  **三省六部制**的运作机制及其对**皇权的制约**与**提高行政效率**的作用。\n4.  **科举制**在唐太宗时期的发展及其对**扩大统治基础**、**促进社会阶层流动**、**推动文化教育**的意义。\n5.  **均田制**与**租庸调制**的内容及其对**恢复农业生产**、**保证国家赋税**的作用。\n6.  唐太宗的民族政策（**战而后和**、**羁縻府州**、**和亲**等）及其对**统一多民族国家发展**的贡献。\n7.  对唐太宗的评价：应全面看待其**文治武功**与**个人权谋**（玄武门之变），他是**中国历史上最杰出的皇帝之一**，其统治为盛唐奠定了基础。\n8.  **存疑/说法不一**：关于李世民在晋阳起兵中的实际主导作用，史书记载有其自我美化的成分；玄武门之变的具体细节，不同史书记载略有出入。\n\n## 地点坐标（自动地理编码）\n| 现称 | 现代搜索地名 | 纬度 | 经度 |\n| --- | --- | --- | --- |\n| 出生于武功别馆。 | 出生于武功别馆。 | 22.507252 | 114.074501 |\n| 唐朝建立，被封为秦王。 | 唐朝建立，被封为秦王。 | 39.693425 | 118.168200 |\n| 指挥虎牢关之战，一战擒两王，威震天下。 | 指挥虎牢关之战，一战擒两王，威震天下。 | 34.778212 | 116.079516 |"};
+      window.__EXPORT_DATA__ = data;
+const locations = data.locations || [];
+const textbookPoints = String(data.textbookPoints || '').trim();
+const examPoints = String(data.examPoints || '').trim();
+const mapStyle = data.mapStyle || {};
+const mergedTeachingPoints = [textbookPoints, examPoints].filter(Boolean).join('\n\n');
+const mergedTeachingPointsNormalized = mergedTeachingPoints
+  .replace(/^(#{0,4}\s*)?(初中阶段|高中阶段)(考点)?\s*$/gm, '')
+  .replace(/^\s*$/gm, (m) => m);
+const markerStyles = mapStyle.markers || {};
+const defaultMarkerStyles = {
+  normal: {
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    color: '#3498db'
+  },
+  birth: {
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    color: '#2ecc71'
+  },
+  death: {
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    color: '#e74c3c'
+  }
+};
+const highlights = data.person?.highlights || {};
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+const extractYear = (text) => {
+  if (!text) return null;
+  const match = String(text).match(/(\d{3,4})\s*年/);
+  return match ? parseInt(match[1], 10) : null;
+};
+
+const renderInline = (text) => {
+  const raw = String(text || '');
+  // 支持 Markdown 的 **加粗**。如果上游文本被截断导致 ** 不成对，兜底移除残留的 **，避免页面出现星号。
+  const parts = raw.split(/(\*\*.*?\*\*)/g).filter(Boolean);
+  return parts.map((p, idx) => {
+    const m = p.match(/^\*\*(.+?)\*\*$/);
+    if (m) {
+      return <strong key={idx} className="font-semibold text-gray-800">{m[1]}</strong>;
+    }
+    return <span key={idx}>{p.replaceAll('**', '')}</span>;
+  });
+};
+
+const safeTruncateMdBold = (text, maxLen) => {
+  const s = String(text || '');
+  if (!maxLen || maxLen <= 0) return s;
+  let out = '';
+  let visible = 0;
+  let inBold = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === '*' && s[i + 1] === '*') {
+      out += '**';
+      inBold = !inBold;
+      i += 1;
+      continue;
+    }
+    out += ch;
+    visible += 1;
+    if (visible >= maxLen) {
+      out = out.trimEnd() + '…';
+      break;
+    }
+  }
+  if (inBold) out += '**';
+  return out;
+};
+
+const renderTextbookPoints = (raw, options) => {
+  // 兼容两种换行输入：
+  // 1) 真实换行：LF / CRLF / CR
+  // 2) 字面量换行：反斜杠 + n（可能出现 1 个或多个反斜杠）
+  // 说明：这段 JS 位于 Python 三引号字符串里，为避免 Python 对转义序列做预解析，
+  // 这里用 charCode 构造换行/反斜杠字符，再用正则 split 一次性切分。
+  const LF = String.fromCharCode(10); // line feed
+  const CR = String.fromCharCode(13); // carriage return
+  const BS = String.fromCharCode(92); // backslash
+
+  // 用 RegExp 构造器 split：匹配 CRLF / CR / LF / (一个或多个反斜杠 + n)
+  const BS_RE = BS + BS;
+  const splitRe = new RegExp(`${CR}${LF}|${CR}|${LF}|${BS_RE}+n`, 'g');
+
+  const lines = String(raw || '').split(splitRe);
+  const isStageHeading = (t) => /^(#{3,4}\s*)?(初中阶段|高中阶段)(考点)?\s*$/.test(String(t || '').trim());
+  const expanded = Boolean(options && options.expanded);
+  if (expanded) {
+    return lines.map((line, idx) => {
+      const rawLine = String(line || '');
+      const leadingSpaces = rawLine.match(/^\s*/)[0].length;
+      const t = rawLine.trim();
+      if (!t) return <div key={idx} className="h-2" />;
+      if (isStageHeading(t)) return null;
+      if (/^-{3,}$/.test(t)) return <hr key={idx} className="my-3 border-[#c8b496]/50" />;
+
+      const level = leadingSpaces >= 4 ? 3 : (leadingSpaces >= 2 ? 2 : 1);
+      const indentClass = level === 1 ? 'ml-0' : (level === 2 ? 'ml-4' : 'ml-8');
+
+      if (t.startsWith('### ')) {
+        const heading = t.replace(/^###\s*/, '');
+        return (
+          <h3 key={idx} className="mt-2 text-base font-bold text-[#7c2d12]">
+            {renderInline(heading)}
+          </h3>
+        );
+      }
+
+      if (t.startsWith('#### ')) {
+        const heading = t.replace(/^####\s*/, '');
+        return (
+          <h4 key={idx} className="mt-2 text-sm font-semibold text-gray-700">
+            {renderInline(heading)}
+          </h4>
+        );
+      }
+
+      if (t.startsWith('- ')) {
+        const body = t.slice(2).trim();
+        const bullet = level === 1 ? '•' : (level === 2 ? '◦' : '▪');
+        return (
+          <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+            <span className="mt-[2px] text-[#c0392b]">{bullet}</span>
+            <div>{renderInline(body)}</div>
+          </div>
+        );
+      }
+
+      const ordered = t.match(/^(\d+)\.\s+(.*)$/);
+      if (ordered) {
+        return (
+          <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+            <span className="mt-[2px] text-gray-500">{ordered[1]}.</span>
+            <div>{renderInline(ordered[2])}</div>
+          </div>
+        );
+      }
+
+      return (
+        <p key={idx} className="text-sm leading-relaxed text-gray-700">
+          {renderInline(t)}
+        </p>
+      );
+    });
+  }
+
+  const kept = [];
+  let sectionBulletCount = 0;
+  let totalBulletCount = 0;
+  const maxTotalBullets = 12;
+  const maxBulletsPerSection = 4;
+  const maxLineLen = 64;
+  for (const line of lines) {
+    const rawLine = String(line || '');
+    const t = rawLine.trim();
+    if (!t) {
+      kept.push(rawLine);
+      continue;
+    }
+    if (isStageHeading(t)) {
+      continue;
+    }
+    if (/^-{3,}$/.test(t)) {
+      kept.push('---');
+      continue;
+    }
+    if (t.startsWith('### ') || t.startsWith('#### ')) {
+      sectionBulletCount = 0;
+      kept.push(rawLine);
+      continue;
+    }
+    const isBullet = t.startsWith('- ') || /^\d+\.\s+/.test(t);
+    if (isBullet) {
+      totalBulletCount += 1;
+      sectionBulletCount += 1;
+      if (totalBulletCount > maxTotalBullets || sectionBulletCount > maxBulletsPerSection) {
+        continue;
+      }
+      const normalized = safeTruncateMdBold(rawLine.replace(/\s+$/g, '').trim(), maxLineLen);
+      kept.push(normalized);
+      continue;
+    }
+    if (totalBulletCount < maxTotalBullets) {
+      const normalized = safeTruncateMdBold(rawLine.replace(/\s+$/g, '').trim(), maxLineLen);
+      kept.push(normalized);
+    }
+  }
+
+  return kept.map((line, idx) => {
+    const rawLine = String(line || '');
+    const leadingSpaces = rawLine.match(/^\s*/)[0].length;
+    const t = rawLine.trim();
+    if (!t) return <div key={idx} className="h-2" />;
+    if (/^-{3,}$/.test(t)) return <hr key={idx} className="my-3 border-[#c8b496]/50" />;
+
+    // Markdown 列表层级：0-1 空格为一级，2-3 空格为二级，4+ 空格为三级
+    const level = leadingSpaces >= 4 ? 3 : (leadingSpaces >= 2 ? 2 : 1);
+    const indentClass = level === 1 ? 'ml-0' : (level === 2 ? 'ml-4' : 'ml-8');
+
+    if (t.startsWith('### ')) {
+      const heading = t.replace(/^###\s*/, '');
+      return (
+        <h3 key={idx} className="mt-2 text-base font-bold text-[#7c2d12]">
+          {renderInline(heading)}
+        </h3>
+      );
+    }
+
+    if (t.startsWith('#### ')) {
+      const heading = t.replace(/^####\s*/, '');
+      return (
+        <h4 key={idx} className="mt-2 text-sm font-semibold text-gray-700">
+          {renderInline(heading)}
+        </h4>
+      );
+    }
+
+    if (t.startsWith('- ')) {
+      const body = t.slice(2).trim();
+      const bullet = level === 1 ? '•' : (level === 2 ? '◦' : '▪');
+      return (
+        <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+          <span className="mt-[2px] text-[#c0392b]">{bullet}</span>
+          <div>{renderInline(body)}</div>
+        </div>
+      );
+    }
+
+    const ordered = t.match(/^(\d+)\.\s+(.*)$/);
+    if (ordered) {
+      return (
+        <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+          <span className="mt-[2px] text-gray-500">{ordered[1]}.</span>
+          <div>{renderInline(ordered[2])}</div>
+        </div>
+      );
+    }
+
+    return (
+      <p key={idx} className="text-sm leading-relaxed text-gray-700">
+        {renderInline(t)}
+      </p>
+    );
+  });
+};
+
+const App = () => {
+  const [selectedLoc, setSelectedLoc] = useState(locations[0] || null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [showTeachingFull, setShowTeachingFull] = useState(false);
+  const [splitPct, setSplitPct] = useState(30);
+  const mapRef = useRef(null);
+  const splitRef = useRef(null);
+  const draggingRef = useRef(false);
+  const totalEvents = locations.length;
+  const description = data.person?.description || '';
+  const relatedWorks = Array.isArray(highlights.works) ? highlights.works : [];
+  const relatedReviews = Array.isArray(highlights.reviews) ? highlights.reviews : [];
+  const relatedHonor = String(highlights.honor || data.person?.title || '').trim();
+  const relatedStatus = String(highlights.status || '').trim();
+  const relatedIdentities = String(highlights.identities || '').trim();
+  const surname = String(data.person?.name || '').slice(0, 1);
+  const headerSubtitle = String(relatedReviews[0] || relatedHonor || relatedWorks[0] || '').replace(/^\s*[-\d.]+\s*/, '').trim();
+  const descSegments = useMemo(() => {
+    if (!description) return [];
+    const parts = description.split(/([。！？])/);
+    const segs = [];
+    for (let i = 0; i < parts.length; i += 2) {
+      const seg = `${parts[i] || ''}${parts[i + 1] || ''}`.trim();
+      if (seg) segs.push(seg);
+    }
+    return segs;
+  }, [description]);
+  const isLongDesc = useMemo(() => description.length > 120 || descSegments.length > 3, [description, descSegments]);
+  const stats = useMemo(() => {
+    let totalDist = 0;
+    for (let i = 0; i < locations.length - 1; i++) {
+      totalDist += calculateDistance(
+        locations[i].lat, locations[i].lng,
+        locations[i+1].lat, locations[i+1].lng
+      );
+    }
+    const regions = new Set(locations.map(l => (l.modernName || l.name || '').split(/[\s/]/)[0]).filter(Boolean));
+    const lifespanDigits = parseInt((data.person?.lifespan || '').replace(/\D/g, ''), 10);
+    const b = extractYear(data.person?.birth?.date || '');
+    const d = extractYear(data.person?.death?.date || '');
+    let yearsValue = Number.isFinite(lifespanDigits) && lifespanDigits > 0 ? lifespanDigits : null;
+    if (yearsValue === null && b && d && d >= b && (d - b) < 200) {
+      yearsValue = d - b + 1;
+    }
+    const yearsLabel = yearsValue === null ? '存疑' : String(yearsValue);
+    return {
+      distance: Math.round(totalDist),
+      regions: regions.size,
+      events: locations.length,
+      yearsValue,
+      yearsLabel
+    };
+  }, []);
+  const birthDate = data.person?.birth?.date || '';
+  const deathDate = data.person?.death?.date || '';
+  const lifeDates = birthDate || deathDate
+    ? `${birthDate}${birthDate && deathDate ? '-' : ''}${deathDate}`
+    : (data.person?.lifespan || '');
+  const birthYear = useMemo(() => extractYear(birthDate), [birthDate]);
+  const getAgeText = (loc) => {
+    const year = extractYear(loc.time || '');
+    if (!birthYear || !year) return '';
+    const age = year - birthYear + 1;
+    if (!Number.isFinite(age) || age <= 0 || age > 150) return '';
+    return `${age}岁`;
+  };
+  const renderDescription = () => {
+    if (!description) return null;
+    return (
+      <div className="mb-4">
+        <div className={`text-gray-600 leading-relaxed ${showFullDesc ? '' : 'desc-clamp'}`}>
+          {descSegments.map((seg, idx) => {
+            const t = String(seg || '').trim();
+            if (/^-{3,}$/.test(t)) {
+              return <hr key={idx} className="my-2 border-gray-200" />;
+            }
+            return <span key={idx} className="block">{seg}</span>;
+          })}
+        </div>
+        {isLongDesc ? (
+          <button
+            onClick={() => setShowFullDesc(!showFullDesc)}
+            className="text-xs text-[#c0392b] mt-1"
+          >
+            {showFullDesc ? '收起' : '展开'}
+          </button>
+        ) : null}
+      </div>
+    );
+  };
+  const changeEvent = (nextIndex) => {
+    if (nextIndex < 0 || nextIndex >= totalEvents || nextIndex === activeIndex) return;
+    const nextLoc = locations[nextIndex] || null;
+    setActiveIndex(nextIndex);
+    setSelectedLoc(nextLoc);
+    if (mapRef.current && nextLoc) {
+      mapRef.current.setView([nextLoc.lat, nextLoc.lng], 7);
+    }
+  };
+  useEffect(() => {
+    if (!mapRef.current) {
+      const first = locations[0] || { lat: 35, lng: 105 };
+      const map = L.map('map', { zoomControl: false }).setView([first.lat, first.lng], locations.length ? 4 : 4);
+      L.control.zoom({ position: 'topright' }).addTo(map);
+      const tileSources = [
+        { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' } },
+        { url: 'https://webst{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' } },
+        { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', options: { subdomains: ['a', 'b', 'c', 'd'], attribution: '&copy; OpenStreetMap contributors &copy; CARTO' } },
+        { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', options: { attribution: 'Tiles &copy; Esri' } }
+      ];
+const isInChina = (lat, lng) => lat >= 18 && lat <= 54 && lng >= 73 && lng <= 135;
+      const addTileLayer = (mapInstance, center) => {
+        let idx = isInChina(center.lat, center.lng) ? 5 : 0;
+        let errorCount = 0;
+        let tileLoadCount = 0;
+        let layer = null;
+        let timer = null;
+        let blankAdded = false;
+
+        const addBlankBase = () => {
+          if (blankAdded) return;
+          blankAdded = true;
+          const el = document.getElementById('map');
+          if (el) el.style.background = '#f6f4ee';
+          const blank = L.gridLayer({ attribution: '' });
+          blank.createTile = () => {
+            const tile = document.createElement('div');
+            tile.style.background = 'transparent';
+            return tile;
+          };
+          blank.addTo(mapInstance);
+        };
+
+        const attach = () => {
+          if (layer) {
+            mapInstance.removeLayer(layer);
+          }
+          errorCount = 0;
+          tileLoadCount = 0;
+          if (idx >= tileSources.length) {
+            addBlankBase();
+            return;
+          }
+          layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
+
+          const handleError = () => {
+            errorCount += 1;
+            if (errorCount >= 6) {
+              idx += 1;
+              attach();
+            }
+          };
+          const handleLoad = () => {
+            tileLoadCount += 1;
+          };
+
+          layer.on('tileerror', handleError);
+          layer.on('tileload', handleLoad);
+          layer.addTo(mapInstance);
+
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(() => {
+            if (tileLoadCount === 0) {
+              idx += 1;
+              attach();
+            }
+          }, 2000);
+        };
+
+        attach();
+      };
+      addTileLayer(map, { lat: first.lat, lng: first.lng });
+L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
+      const resolveMarkerStyle = (type) => {
+        if (markerStyles[type]) return markerStyles[type];
+        if (markerStyles.normal) return markerStyles.normal;
+        return defaultMarkerStyles[type] || defaultMarkerStyles.normal;
+      };
+      const markerIcon = (type) => {
+        const iconUrl = resolveMarkerStyle(type).iconUrl || defaultMarkerStyles.normal.iconUrl;
+        return L.icon({
+          iconUrl,
+          iconSize: [25, 34],
+          iconAnchor: [12, 34],
+          popupAnchor: [0, -30]
+        });
+      };
+      const pathCoords = locations.map(l => [l.lat, l.lng]);
+      for (let i = 0; i < pathCoords.length - 1; i++) {
+        const opacity = 0.25 + (i / pathCoords.length) * 0.6;
+        L.polyline([pathCoords[i], pathCoords[i+1]], {
+          color: mapStyle.pathColor || '#1e40af',
+          weight: 3,
+          opacity: opacity
+        }).addTo(map);
+      }
+      locations.forEach((loc, idx) => {
+        const style = resolveMarkerStyle(loc.type || 'normal');
+        L.circleMarker([loc.lat, loc.lng], {
+          radius: 10,
+          color: style.color || defaultMarkerStyles.normal.color,
+          fillColor: style.color || defaultMarkerStyles.normal.color,
+          fillOpacity: 0.35,
+          weight: 2
+        }).addTo(map);
+        const marker = L.marker([loc.lat, loc.lng], { icon: markerIcon(loc.type || 'normal') }).addTo(map);
+        marker.on('click', () => {
+          setSelectedLoc(loc);
+          setActiveIndex(idx);
+          map.setView([loc.lat, loc.lng], 7);
+        });
+        const ageText = getAgeText(loc);
+        if (ageText) {
+          const ageIcon = L.divIcon({
+            className: 'age-marker',
+            html: `<div class="age-badge">${ageText}</div>`,
+            iconSize: [44, 20],
+            iconAnchor: [22, 30]
+          });
+          L.marker([loc.lat, loc.lng], { icon: ageIcon, interactive: false }).addTo(map);
+        }
+      });
+      if (pathCoords.length > 1) {
+        const bounds = L.latLngBounds(pathCoords);
+        map.fitBounds(bounds, { padding: [48, 48], maxZoom: 6 });
+      } else if (pathCoords.length === 1) {
+        map.setView(pathCoords[0], 6);
+      }
+      mapRef.current = map;
+    }
+  }, []);
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!draggingRef.current || !splitRef.current) return;
+      const rect = splitRef.current.getBoundingClientRect();
+      const next = ((e.clientX - rect.left) / rect.width) * 100;
+      if (!Number.isFinite(next)) return;
+      const clamped = Math.min(60, Math.max(20, next));
+      setSplitPct(clamped);
+    };
+    const onUp = () => {
+      draggingRef.current = false;
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, []);
+  const handleLocClick = (loc, idx) => {
+    setSelectedLoc(loc);
+    if (typeof idx === 'number') {
+      setActiveIndex(idx);
+    }
+    if (mapRef.current) {
+      mapRef.current.setView([loc.lat, loc.lng], 7);
+    }
+  };
+  return (
+    <div className="max-w-screen-2xl mx-auto space-y-6">
+      <header className="glass-panel p-6 rounded-xl shadow-sm border-l-8 border-[#c0392b] flex flex-col md:flex-row gap-6 items-center">
+        <div className="w-32 h-32 bg-[#fdf6e3] rounded-full flex items-center justify-center border-4 border-white shadow-inner overflow-hidden">
+          <span className="text-[#7c2d12] text-5xl font-black tracking-wide">{surname}</span>
+        </div>
+        <div className="flex-1 text-center md:text-left">
+          <h1 className="text-4xl font-bold">{data.person.name}</h1>
+          {headerSubtitle ? (
+            <p className="text-xs text-gray-500 mt-1 mb-2">{headerSubtitle}</p>
+          ) : null}
+          {renderDescription()}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <p className="text-gray-400 text-sm">朝代</p>
+              <p className="font-bold">{data.person?.dynasty || ''}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">籍贯</p>
+              <p className="font-bold">{data.person?.birthplace || ''}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">生卒</p>
+              <p className="font-bold">{lifeDates}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">享年</p>
+              <p className="font-bold">{data.person?.lifespan || ''}</p>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div className="space-y-6">
+        <div ref={splitRef} className="flex flex-col lg:flex-row gap-6 items-stretch">
+          <div
+            className="glass-panel rounded-xl overflow-hidden flex flex-col h-[620px]"
+            style={{ flexBasis: `${splitPct}%`, flexGrow: 0 }}
+          >
+            <div className="p-4 bg-[#c0392b] text-white font-bold flex items-center justify-between">
+              <span>足迹时间轴</span>
+              <div className="flex items-center gap-2 text-xs">
+                <button
+                  onClick={() => changeEvent(activeIndex - 1)}
+                  disabled={activeIndex === 0}
+                  className="px-2 py-1 rounded bg-white/20 disabled:opacity-40"
+                >上一事件</button>
+                <span className="opacity-80">{totalEvents ? activeIndex + 1 : 0} / {totalEvents}</span>
+                <button
+                  onClick={() => changeEvent(activeIndex + 1)}
+                  disabled={activeIndex + 1 >= totalEvents}
+                  className="px-2 py-1 rounded bg-white/20 disabled:opacity-40"
+                >下一事件</button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3">
+              {locations.length ? (
+                locations.map((loc, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => handleLocClick(loc, idx)}
+                    className={`p-3 rounded-lg cursor-pointer transition-all border-l-4 ${
+                      idx === activeIndex
+                        ? 'bg-white shadow-md border-[#c0392b]'
+                        : 'bg-white/70 border-transparent hover:bg-white'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm truncate">{loc.name}</span>
+                          {loc.type === 'birth' ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">出生</span>
+                          ) : loc.type === 'death' ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">去世</span>
+                          ) : null}
+                        </div>
+                        <div className="text-[10px] text-gray-400 truncate">{loc.ancientName} → {loc.modernName}</div>
+                      </div>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
+                        {loc.time || '未知'}
+                      </span>
+                    </div>
+                    <div className="space-y-1 text-[11px] text-gray-500 mb-2">
+                      <div className="flex justify-between">
+                        <span>公元纪年</span>
+                        <span className="text-gray-700">{loc.time || '未知'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>停留时间</span>
+                        <span className="text-gray-700">{loc.duration || '未知'}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500">{loc.event}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-xs text-gray-400">暂无事件</div>
+              )}
+            </div>
+          </div>
+          <div
+            className="hidden lg:block w-2 rounded bg-[#c8b496]/50 hover:bg-[#c8b496] cursor-col-resize"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              draggingRef.current = true;
+            }}
+          ></div>
+          <div className="relative flex-1">
+            <div id="map"></div>
+            {selectedLoc && (
+              <div className="absolute top-4 left-4 z-[1000] w-72 glass-panel p-4 rounded-xl shadow-xl border-t-4 border-[#c0392b]">
+                <button
+                  onClick={() => setSelectedLoc(null)}
+                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                >✕</button>
+                <h3 className="text-xl font-bold text-[#c0392b] mb-1">{selectedLoc.name}</h3>
+                <p className="text-xs text-gray-400 mb-3">{selectedLoc.ancientName} → {selectedLoc.modernName}</p>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="text-gray-400 text-[10px] uppercase font-bold">公元纪年</p>
+                    <p>{selectedLoc.time || '未知'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-[10px] uppercase font-bold">停留时间</p>
+                    <p>{selectedLoc.duration || '未知'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-[10px] uppercase font-bold">事迹描述</p>
+                    <p className="leading-relaxed">{selectedLoc.event}</p>
+                  </div>
+                  {selectedLoc.poster?.png ? (
+                    <div>
+                      <p className="text-gray-400 text-[10px] uppercase font-bold">海报</p>
+                      <a href={selectedLoc.poster.png} target="_blank" rel="noreferrer">
+                        <img src={selectedLoc.poster.png} className="w-full rounded-lg border border-[#c8b496]/50" />
+                      </a>
+                    </div>
+                  ) : null}
+                  <div className="bg-[#fdf6e3] p-2 rounded border border-dashed border-[#c8b496]">
+                    <p className="text-[#c0392b] text-[10px] uppercase font-bold">历史意义</p>
+                    <p className="italic text-xs">{selectedLoc.significance}</p>
+                  </div>
+                  {selectedLoc.quoteLines?.length ? (
+                    <div>
+                      <p className="text-gray-400 text-[10px] uppercase font-bold">名篇名句</p>
+                      <ul className="space-y-1">
+                        {selectedLoc.quoteLines.map((q, idx) => (
+                          <li key={idx} className="text-xs text-gray-700">{q}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : selectedLoc.works?.length ? (
+                    <div>
+                      <p className="text-gray-400 text-[10px] uppercase font-bold">名篇名句</p>
+                      <ul className="list-disc pl-4 space-y-1">
+                        {selectedLoc.works.map((w, idx) => (
+                          <li key={idx} className="text-xs text-gray-700">《{w}》</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">🗺️</p>
+            <p className="text-xl font-bold">{stats.distance} <span className="text-xs font-normal">km</span></p>
+            <p className="text-[10px] text-gray-400 uppercase">总行程估算</p>
+          </div>
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">⏱️</p>
+            <p className="text-xl font-bold">
+              {stats.yearsLabel}{stats.yearsValue === null ? null : <span className="text-xs font-normal">年</span>}
+            </p>
+            <p className="text-[10px] text-gray-400 uppercase">生命跨度</p>
+          </div>
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">📍</p>
+            <p className="text-xl font-bold">{stats.regions} <span className="text-xs font-normal">个</span></p>
+            <p className="text-[10px] text-gray-400 uppercase">覆盖地区</p>
+          </div>
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">🌟</p>
+            <p className="text-xl font-bold">{stats.events} <span className="text-xs font-normal">件</span></p>
+            <p className="text-[10px] text-gray-400 uppercase">重要事迹</p>
+          </div>
+        </div>
+
+        {mergedTeachingPoints ? (
+          <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-amber-50/40">
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <h2 className="text-lg font-bold text-[#7c2d12]">教材知识点与考点</h2>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowTeachingFull(v => !v)}
+                  className="text-[11px] px-2 py-1 rounded bg-white/70 border border-[#c8b496]/50 text-[#7c2d12] hover:bg-white"
+                >
+                  {showTeachingFull ? '收起' : '展开'}
+                </button>
+                <span className="text-[10px] text-gray-500">面向教学</span>
+              </div>
+            </div>
+            <div className="space-y-1">
+              {renderTextbookPoints(mergedTeachingPointsNormalized, { expanded: showTeachingFull })}
+            </div>
+          </section>
+        ) : null}
+
+        {(relatedHonor || relatedStatus || relatedIdentities || relatedWorks.length || relatedReviews.length) ? (
+          <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-white/70">
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <h2 className="text-lg font-bold text-[#7c2d12]">人物要点</h2>
+              <span className="text-[10px] text-gray-500">强相关速览</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {relatedHonor ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{relatedHonor}</span> : null}
+              {data.person?.dynasty ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{data.person.dynasty}</span> : null}
+              {data.person?.lifespan ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{data.person.lifespan}</span> : null}
+            </div>
+            {relatedStatus ? (
+              <div className="mb-3">
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">历史地位</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{relatedStatus}</p>
+              </div>
+            ) : null}
+            {relatedIdentities ? (
+              <div className="mb-3">
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">身份</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{relatedIdentities}</p>
+              </div>
+            ) : null}
+            {relatedWorks.length ? (
+              <div className="mb-3">
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">代表作</p>
+                <div className="flex flex-wrap gap-2">
+                  {relatedWorks.slice(0, 6).map((w, idx) => (
+                    <span key={idx} className="text-[11px] px-2 py-1 rounded bg-gray-50 border border-gray-200">《{w}》</span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {relatedReviews.length ? (
+              <div>
+                <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">他人评价 / 史料</p>
+                <ul className="space-y-1">
+                  {relatedReviews.slice(0, 3).map((t, idx) => (
+                    <li key={idx} className="text-sm text-gray-700 leading-relaxed">- {t}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
+      </div>
+      <footer className="text-center text-gray-400 text-[10px] py-8 border-t border-gray-200">
+        <p>
+          built by cuicheng (
+          <a className="underline hover:text-gray-600" href="mailto:cuizicheng.1024@gmail.com">cuizicheng.1024@gmail.com</a>
+          )
+        </p>
+      </footer>
+    </div>
+  );
+};
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+const downloadText = (filename, content, type) => {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
+const buildGeoJSON = (payload) => {
+  const person = payload.person || {};
+  const locations = payload.locations || [];
+  const features = locations.map(loc => ({
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [loc.lng, loc.lat] },
+    properties: {
+      person: person.name || '',
+      name: loc.name || '',
+      type: loc.type || '',
+      time: loc.time || '',
+      modernName: loc.modernName || '',
+      ancientName: loc.ancientName || ''
+    }
+  }));
+  if (locations.length > 1) {
+    features.push({
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: locations.map(loc => [loc.lng, loc.lat])
+      },
+      properties: { person: person.name || '', name: '轨迹' }
+    });
+  }
+  return { type: 'FeatureCollection', features };
+};
+const csvEscape = (value) => `"${String(value || '').replace(/"/g, '""')}"`;
+const buildCSV = (payload) => {
+  const person = payload.person || {};
+  const locations = payload.locations || [];
+  const header = ['person','name','lat','lng','type','time','modernName','ancientName'];
+  const rows = locations.map(loc => [
+    person.name || '',
+    loc.name || '',
+    loc.lat || '',
+    loc.lng || '',
+    loc.type || '',
+    loc.time || '',
+    loc.modernName || '',
+    loc.ancientName || ''
+  ]);
+  return [header.join(','), ...rows.map(r => r.map(csvEscape).join(','))].join('\n');
+};
+const setupExports = () => {
+  document.querySelectorAll('[data-export]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const type = btn.getAttribute('data-export');
+      const payload = window.__EXPORT_DATA__ || {};
+      if (type === 'geojson') {
+        const geo = buildGeoJSON(payload);
+        downloadText(`${payload.person?.name || 'map'}.geojson`, JSON.stringify(geo, null, 2), 'application/json');
+      } else if (type === 'csv') {
+        const csv = buildCSV(payload);
+        downloadText(`${payload.person?.name || 'map'}.csv`, csv, 'text/csv');
+      } else if (type === 'markdown') {
+        const md = payload.markdown || '';
+        if (!md) {
+          alert('Markdown 导出不可用');
+          return;
+        }
+        downloadText(`${payload.person?.name || 'map'}.md`, md, 'text/markdown');
+      } else if (type === 'share') {
+        const link = location.href;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link);
+        } else {
+          prompt('复制链接', link);
+        }
+      }
+    });
+  });
+};
+setTimeout(setupExports, 0);
+</script>
+</body>
+</html>

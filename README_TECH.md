@@ -4,7 +4,7 @@
 
 ## 1. 一句话架构
 - **LLM 生成 Markdown 生平**（结构化模板）  
-- **解析 Markdown → 结构化 profile**（人物档案/地点/事件/教学要点）  
+- **解析 Markdown → 结构化 profile**（人物档案/地点/事件/主要作品/教学要点）  
 - **地名→坐标**（本地历史词典优先 + 缓存 + 在线兜底）  
 - **渲染 HTML**（单文件离线可打开，含时间线与地图交互）
 
@@ -55,8 +55,6 @@ map_story/
       story/                 # 人物 Markdown（可手工/批量生成）
       story_map/             # 渲染后的 HTML/导出文件
     script/                  # 核心 Python 链路（解析/地名/渲染/服务）
-
-maptoposter/                 # 另一条“地图海报”产品线（与 storymap 相对独立）
 ```
 
 ## 5. 教学相关字段（页面底部）
@@ -87,12 +85,7 @@ MODEL=gpt-4o-mini
 ```
 不同脚本可能还支持 MiMo/QVeris 等配置，建议优先阅读对应脚本顶部的说明与 `map_story/storymap/docs/`。
 
-## 8. 维护建议（仓库不乱的关键）
-- 把生成物（HTML/缓存/runs 报告）放在输出目录，不要提交到仓库。
-- `examples/story/` 建议只保留少量 demo；批量产物使用外部目录。
-- 开发调试脚本统一放在 `tools/` 或 `docs/`，避免仓库根目录堆积临时文件。
-
-## 9. 提交内置数据（评审可直接复现）
+## 8. 提交内置数据（评审可直接复现）
 - `data/pep_people_merged.json`：人教版人名合并去重结果（推荐入口）
 - `data/pep_history_figures_sample.json`：历史人物名单
 - `data/pep_junior_all_people.json`：初中阶段全人物名单
