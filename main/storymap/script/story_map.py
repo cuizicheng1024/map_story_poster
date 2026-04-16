@@ -99,6 +99,7 @@ def _historical_index_candidates() -> List[str]:
             os.path.join(here, "..", "historical_places_index.jsonl"),
             os.path.join(here, "..", "..", "historical_places_index.jsonl"),
             os.path.join(repo_root, "historical_places_index.jsonl"),
+            os.path.join(repo_root, "data", "historical_places_index.jsonl"),
             os.path.join(here, "..", "..", "..", "..", "historical_places_index.jsonl"),
         ]
     )
