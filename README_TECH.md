@@ -79,11 +79,11 @@ map_story/
 ## 7. 配置与环境变量
 在项目根目录创建 `.env`（示例）：
 ```bash
-API_KEY=你的key
-BASE_URL=https://api.openai.com/v1
-MODEL=gpt-4o-mini
+MIMO_API_KEY=你的key
+MIMO_BASE_URL=https://api.xiaomimimo.com/v1
+MODEL=mimo-v2-pro
 ```
-不同脚本可能还支持 MiMo/QVeris 等配置，建议优先阅读对应脚本顶部的说明与 `map_story/storymap/docs/`。
+也支持兼容变量名：`API_KEY/BASE_URL` 或 `LLM_API_KEY/LLM_BASE_URL/LLM_MODEL_ID`。不同脚本可能还支持 QVeris 等配置，建议优先阅读对应脚本顶部说明与 `main/storymap/docs/`。
 
 ## 8. 提交内置数据（评审可直接复现）
 - `data/pep_people_merged.json`：人教版人名合并去重结果（推荐入口）

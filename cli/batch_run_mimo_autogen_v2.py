@@ -121,6 +121,13 @@ def _safe_str(x: object, limit: int = 800) -> str:
     return s
 
 
+def _safe_filename(name: str) -> str:
+    s = (name or "").strip()
+    s = re.sub(r"[\\\\/:\\*\\?\"<>\\|]", "_", s)
+    s = re.sub(r"\\s+", " ", s).strip()
+    return s or "unknown"
+
+
 def _mask_token(token: str) -> str:
     t = (token or "").strip()
     if not t:
@@ -463,9 +470,9 @@ def run_pipeline_only(
             person_name = person
             html = story_map.render_html(person_name, points, md_after_ensure)
 
-        out_story_map_dir = REPO_ROOT / "map_story" / "storymap" / "examples" / "story_map"
+        out_story_map_dir = REPO_ROOT / "main" / "storymap" / "examples" / "story_map"
         ts = _now_ts()
-        html_path = str(out_story_map_dir / f"{person_name}__pure__{ts}.html")
+        html_path = str(out_story_map_dir / f"{_safe_filename(person)}__pure__{ts}.html")
         write_text(Path(html_path), html)
 
     except Exception as exc:
@@ -492,7 +499,10 @@ def run_pipeline_only(
         "qveris_api_key_present": bool((os.getenv("QVERIS_API_KEY") or "").strip()),
     }
 
-    ok_e2e = bool(html_path) and not html_error
+    has_bio = not bool(ensure_checks.get("empty"))
+    loc_count = int(parse_info.get("locations_count") or 0)
+    places_rows = int(parse_info.get("places_rows") or 0)
+    ok_e2e = bool(html_path) and not html_error and has_bio and (loc_count > 0 or places_rows > 0)
 
     # 额外把 html_path 写进 parse_info，便于汇总
     if html_path:
@@ -513,9 +523,9 @@ def run_one_full(
     run_dir.mkdir(parents=True, exist_ok=True)
 
     # meta
-    api_key = (os.getenv("API_KEY") or "").strip()
-    base_url = (os.getenv("BASE_URL") or "").strip()
-    model = (os.getenv("MODEL") or "").strip()
+    api_key = (os.getenv("MIMO_API_KEY") or os.getenv("API_KEY") or os.getenv("LLM_API_KEY") or "").strip()
+    base_url = (os.getenv("MIMO_BASE_URL") or os.getenv("BASE_URL") or os.getenv("LLM_BASE_URL") or "https://api.xiaomimimo.com/v1").strip()
+    model = (os.getenv("MODEL") or os.getenv("LLM_MODEL_ID") or "mimo-v2-pro").strip()
 
     write_text(
         run_dir / "meta.json",
@@ -546,16 +556,27 @@ def run_one_full(
         {"role": "user", "content": f"人物姓名：{person}"},
     ]
 
-    raw_md, api_attempt = call_openai_compatible_with_meta(
-        messages=messages,
-        api_key=api_key,
-        model=model,
-        base_url=base_url,
-        timeout_s=timeout_s,
-        temperature=0.2,
-        max_retries=retries,
-        retry_backoff_s=retry_backoff_s,
-    )
+    if not api_key:
+        api_attempt = ApiAttempt(
+            ok=False,
+            status_code=None,
+            error_type="missing_api_key",
+            error_message="missing MIMO_API_KEY/API_KEY/LLM_API_KEY",
+            duration_s=0.0,
+            usage=None,
+        )
+        raw_md = ""
+    else:
+        raw_md, api_attempt = call_openai_compatible_with_meta(
+            messages=messages,
+            api_key=api_key,
+            model=model,
+            base_url=base_url,
+            timeout_s=timeout_s,
+            temperature=0.2,
+            max_retries=retries,
+            retry_backoff_s=retry_backoff_s,
+        )
 
     if raw_md is None:
         raw_md = ""

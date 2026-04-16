@@ -10,9 +10,9 @@ __pycache__/
 
 cache/
 
-map_story/storymap/examples/story_map/*.html
-map_story/storymap/examples/story_map/*.geojson
-map_story/storymap/examples/story_map/*.csv
+main/storymap/examples/story_map/*.html
+main/storymap/examples/story_map/*.geojson
+main/storymap/examples/story_map/*.csv
 
 # Temp artifacts for historical location auditing
 .tmp/
