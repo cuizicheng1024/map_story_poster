@@ -2,6 +2,84 @@ import json
 from typing import Dict, List
 
 
+def _leaflet_tiles_js(center_lat_expr: str, center_lng_expr: str, map_var: str, map_el_id: str) -> str:
+    tile_sources = """const tileSources = [
+        { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' } },
+        { url: 'https://webst{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' } },
+        { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', options: { subdomains: ['a', 'b', 'c', 'd'], attribution: '&copy; OpenStreetMap contributors &copy; CARTO' } },
+        { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', options: { attribution: 'Tiles &copy; Esri' } }
+      ];"""
+
+    tile_fallback = f"""const isInChina = (lat, lng) => lat >= 18 && lat <= 54 && lng >= 73 && lng <= 135;
+      const addTileLayer = (mapInstance, center) => {{
+        let idx = isInChina(center.lat, center.lng) ? 5 : 0;
+        let errorCount = 0;
+        let tileLoadCount = 0;
+        let layer = null;
+        let timer = null;
+        let blankAdded = false;
+
+        const addBlankBase = () => {{
+          if (blankAdded) return;
+          blankAdded = true;
+          const el = document.getElementById('{map_el_id}');
+          if (el) el.style.background = '#f6f4ee';
+          const blank = L.gridLayer({{ attribution: '' }});
+          blank.createTile = () => {{
+            const tile = document.createElement('div');
+            tile.style.background = 'transparent';
+            return tile;
+          }};
+          blank.addTo(mapInstance);
+        }};
+
+        const attach = () => {{
+          if (layer) {{
+            mapInstance.removeLayer(layer);
+          }}
+          errorCount = 0;
+          tileLoadCount = 0;
+          if (idx >= tileSources.length) {{
+            addBlankBase();
+            return;
+          }}
+          layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
+
+          const handleError = () => {{
+            errorCount += 1;
+            if (errorCount >= 6) {{
+              idx += 1;
+              attach();
+            }}
+          }};
+          const handleLoad = () => {{
+            tileLoadCount += 1;
+          }};
+
+          layer.on('tileerror', handleError);
+          layer.on('tileload', handleLoad);
+          layer.addTo(mapInstance);
+
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(() => {{
+            if (tileLoadCount === 0) {{
+              idx += 1;
+              attach();
+            }}
+          }}, 2000);
+        }};
+
+        attach();
+      }};
+      addTileLayer({map_var}, {{ lat: {center_lat_expr}, lng: {center_lng_expr} }});"""
+
+    scale = f"L.control.scale({{ position: 'bottomleft', imperial: false }}).addTo({map_var});"
+    return "\n".join([tile_sources, tile_fallback, scale])
+
+
 
 
 def build_info_panel_html(title: str, fields: Dict[str, str]) -> str:
@@ -34,6 +112,7 @@ def render_profile_html(data: Dict[str, object]) -> str:
     payload = json.dumps(data, ensure_ascii=False).replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
     name = (data.get("person", {}) or {}).get("name", "")
     title = f"{name}的人生足迹地图" if name else "人生足迹地图"
+    leaflet_tiles = _leaflet_tiles_js("first.lat", "first.lng", "map", "map")
     html = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -132,7 +211,10 @@ const locations = data.locations || [];
 const textbookPoints = String(data.textbookPoints || '').trim();
 const examPoints = String(data.examPoints || '').trim();
 const mapStyle = data.mapStyle || {};
-const mergedTeachingPoints = [textbookPoints, examPoints].filter(Boolean).join('\n\n');
+const mergedTeachingPoints = [textbookPoints, examPoints].filter(Boolean).join('\\n\\n');
+const mergedTeachingPointsNormalized = mergedTeachingPoints
+  .replace(/^(#{0,4}\s*)?(初中阶段|高中阶段)(考点)?\s*$/gm, '')
+  .replace(/^\s*$/gm, (m) => m);
 const markerStyles = mapStyle.markers || {};
 const defaultMarkerStyles = {
   normal: {
@@ -167,18 +249,43 @@ const extractYear = (text) => {
 
 const renderInline = (text) => {
   const raw = String(text || '');
-  // 支持 Markdown 的 **加粗**（非贪婪匹配，避免跨段落/跨多段加粗误吞）
+  // 支持 Markdown 的 **加粗**。如果上游文本被截断导致 ** 不成对，兜底移除残留的 **，避免页面出现星号。
   const parts = raw.split(/(\*\*.*?\*\*)/g).filter(Boolean);
   return parts.map((p, idx) => {
     const m = p.match(/^\*\*(.+?)\*\*$/);
     if (m) {
       return <strong key={idx} className="font-semibold text-gray-800">{m[1]}</strong>;
     }
-    return <span key={idx}>{p}</span>;
+    return <span key={idx}>{p.replaceAll('**', '')}</span>;
   });
 };
 
-const renderTextbookPoints = (raw) => {
+const safeTruncateMdBold = (text, maxLen) => {
+  const s = String(text || '');
+  if (!maxLen || maxLen <= 0) return s;
+  let out = '';
+  let visible = 0;
+  let inBold = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === '*' && s[i + 1] === '*') {
+      out += '**';
+      inBold = !inBold;
+      i += 1;
+      continue;
+    }
+    out += ch;
+    visible += 1;
+    if (visible >= maxLen) {
+      out = out.trimEnd() + '…';
+      break;
+    }
+  }
+  if (inBold) out += '**';
+  return out;
+};
+
+const renderTextbookPoints = (raw, options) => {
   // 兼容两种换行输入：
   // 1) 真实换行：LF / CRLF / CR
   // 2) 字面量换行：反斜杠 + n（可能出现 1 个或多个反斜杠）
@@ -193,11 +300,115 @@ const renderTextbookPoints = (raw) => {
   const splitRe = new RegExp(`${CR}${LF}|${CR}|${LF}|${BS_RE}+n`, 'g');
 
   const lines = String(raw || '').split(splitRe);
-  return lines.map((line, idx) => {
+  const isStageHeading = (t) => /^(#{3,4}\s*)?(初中阶段|高中阶段)(考点)?\s*$/.test(String(t || '').trim());
+  const expanded = Boolean(options && options.expanded);
+  if (expanded) {
+    return lines.map((line, idx) => {
+      const rawLine = String(line || '');
+      const leadingSpaces = rawLine.match(/^\\s*/)[0].length;
+      const t = rawLine.trim();
+      if (!t) return <div key={idx} className="h-2" />;
+      if (isStageHeading(t)) return null;
+      if (/^-{3,}$/.test(t)) return <hr key={idx} className="my-3 border-[#c8b496]/50" />;
+
+      const level = leadingSpaces >= 4 ? 3 : (leadingSpaces >= 2 ? 2 : 1);
+      const indentClass = level === 1 ? 'ml-0' : (level === 2 ? 'ml-4' : 'ml-8');
+
+      if (t.startsWith('### ')) {
+        const heading = t.replace(/^###\s*/, '');
+        return (
+          <h3 key={idx} className="mt-2 text-base font-bold text-[#7c2d12]">
+            {renderInline(heading)}
+          </h3>
+        );
+      }
+
+      if (t.startsWith('#### ')) {
+        const heading = t.replace(/^####\s*/, '');
+        return (
+          <h4 key={idx} className="mt-2 text-sm font-semibold text-gray-700">
+            {renderInline(heading)}
+          </h4>
+        );
+      }
+
+      if (t.startsWith('- ')) {
+        const body = t.slice(2).trim();
+        const bullet = level === 1 ? '•' : (level === 2 ? '◦' : '▪');
+        return (
+          <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+            <span className="mt-[2px] text-[#c0392b]">{bullet}</span>
+            <div>{renderInline(body)}</div>
+          </div>
+        );
+      }
+
+      const ordered = t.match(/^(\d+)\.\s+(.*)$/);
+      if (ordered) {
+        return (
+          <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+            <span className="mt-[2px] text-gray-500">{ordered[1]}.</span>
+            <div>{renderInline(ordered[2])}</div>
+          </div>
+        );
+      }
+
+      return (
+        <p key={idx} className="text-sm leading-relaxed text-gray-700">
+          {renderInline(t)}
+        </p>
+      );
+    });
+  }
+
+  const kept = [];
+  let sectionBulletCount = 0;
+  let totalBulletCount = 0;
+  const maxTotalBullets = 12;
+  const maxBulletsPerSection = 4;
+  const maxLineLen = 64;
+  for (const line of lines) {
+    const rawLine = String(line || '');
+    const t = rawLine.trim();
+    if (!t) {
+      kept.push(rawLine);
+      continue;
+    }
+    if (isStageHeading(t)) {
+      continue;
+    }
+    if (/^-{3,}$/.test(t)) {
+      kept.push('---');
+      continue;
+    }
+    if (t.startsWith('### ') || t.startsWith('#### ')) {
+      sectionBulletCount = 0;
+      kept.push(rawLine);
+      continue;
+    }
+    const isBullet = t.startsWith('- ') || /^\d+\.\s+/.test(t);
+    if (isBullet) {
+      totalBulletCount += 1;
+      sectionBulletCount += 1;
+      if (totalBulletCount > maxTotalBullets || sectionBulletCount > maxBulletsPerSection) {
+        continue;
+      }
+      const normalized = safeTruncateMdBold(rawLine.replace(/\s+$/g, '').trim(), maxLineLen);
+      kept.push(normalized);
+      continue;
+    }
+    if (totalBulletCount < maxTotalBullets) {
+      const normalized = safeTruncateMdBold(rawLine.replace(/\s+$/g, '').trim(), maxLineLen);
+      kept.push(normalized);
+    }
+  }
+
+  return kept.map((line, idx) => {
     const rawLine = String(line || '');
     const leadingSpaces = rawLine.match(/^\\s*/)[0].length;
     const t = rawLine.trim();
     if (!t) return <div key={idx} className="h-2" />;
+    if (/^-{3,}$/.test(t)) return <hr key={idx} className="my-3 border-[#c8b496]/50" />;
 
     // Markdown 列表层级：0-1 空格为一级，2-3 空格为二级，4+ 空格为三级
     const level = leadingSpaces >= 4 ? 3 : (leadingSpaces >= 2 ? 2 : 1);
@@ -254,19 +465,20 @@ const App = () => {
   const [selectedLoc, setSelectedLoc] = useState(locations[0] || null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [showTeachingFull, setShowTeachingFull] = useState(false);
   const [splitPct, setSplitPct] = useState(30);
   const mapRef = useRef(null);
   const splitRef = useRef(null);
   const draggingRef = useRef(false);
   const totalEvents = locations.length;
-  const avatarUrl = data.person?.avatar || '';
   const description = data.person?.description || '';
-  const quoteText = data.person?.quote || data.person?.title || '';
   const relatedWorks = Array.isArray(highlights.works) ? highlights.works : [];
   const relatedReviews = Array.isArray(highlights.reviews) ? highlights.reviews : [];
   const relatedHonor = String(highlights.honor || data.person?.title || '').trim();
   const relatedStatus = String(highlights.status || '').trim();
   const relatedIdentities = String(highlights.identities || '').trim();
+  const surname = String(data.person?.name || '').slice(0, 1);
+  const headerSubtitle = String(relatedReviews[0] || relatedHonor || relatedWorks[0] || '').replace(/^\s*[-\d.]+\s*/, '').trim();
   const descSegments = useMemo(() => {
     if (!description) return [];
     const parts = description.split(/([。！？])/);
@@ -321,9 +533,13 @@ const App = () => {
     return (
       <div className="mb-4">
         <div className={`text-gray-600 leading-relaxed ${showFullDesc ? '' : 'desc-clamp'}`}>
-          {descSegments.map((seg, idx) => (
-            <span key={idx} className="block">{seg}</span>
-          ))}
+          {descSegments.map((seg, idx) => {
+            const t = String(seg || '').trim();
+            if (/^-{3,}$/.test(t)) {
+              return <hr key={idx} className="my-2 border-gray-200" />;
+            }
+            return <span key={idx} className="block">{seg}</span>;
+          })}
         </div>
         {isLongDesc ? (
           <button
@@ -350,50 +566,7 @@ const App = () => {
       const first = locations[0] || { lat: 35, lng: 105 };
       const map = L.map('map', { zoomControl: false }).setView([first.lat, first.lng], locations.length ? 4 : 4);
       L.control.zoom({ position: 'topright' }).addTo(map);
-      const tileSources = [
-        {
-          url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          options: { attribution: '&copy; OpenStreetMap contributors' }
-        },
-        {
-          url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-          options: { attribution: '&copy; OpenStreetMap contributors' }
-        },
-        {
-          url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png',
-          options: { attribution: '&copy; OpenStreetMap contributors' }
-        },
-        {
-          url: 'https://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',
-          options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' }
-        },
-        {
-          url: 'https://webst{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}',
-          options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' }
-        }
-      ];
-      const addTileLayer = (mapInstance) => {
-        let idx = 0;
-        let errorCount = 0;
-        let layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
-        const handleError = () => {
-          errorCount += 1;
-          if (errorCount >= 8) {
-            idx += 1;
-            if (idx >= tileSources.length) {
-              return;
-            }
-            mapInstance.removeLayer(layer);
-            layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
-            layer.addTo(mapInstance);
-            errorCount = 0;
-            layer.on('tileerror', handleError);
-          }
-        };
-        layer.on('tileerror', handleError);
-        layer.addTo(mapInstance);
-      };
-      addTileLayer(map);
+      __LEAFLET_TILES_PROFILE__
       const resolveMarkerStyle = (type) => {
         if (markerStyles[type]) return markerStyles[type];
         if (markerStyles.normal) return markerStyles.normal;
@@ -483,17 +656,13 @@ const App = () => {
   return (
     <div className="max-w-screen-2xl mx-auto space-y-6">
       <header className="glass-panel p-6 rounded-xl shadow-sm border-l-8 border-[#c0392b] flex flex-col md:flex-row gap-6 items-center">
-        <div className="w-32 h-32 bg-[#e5e7eb] rounded-full flex items-center justify-center border-4 border-white shadow-inner overflow-hidden">
-          {avatarUrl ? (
-            <img src={avatarUrl} alt={data.person?.name || ''} className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-gray-600 text-2xl">{data.person?.name || ''}</span>
-          )}
+        <div className="w-32 h-32 bg-[#fdf6e3] rounded-full flex items-center justify-center border-4 border-white shadow-inner overflow-hidden">
+          <span className="text-[#7c2d12] text-5xl font-black tracking-wide">{surname}</span>
         </div>
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-4xl font-bold">{data.person.name}</h1>
-          {quoteText ? (
-            <p className="text-xs text-gray-500 mt-1 mb-2">{quoteText}</p>
+          {headerSubtitle ? (
+            <p className="text-xs text-gray-500 mt-1 mb-2">{headerSubtitle}</p>
           ) : null}
           {renderDescription()}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -679,10 +848,18 @@ const App = () => {
           <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-amber-50/40">
             <div className="flex items-center justify-between gap-4 mb-3">
               <h2 className="text-lg font-bold text-[#7c2d12]">教材知识点与考点</h2>
-              <span className="text-[10px] text-gray-500">面向教学</span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowTeachingFull(v => !v)}
+                  className="text-[11px] px-2 py-1 rounded bg-white/70 border border-[#c8b496]/50 text-[#7c2d12] hover:bg-white"
+                >
+                  {showTeachingFull ? '收起' : '展开'}
+                </button>
+                <span className="text-[10px] text-gray-500">面向教学</span>
+              </div>
             </div>
             <div className="space-y-1">
-              {renderTextbookPoints(mergedTeachingPoints)}
+              {renderTextbookPoints(mergedTeachingPointsNormalized, { expanded: showTeachingFull })}
             </div>
           </section>
         ) : null}
@@ -833,12 +1010,17 @@ setTimeout(setupExports, 0);
 </script>
 </body>
 </html>"""
-    return html.replace("__TITLE__", title).replace("__DATA__", payload.replace('</script>', '<\\/script>'))
+    return (
+        html.replace("__TITLE__", title)
+        .replace("__DATA__", payload.replace("</script>", "<\\/script>"))
+        .replace("__LEAFLET_TILES_PROFILE__", leaflet_tiles)
+    )
 
 
 def render_multi_html(data: Dict[str, object]) -> str:
     payload = json.dumps(data, ensure_ascii=False).replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
     title = data.get("title") or "多人物合并视图"
+    leaflet_tiles = _leaflet_tiles_js("35", "105", "map", "map").replace("addTileLayer(map, { lat: 35, lng: 105 });", "addTileLayer(map, { lat: 35, lng: 105 });")
     html = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -873,35 +1055,7 @@ window.__EXPORT_DATA__ = data;
 const people = data.people || [];
 const map = L.map('map', { zoomControl: false }).setView([35, 105], 4);
 L.control.zoom({ position: 'topright' }).addTo(map);
-const tileSources = [
-  { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
-  { url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
-  { url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
-  { url: 'https://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0','1','2','3'], attribution: '&copy; 高德地图' } },
-  { url: 'https://webst{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0','1','2','3'], attribution: '&copy; 高德地图' } }
-];
-const addTileLayer = (mapInstance) => {
-  let idx = 0;
-  let errorCount = 0;
-  let layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
-  const handleError = () => {
-    errorCount += 1;
-    if (errorCount >= 8) {
-      idx += 1;
-      if (idx >= tileSources.length) {
-        return;
-      }
-      mapInstance.removeLayer(layer);
-      layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
-      layer.addTo(mapInstance);
-      errorCount = 0;
-      layer.on('tileerror', handleError);
-    }
-  };
-  layer.on('tileerror', handleError);
-  layer.addTo(mapInstance);
-};
-addTileLayer(map);
+__LEAFLET_TILES_MULTI__
 const bounds = [];
 people.forEach((p) => {
   const color = p.color || '#1e40af';
@@ -1015,7 +1169,11 @@ document.querySelectorAll('[data-export]').forEach(btn => {
 </script>
 </body>
 </html>"""
-    return html.replace("__TITLE__", title).replace("__DATA__", payload.replace('</script>', '<\\/script>'))
+    return (
+        html.replace("__TITLE__", title)
+        .replace("__DATA__", payload.replace("</script>", "<\\/script>"))
+        .replace("__LEAFLET_TILES_MULTI__", leaflet_tiles)
+    )
 
 
 def render_osm_html(title: str, points: List[Dict[str, object]], info_panel_html: str = "") -> str:
@@ -1028,6 +1186,7 @@ def render_osm_html(title: str, points: List[Dict[str, object]], info_panel_html
         lon = float(points[0]["lon"])
         center = {"lat": lat, "lon": lon, "zoom": 6}
     pts_json = json.dumps(points, ensure_ascii=False)
+    leaflet_tiles = _leaflet_tiles_js(str(center["lat"]), str(center["lon"]), "map", "map")
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -1044,50 +1203,7 @@ def render_osm_html(title: str, points: List[Dict[str, object]], info_panel_html
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 const map = L.map('map').setView([{center["lat"]},{center["lon"]}], {center["zoom"]});
-const tileSources = [
-  {{
-    url: 'https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png',
-    options: {{ maxZoom: 20, attribution: '&copy; OpenStreetMap contributors' }}
-  }},
-  {{
-    url: 'https://{{s}}.tile.openstreetmap.fr/hot/{{z}}/{{x}}/{{y}}.png',
-    options: {{ maxZoom: 20, attribution: '&copy; OpenStreetMap contributors' }}
-  }},
-  {{
-    url: 'https://{{s}}.tile.openstreetmap.de/{{z}}/{{x}}/{{y}}.png',
-    options: {{ maxZoom: 20, attribution: '&copy; OpenStreetMap contributors' }}
-  }},
-  {{
-    url: 'https://webrd{{s}}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={{x}}&y={{y}}&z={{z}}',
-    options: {{ maxZoom: 20, subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' }}
-  }},
-  {{
-    url: 'https://webst{{s}}.is.autonavi.com/appmaptile?style=7&x={{x}}&y={{y}}&z={{z}}',
-    options: {{ maxZoom: 20, subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' }}
-  }}
-];
-const addTileLayer = (mapInstance) => {{
-  let idx = 0;
-  let errorCount = 0;
-  let layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
-  const handleError = () => {{
-    errorCount += 1;
-    if (errorCount >= 8) {{
-      idx += 1;
-      if (idx >= tileSources.length) {{
-        return;
-      }}
-      mapInstance.removeLayer(layer);
-      layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
-      layer.addTo(mapInstance);
-      errorCount = 0;
-      layer.on('tileerror', handleError);
-    }}
-  }};
-  layer.on('tileerror', handleError);
-  layer.addTo(mapInstance);
-}};
-addTileLayer(map);
+__LEAFLET_TILES_OSM__
 const pts = {pts_json};
 const latlngs = pts.map(p => [p.lat, p.lon]);
 if (latlngs.length > 1) {{
@@ -1104,4 +1220,4 @@ pts.forEach((p, i) => {{
 </script>
 </body>
 </html>"""
-    return html
+    return html.replace("__LEAFLET_TILES_OSM__", leaflet_tiles)

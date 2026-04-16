@@ -21,6 +21,10 @@ def _project_root() -> str:
 
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env)
+root_env = os.path.abspath(os.path.join(_project_root(), "..", ".env"))
+load_dotenv(dotenv_path=root_env)
+workspace_env = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", ".env"))
+load_dotenv(dotenv_path=workspace_env)
 
 _MAX_TEXT_LEN = 200
 
@@ -58,10 +62,14 @@ class StoryAgentLLM:
         - LLM_API_KEY   -> Qveris API Key
         - LLM_BASE_URL  -> Qveris API Base URL (例如 https://qveris.ai/api/v1)
         """
-        self.model = model or os.getenv("LLM_MODEL_ID")
+        fallback_model = os.getenv("MODEL")
+        fallback_key = os.getenv("MIMO_API_KEY") or os.getenv("API_KEY")
+        fallback_base = os.getenv("MIMO_BASE_URL") or os.getenv("BASE_URL") or "https://api.xiaomimimo.com/v1"
+
+        self.model = model or os.getenv("LLM_MODEL_ID") or fallback_model or "mimo-v2-pro"
         self.event_callback = event_callback
-        self.apiKey = apiKey or os.getenv("LLM_API_KEY")
-        self.baseUrl = baseUrl or os.getenv("LLM_BASE_URL")
+        self.apiKey = apiKey or os.getenv("LLM_API_KEY") or fallback_key
+        self.baseUrl = baseUrl or os.getenv("LLM_BASE_URL") or fallback_base
         # Increase default timeout to 300 seconds (5 minutes)
         self.timeout = timeout or int(os.getenv("LLM_TIMEOUT", "300"))
         provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
