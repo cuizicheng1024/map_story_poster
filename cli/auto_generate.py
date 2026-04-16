@@ -5,7 +5,7 @@
 一键入口：输入人名 -> （LLM 生成 Markdown）-> 生成整合版交互 HTML StoryMap。
 
 用法：
-  python3 auto_generate.py --name "辛弃疾"
+  python3 cli/auto_generate.py --name "辛弃疾"
 
 说明：
 - 默认使用 OpenAI 兼容接口（读取环境变量 API_KEY）。

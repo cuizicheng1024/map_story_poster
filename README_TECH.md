@@ -12,7 +12,7 @@
 
 ### 2.1 单人一键生成（推荐）
 ```bash
-python3 auto_generate.py --name "辛弃疾"
+python3 cli/auto_generate.py --name "辛弃疾"
 ```
 - 产物：
   - Markdown：`map_story/storymap/examples/story/<人物>.md`
@@ -20,12 +20,12 @@ python3 auto_generate.py --name "辛弃疾"
 
 ### 2.2 纯渲染：Markdown → HTML
 ```bash
-python3 generate_pure_story_map.py --md_path map_story/storymap/examples/story/辛弃疾.md
+python3 cli/generate_pure_story_map.py --md_path map_story/storymap/examples/story/辛弃疾.md
 ```
 
 ### 2.3 批量跑数（工程回归/体检）
 ```bash
-python3 batch_run_mimo_autogen_v2.py
+python3 cli/batch_run_mimo_autogen_v2.py
 ```
 - 用于：批量调用模型、结构检查、地理编码统计与失败样本汇总、生成报表。
 

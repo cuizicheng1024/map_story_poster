@@ -9,8 +9,8 @@
 - 不依赖 / 不触发任何 OSMnx、matplotlib 等静态海报逻辑
 
 用法示例：
-  python3 generate_pure_story_map.py --md map_story/storymap/examples/story/苏轼.md
-  python3 generate_pure_story_map.py --person 苏轼
+  python3 cli/generate_pure_story_map.py --md map_story/storymap/examples/story/苏轼.md
+  python3 cli/generate_pure_story_map.py --person 苏轼
 
 输出：默认写入 map_story/storymap/examples/story_map/ 目录。
 """
