@@ -139,6 +139,7 @@ def _mask_token(token: str) -> str:
 
 def load_env() -> None:
     load_dotenv(REPO_ROOT / ".env")
+    load_dotenv(REPO_ROOT / "data" / ".env")
     load_dotenv(STORYMAP_SCRIPT_DIR / ".env")
     load_dotenv(REPO_ROOT.parent.parent / ".env")
 
@@ -186,7 +187,9 @@ def call_openai_compatible_with_meta(
     for attempt in range(1, max_retries + 1):
         t0 = time.perf_counter()
         try:
-            resp = requests.post(url, headers=headers, json=payload, timeout=timeout_s)
+            connect_timeout = min(10, max(3, int(timeout_s * 0.2)))
+            read_timeout = max(10, int(timeout_s))
+            resp = requests.post(url, headers=headers, json=payload, timeout=(connect_timeout, read_timeout))
             dt = time.perf_counter() - t0
 
             status = resp.status_code
@@ -825,7 +828,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="批量跑 MiMo auto_generate 并生成排障报告（可断点续跑）")
     parser.add_argument("--out-dir", type=str, default="", help="指定输出目录（用于断点续跑）；不填则新建 batch_runs/<ts>")
     parser.add_argument("--people", type=str, default="", help="逗号分隔的人物列表；不填则用内置 16 人")
-    parser.add_argument("--timeout", type=int, default=int(os.getenv("TIMEOUT", "120")), help="单次 API timeout（秒）")
+    parser.add_argument("--timeout", type=int, default=int(os.getenv("TIMEOUT", "300")), help="单次 API timeout（秒）")
     parser.add_argument("--retries", type=int, default=int(os.getenv("BATCH_RETRIES", "3")), help="API 最大重试次数")
     parser.add_argument("--retry-backoff", type=float, default=float(os.getenv("BATCH_RETRY_BACKOFF_S", "2")), help="重试退避基数（秒）")
     parser.add_argument("--sleep", type=float, default=float(os.getenv("BATCH_SLEEP_S", "0.8")), help="每个人之间 sleep 秒数")

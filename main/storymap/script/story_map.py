@@ -48,6 +48,8 @@ def _project_root() -> str:
 
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env)
+data_env = os.path.abspath(os.path.join(_project_root(), "..", "data", ".env"))
+load_dotenv(dotenv_path=data_env)
 
 _LOGGER = logging.getLogger("story_map")
 if not _LOGGER.handlers:

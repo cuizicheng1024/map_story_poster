@@ -123,6 +123,7 @@ def _project_root() -> str:
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env)
 load_dotenv(dotenv_path=os.path.join(_project_root(), ".env"))
+load_dotenv(dotenv_path=os.path.join(_project_root(), "data", ".env"))
 _load_geocode_cache()
 
 
