@@ -18,7 +18,8 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Dict, List, Optional, Tuple
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
+from urllib.request import Request, urlopen
 
 from dotenv import load_dotenv
 from map_client import (
@@ -64,6 +65,8 @@ if not _LOGGER.handlers:
 
 _HISTORICAL_INDEX: Optional[Dict[str, Tuple[float, float]]] = None
 _HISTORICAL_INDEX_LOCK = threading.Lock()
+_TGAZ_CACHE: Dict[str, Optional[Tuple[float, float]]] = {}
+_TGAZ_CACHE_LOCK = threading.Lock()
 
 
 def _normalize_place_key(text: str) -> str:
@@ -178,6 +181,95 @@ def _lookup_coords_from_historical_index(*names: str) -> Optional[Tuple[float, f
         coord = mapping.get(norm)
         if coord:
             return coord
+    return None
+
+
+def _tgaz_query(name: str, year: Optional[int]) -> Optional[Tuple[float, float]]:
+    n = str(name or "").strip()
+    if not n:
+        return None
+    yr = None
+    if isinstance(year, int) and -222 <= year <= 1911:
+        yr = year
+    cache_key = f"{n}|{yr if yr is not None else ''}"
+    with _TGAZ_CACHE_LOCK:
+        if cache_key in _TGAZ_CACHE:
+            return _TGAZ_CACHE[cache_key]
+
+    base = "https://chgis.hudci.org/tgaz/placename"
+    url = f"{base}?fmt=json&n={quote(n, safe='')}"
+    if yr is not None:
+        url += f"&yr={yr}"
+
+    try:
+        req = Request(url, headers={"User-Agent": "StoryMap/1.0"})
+        with urlopen(req, timeout=12) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except Exception:
+        with _TGAZ_CACHE_LOCK:
+            _TGAZ_CACHE[cache_key] = None
+        return None
+
+    items = data.get("placenames") if isinstance(data, dict) else None
+    if not isinstance(items, list):
+        with _TGAZ_CACHE_LOCK:
+            _TGAZ_CACHE[cache_key] = None
+        return None
+
+    def parse_xy(s: str) -> Optional[Tuple[float, float]]:
+        try:
+            parts = [p.strip() for p in str(s).split(",")]
+            if len(parts) != 2:
+                return None
+            x = float(parts[0])
+            y = float(parts[1])
+            if abs(x) < 1e-6 and abs(y) < 1e-6:
+                return None
+            return (y, x)
+        except Exception:
+            return None
+
+    best = None
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        if str(it.get("object type") or "").upper() != "POINT":
+            continue
+        xy = parse_xy(it.get("xy coordinates") or "")
+        if not xy:
+            continue
+        best = xy
+        break
+
+    if best is None:
+        for it in items:
+            if not isinstance(it, dict):
+                continue
+            xy = parse_xy(it.get("xy coordinates") or "")
+            if not xy:
+                continue
+            best = xy
+            break
+
+    with _TGAZ_CACHE_LOCK:
+        _TGAZ_CACHE[cache_key] = best
+    return best
+
+
+def _resolve_place_coord(place: str, year: Optional[int] = None, *aliases: str) -> Optional[Tuple[float, float]]:
+    candidates = [place] + [a for a in aliases if a]
+    coord = _lookup_coords_from_historical_index(*candidates)
+    if coord:
+        return coord
+    for cand in candidates:
+        c = _tgaz_query(cand, year)
+        if c:
+            return c
+    for cand in candidates:
+        try:
+            return geocode_city(cand)
+        except Exception:
+            continue
     return None
 
 
@@ -1025,14 +1117,10 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
     death_coord = coords_cache.get(death_geo) if death_geo else None
 
     if not birth_coord and birth_geo:
-        birth_coord = _lookup_coords_from_historical_index(birth_loc, birth_modern, birth_geo)
-        if not birth_coord:
-            birth_coord = geocode_city(birth_geo)
+        birth_coord = _resolve_place_coord(birth_geo, None, birth_loc, birth_modern)
 
     if not death_coord and death_geo:
-        death_coord = _lookup_coords_from_historical_index(death_loc, death_modern, death_geo)
-        if not death_coord:
-            death_coord = geocode_city(death_geo)
+        death_coord = _resolve_place_coord(death_geo, None, death_loc, death_modern)
 
     dynasty = (info.get("时代", "") or info.get("朝代", "")).strip()
     avatar = ""
@@ -1099,18 +1187,20 @@ def _build_profile_data(md: str, event_callback: Optional[callable] = None) -> O
             geocode_candidates.append(geo_name)
         if not coord:
             for candidate in geocode_candidates:
-                coord = _lookup_coords_from_historical_index(
+                year = None
+                try:
+                    m = re.search(r"(?<!\d)(-?\d{1,4})(?!\d)", str(loc.get("time") or ""))
+                    year = int(m.group(1)) if m else None
+                except Exception:
+                    year = None
+                coord = _resolve_place_coord(
+                    candidate,
+                    year,
                     ancient,
                     modern,
                     loc_text,
                     loc.get("name") or "",
-                    candidate,
                 )
-                if coord:
-                    break
-        if not coord:
-            for candidate in geocode_candidates:
-                coord = geocode_city(candidate)
                 if coord:
                     break
         if not coord:
@@ -1832,6 +1922,9 @@ def _is_valid_coord(lat: object, lng: object) -> bool:
 
 
 def _write_text(path: str, content: str) -> None:
+    parent = os.path.dirname(path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
@@ -1978,12 +2071,17 @@ def _run_task(task_id: str, text: str, allow_cache: bool = True) -> None:
     client = _get_llm_client(event_callback=_llm_event)
     targets = extract_historical_figures(client, text)
     if not targets:
-        error = "未识别到历史人物"
-        _update_task(task_id, status="failed", error=error)
-        _append_progress(task_id, "失败", error)
-        _append_progress(task_id, "完成", "失败")
-        _LOGGER.warning("task_failed id=%s error=%s", task_id, error)
-        return
+        fallback = str(text or "").strip()
+        if fallback:
+            targets = [fallback]
+            _append_progress(task_id, "人物识别", f"未检出列表，已按输入人物处理：{fallback}")
+        else:
+            error = "未识别到人物"
+            _update_task(task_id, status="failed", error=error)
+            _append_progress(task_id, "失败", error)
+            _append_progress(task_id, "完成", "失败")
+            _LOGGER.warning("task_failed id=%s error=%s", task_id, error)
+            return
     results = []
     people_payload = []
     for idx, person in enumerate(targets):
@@ -2272,8 +2370,11 @@ def main():
     client = StoryAgentLLM()
     targets = extract_historical_figures(client, args.person)
     if not targets:
-        print("未识别到历史人物")
-        return
+        fallback = str(args.person or "").strip()
+        if not fallback:
+            print("未识别到人物")
+            return
+        targets = [fallback]
     stats = {"markdown": 0, "html": 0, "failed": 0}
     for person in targets:
         print(f"正在生成 {person} 生平文档，可能需要一些时间...")
