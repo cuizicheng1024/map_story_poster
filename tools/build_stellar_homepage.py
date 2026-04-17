@@ -58,6 +58,39 @@ def _scan_latest_html(story_map_dir: Path) -> Dict[str, HtmlEntry]:
     return latest
 
 
+def _extract_birth_from_story_map_html(html_path: Path) -> Tuple[Optional[float], Optional[float], str, str]:
+    try:
+        text = html_path.read_text(encoding="utf-8")
+    except Exception:
+        return None, None, "", ""
+    m = re.search(r"const data\s*=\s*(\{[\s\S]*?\})\s*;\s*window\.__EXPORT_DATA__", text)
+    if not m:
+        return None, None, "", ""
+    try:
+        data = json.loads(m.group(1))
+    except Exception:
+        return None, None, "", ""
+    person = data.get("person") if isinstance(data, dict) else None
+    if not isinstance(person, dict):
+        return None, None, "", ""
+    dynasty = str(person.get("dynasty") or "").strip()
+    birthplace = str(person.get("birthplace") or "").strip()
+    birth = person.get("birth")
+    if not isinstance(birth, dict):
+        return None, None, birthplace, dynasty
+    lat = birth.get("lat")
+    lng = birth.get("lng")
+    try:
+        lat_f = float(lat) if lat is not None else None
+    except Exception:
+        lat_f = None
+    try:
+        lng_f = float(lng) if lng is not None else None
+    except Exception:
+        lng_f = None
+    return lat_f, lng_f, birthplace, dynasty
+
+
 def _read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -203,6 +236,8 @@ def _render_index_html(title: str, data_file: str) -> str:
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{safe_title}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" onerror="if(!this.dataset.f){{this.dataset.f='1';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}}else if(this.dataset.f==='1'){{this.dataset.f='2';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}}" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" onerror="if(!this.dataset.f){{this.dataset.f='1';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}}else if(this.dataset.f==='1'){{this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}}"></script>
     <style>
       body {{
         background: radial-gradient(900px 600px at 10% 0%, rgba(59,130,246,0.15), transparent 60%),
@@ -276,7 +311,7 @@ def _render_index_html(title: str, data_file: str) -> str:
     <div class="max-w-5xl mx-auto px-4 py-6 space-y-4">
       <div class="glass card px-6 py-5">
         <div class="text-xl font-extrabold text-slate-900">故事地图</div>
-        <div class="text-xs text-slate-500 mt-1">以人物→时空→事件为主线，探索历史人物的时空变革</div>
+        <div class="text-xs text-slate-500 mt-1">以人物→时空→事件为主线，探索历史人物的时空关联</div>
       </div>
 
       <div class="glass card px-6 py-5">
@@ -289,15 +324,29 @@ def _render_index_html(title: str, data_file: str) -> str:
 
       <div class="card graph overflow-hidden relative">
         <div class="px-6 py-4 text-sm font-bold text-white/90 flex items-center justify-between">
-          <div>人类群星闪耀时</div>
+          <div class="flex items-center gap-3">
+            <div>人类群星闪耀时</div>
+            <div class="flex items-center gap-1 text-[11px] font-normal">
+              <button id="tabGraph" class="px-3 py-1 rounded-lg bg-white/15 border border-white/20 text-white/90">关系图</button>
+              <button id="tabMap" class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10">地图视角</button>
+            </div>
+          </div>
           <div class="text-[11px] font-normal text-white/60">窗口内：<span id="activeCount">-</span></div>
         </div>
         <div class="px-6 pb-2 -mt-2 text-[11px] text-white/60">拖动时间窗筛选人物；悬停查看简介；点击节点进入人物页</div>
-        <div class="relative px-3 pb-3">
-          <div class="rounded-xl overflow-hidden border border-white/10">
-            <canvas id="c" width="980" height="460"></canvas>
+
+        <div class="relative px-3 pb-3 overflow-hidden">
+          <div id="tabTrack" class="flex w-[200%]" style="transform: translateX(0%); transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1); will-change: transform;">
+            <div class="w-1/2 pr-3 relative">
+              <div class="rounded-xl overflow-hidden border border-white/10">
+                <canvas id="c" width="980" height="460"></canvas>
+              </div>
+              <div id="tip" class="tooltip hidden"></div>
+            </div>
+            <div class="w-1/2 pl-3">
+              <div id="chinaMap" class="rounded-xl overflow-hidden border border-white/10" style="height:460px;"></div>
+            </div>
           </div>
-          <div id="tip" class="tooltip hidden"></div>
         </div>
 
         <div class="px-6 pb-6">
@@ -345,6 +394,10 @@ def _render_index_html(title: str, data_file: str) -> str:
       const $minLabel = document.getElementById("minLabel");
       const $maxLabel = document.getElementById("maxLabel");
       const $midLabel = document.getElementById("midLabel");
+      const $tabTrack = document.getElementById("tabTrack");
+      const $tabGraph = document.getElementById("tabGraph");
+      const $tabMap = document.getElementById("tabMap");
+      const $chinaMap = document.getElementById("chinaMap");
 
       const W = $c.width;
       const H = $c.height;
@@ -535,12 +588,13 @@ def _render_index_html(title: str, data_file: str) -> str:
 
         ctx.globalCompositeOperation = "source-over";
         for (const n of nodes) {{
-          const active = inWindow(n);
-          let r = active ? 6.2 : 4.6;
-          let alpha = active ? 0.95 : 0.14;
-          let col = active ? colorByYear(n.birth_year) : "rgba(255,255,255,0.32)";
+          const p = (typeof n.p === "number") ? clamp(n.p, 0, 1) : (inWindow(n) ? 1 : 0);
+          const active = p > 0.55;
+          let r = 4.4 + p * 2.8;
+          let alpha = 0.10 + p * 0.88;
+          let col = p > 0 ? colorByYear(n.birth_year) : "rgba(255,255,255,0.30)";
           if (hover && hover.person === n.person) {{
-            r = 9.0;
+            r = 9.2;
             alpha = 1.0;
             col = "#fbbf24";
           }}
@@ -551,10 +605,10 @@ def _render_index_html(title: str, data_file: str) -> str:
           ctx.fill();
           if (active) {{
             ctx.beginPath();
-            ctx.strokeStyle = "rgba(255,255,255,0.20)";
-            ctx.globalAlpha = 0.55;
+            ctx.strokeStyle = "rgba(255,255,255,0.22)";
+            ctx.globalAlpha = 0.35 + p * 0.35;
             ctx.lineWidth = 1;
-            ctx.arc(n.x, n.y, r + 2.5, 0, Math.PI * 2);
+            ctx.arc(n.x, n.y, r + 2.6, 0, Math.PI * 2);
             ctx.stroke();
           }}
         }}
@@ -582,6 +636,9 @@ def _render_index_html(title: str, data_file: str) -> str:
         if (reduceMotion) return;
         const t = (nowMs || 0) * 0.001;
         for (const n of nodes) {{
+          const target = inWindow(n) ? 1 : 0;
+          if (typeof n.p !== "number") n.p = target;
+          n.p = n.p + (target - n.p) * 0.10;
           const seed = hash(n.person || "");
           const ox = Math.sin(t * 0.55 + (seed % 1000) * 0.01) * 2.0 + Math.sin(t * 0.17 + (seed % 97)) * 0.9;
           const oy = Math.cos(t * 0.50 + (seed % 777) * 0.01) * 1.8 + Math.cos(t * 0.19 + (seed % 83)) * 0.8;
@@ -642,6 +699,100 @@ def _render_index_html(title: str, data_file: str) -> str:
       $q.addEventListener("keydown", (e) => {{
         if (e.key === "Enter") openPerson($q.value);
       }});
+
+      let currentTab = "graph";
+      let mapInited = false;
+      let map = null;
+      let geoLayer = null;
+      let markers = [];
+      let mapRenderer = null;
+
+      const setTab = (tab) => {{
+        currentTab = tab;
+        if ($tabTrack) {{
+          $tabTrack.style.transform = tab === "graph" ? "translateX(0%)" : "translateX(-50%)";
+        }}
+        if ($tabGraph && $tabMap) {{
+          if (tab === "graph") {{
+            $tabGraph.className = "px-3 py-1 rounded-lg bg-white/15 border border-white/20 text-white/90";
+            $tabMap.className = "px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10";
+          }} else {{
+            $tabGraph.className = "px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10";
+            $tabMap.className = "px-3 py-1 rounded-lg bg-white/15 border border-white/20 text-white/90";
+          }}
+        }}
+        if (tab === "map") {{
+          initMapOnce();
+        }}
+      }};
+
+      const initMapOnce = () => {{
+        if (mapInited) return;
+        if (!$chinaMap) return;
+        if (typeof L === "undefined") return;
+        mapInited = true;
+        mapRenderer = L.canvas({{ padding: 0.5 }});
+        map = L.map($chinaMap, {{
+          zoomControl: false,
+          attributionControl: false,
+          scrollWheelZoom: true,
+          preferCanvas: true,
+          renderer: mapRenderer,
+        }}).setView([35.5, 105.0], 4);
+
+        fetch("https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json").then((r) => r.json()).then((gj) => {{
+          try {{
+            geoLayer = L.geoJSON(gj, {{
+              style: () => ({{
+                color: "rgba(255,255,255,0.28)",
+                weight: 1,
+                fillColor: "rgba(59,130,246,0.06)",
+                fillOpacity: 1,
+              }})
+            }}).addTo(map);
+            map.fitBounds(geoLayer.getBounds(), {{ padding: [12, 12] }});
+          }} catch (_) {{}}
+        }}).catch(() => {{}});
+
+        const addMarker = (n) => {{
+          const lat = n.birth_lat;
+          const lng = n.birth_lng;
+          if (typeof lat !== "number" || typeof lng !== "number") return;
+          const mk = L.circleMarker([lat, lng], {{
+            radius: 4.5,
+            color: "rgba(255,255,255,0.35)",
+            weight: 1,
+            fillColor: "rgba(255,255,255,0.28)",
+            fillOpacity: 0.4,
+            renderer: mapRenderer,
+          }});
+          mk.on("click", () => openPerson(n.person));
+          mk.addTo(map);
+          markers.push({{ mk, n }});
+        }};
+
+        for (const n of nodes) addMarker(n);
+        updateMapMarkers();
+      }};
+
+      const updateMapMarkers = () => {{
+        if (!mapInited) return;
+        for (const it of markers) {{
+          const n = it.n;
+          const active = inWindow(n);
+          it.mk.setStyle({{
+            radius: active ? 6.2 : 4.2,
+            color: active ? "rgba(34,197,94,0.65)" : "rgba(255,255,255,0.20)",
+            weight: active ? 1.2 : 1,
+            fillColor: active ? "rgba(34,197,94,0.55)" : "rgba(255,255,255,0.20)",
+            fillOpacity: active ? 0.85 : 0.30,
+          }});
+        }}
+      }};
+
+      if ($tabGraph) $tabGraph.addEventListener("click", () => setTab("graph"));
+      if ($tabMap) $tabMap.addEventListener("click", () => setTab("map"));
+      setTab("graph");
 
       const onMouseMove = (e) => {{
         const rect = $c.getBoundingClientRect();
@@ -722,6 +873,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         }}
         setHandles();
         updateActiveCount();
+        updateMapMarkers();
         draw();
       }};
 
@@ -742,6 +894,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         endYear = 1761;
         setHandles();
         updateActiveCount();
+        updateMapMarkers();
         draw();
       }});
 
@@ -778,10 +931,30 @@ def _render_index_html(title: str, data_file: str) -> str:
         const centers = new Map();
         const cx = W / 2;
         const cy = H / 2;
-        const ring = Math.min(W, H) * 0.34;
-        keys.forEach((k, i) => {{
-          const ang = (i / Math.max(1, keys.length)) * Math.PI * 2 - Math.PI / 2;
-          centers.set(k, {{ x: cx + Math.cos(ang) * ring, y: cy + Math.sin(ang) * ring }});
+        const picked = [];
+        const minD2 = 160 * 160;
+        keys.forEach((k) => {{
+          const seed = hash(k);
+          let best = null;
+          for (let a = 0; a < 32; a++) {{
+            const x = pad + rand01(seed + a * 17 + 1) * (W - pad * 2);
+            const y = pad + rand01(seed + a * 17 + 2) * (H - pad * 2);
+            let ok = true;
+            for (const p of picked) {{
+              const dx = x - p.x;
+              const dy = y - p.y;
+              if (dx * dx + dy * dy < minD2) {{ ok = false; break; }}
+            }}
+            if (ok) {{ best = {{ x, y }}; break; }}
+          }}
+          if (!best) {{
+            best = {{
+              x: clamp(cx + (rand01(seed + 3) - 0.5) * (W * 0.7), pad, W - pad),
+              y: clamp(cy + (rand01(seed + 4) - 0.5) * (H * 0.7), pad, H - pad),
+            }};
+          }}
+          centers.set(k, best);
+          picked.push(best);
         }});
 
         nodes = raw.map((n, idx) => {{
@@ -866,6 +1039,16 @@ def main() -> int:
             quote = _pick_quote(spot)
 
         html_entry = latest_html.get(name)
+        birth_lat = None
+        birth_lng = None
+        birthplace = ""
+        if html_entry:
+            lat, lng, bp, dyn2 = _extract_birth_from_story_map_html(story_map_dir / html_entry.file)
+            birth_lat = lat
+            birth_lng = lng
+            birthplace = bp
+            if not dynasty and dyn2:
+                dynasty = dyn2
         nodes.append(
             {
                 "person": name,
@@ -873,6 +1056,9 @@ def main() -> int:
                 "death_year": death_year,
                 "dynasty": dynasty,
                 "quote": quote,
+                "birthplace": birthplace,
+                "birth_lat": birth_lat,
+                "birth_lng": birth_lng,
                 "file": html_entry.file if html_entry else "",
                 "seed": _sha1_int(name),
                 "relations": relations,
