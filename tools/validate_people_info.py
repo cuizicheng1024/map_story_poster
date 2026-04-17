@@ -452,7 +452,10 @@ def main() -> int:
         "format_check": {"enabled": do_fmt, "ok": fmt_ok},
     }
     (out_dir / "summary.json").write_text(json.dumps(out_summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    (out_dir / "index.json").write_text(json.dumps(sorted(summary_rows, key=lambda x: str(x.get("person") or "")), ensure_ascii=False, indent=2), encoding="utf-8")
+    idx_rows = sorted(summary_rows, key=lambda x: str(x.get("person") or ""))
+    (out_dir / "index.json").write_text(json.dumps(idx_rows, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "index_fact.json").write_text(json.dumps([r for r in idx_rows if r.get("fact_check_path")], ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "index_format.json").write_text(json.dumps([r for r in idx_rows if r.get("format_check_path")], ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(out_summary, ensure_ascii=False))
     return 0
 
