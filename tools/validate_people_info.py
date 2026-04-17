@@ -360,6 +360,7 @@ def main() -> int:
     p.add_argument("--fact-check", action="store_true")
     p.add_argument("--format-check", action="store_true")
     p.add_argument("--only", choices=["fact", "format", "both"], default="both")
+    p.add_argument("--limit", type=int, default=0, help="只校验前 N 个文件（0 表示全量）")
     p.add_argument("--concurrency", type=int, default=int(os.getenv("VALIDATE_CONCURRENCY", "20")))
     p.add_argument("--timeout", type=int, default=int(os.getenv("VALIDATE_TIMEOUT", "120")))
     p.add_argument("--retries", type=int, default=int(os.getenv("VALIDATE_RETRIES", "2")))
@@ -382,6 +383,8 @@ def main() -> int:
     do_fmt = args.only in ("format", "both")
 
     md_files = _iter_md_files(input_dir)
+    if int(args.limit) > 0:
+        md_files = md_files[: int(args.limit)]
     total = len(md_files)
     if total == 0:
         raise SystemExit(f"no md files in {input_dir}")
