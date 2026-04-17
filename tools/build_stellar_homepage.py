@@ -267,7 +267,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         border: 1px solid rgba(255,255,255,0.12);
         border-radius: 10px;
         padding: 10px 12px;
-        max-width: 340px;
+        max-width: 280px;
         font-size: 12px;
         line-height: 1.45;
         box-shadow: 0 12px 24px rgba(0,0,0,0.24);
@@ -276,18 +276,18 @@ def _render_index_html(title: str, data_file: str) -> str:
       .range-rail {{
         height: 64px;
         border-radius: 14px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-        border: 1px solid rgba(255,255,255,0.12);
+        background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+        border: 1px solid rgba(255,255,255,0.16);
         touch-action: none;
         user-select: none;
       }}
       .ticks {{
         background-image:
           repeating-linear-gradient(to right,
-            rgba(255,255,255,0.10) 0px,
-            rgba(255,255,255,0.10) 1px,
+            rgba(255,255,255,0.14) 0px,
+            rgba(255,255,255,0.14) 1px,
             rgba(0,0,0,0) 1px,
-            rgba(0,0,0,0) 22px);
+            rgba(0,0,0,0) 20px);
         pointer-events: none;
       }}
       .band {{
@@ -370,7 +370,6 @@ def _render_index_html(title: str, data_file: str) -> str:
         </div>
       </div>
 
-      <div class="text-[11px] text-slate-500 px-1">数据：{data_file} · 生成：{_now()}</div>
     </div>
 
     <script>
@@ -512,20 +511,36 @@ def _render_index_html(title: str, data_file: str) -> str:
         if (!$bands) return;
         const bands = [
           {{ name: "春秋战国", a: -800, b: -221 }},
-          {{ name: "秦汉", a: -221, b: 220 }},
+          {{ name: "秦", a: -221, b: -206 }},
+          {{ name: "汉", a: -206, b: 220 }},
           {{ name: "魏晋南北", a: 220, b: 589 }},
           {{ name: "隋唐", a: 589, b: 907 }},
-          {{ name: "宋元", a: 960, b: 1368 }},
-          {{ name: "明清", a: 1368, b: 1840 }},
+          {{ name: "宋", a: 960, b: 1279 }},
+          {{ name: "元", a: 1271, b: 1368 }},
+          {{ name: "明", a: 1368, b: 1644 }},
+          {{ name: "清", a: 1644, b: 1840 }},
+        ];
+        const bandColors = [
+          "rgba(56,189,248,0.12)",
+          "rgba(34,197,94,0.10)",
+          "rgba(239,68,68,0.10)",
+          "rgba(96,165,250,0.10)",
+          "rgba(245,158,11,0.10)",
+          "rgba(168,85,247,0.10)",
+          "rgba(16,185,129,0.10)",
+          "rgba(249,115,22,0.10)",
+          "rgba(234,179,8,0.10)",
         ];
         const pieces = [];
-        for (const b of bands) {{
+        for (let i = 0; i < bands.length; i++) {{
+          const b = bands[i];
           const l = clamp(toT(b.a), 0, 1);
           const r = clamp(toT(b.b), 0, 1);
           if (r <= 0 || l >= 1) continue;
           const left = (l * 100).toFixed(4) + "%";
           const width = ((r - l) * 100).toFixed(4) + "%";
-          pieces.push(`<div style="position:absolute;left:${{left}};width:${{width}};top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">${{esc(b.name)}}</div>`);
+          const bg = bandColors[i % bandColors.length];
+          pieces.push(`<div style="position:absolute;left:${{left}};width:${{width}};top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:${{bg}};border-right:1px solid rgba(255,255,255,0.12);">${{esc(b.name)}}</div>`);
         }}
         $bands.innerHTML = pieces.join("");
         $bands.style.position = "absolute";
@@ -678,8 +693,15 @@ def _render_index_html(title: str, data_file: str) -> str:
         const dynasty = String(n.dynasty || "").trim();
         const dline = dynasty ? `<div class="text-white/70 text-[11px] mt-1">时代：${{esc(dynasty)}}</div>` : "";
         $tip.innerHTML = `<div class="font-bold text-white/95">${{esc(n.person)}}</div><div class="text-white/70 text-[11px] mt-1">生卒：${{esc(years)}}</div>${{dline}}<div class="text-white/85 text-[11px] mt-1 whitespace-pre-wrap">${{esc(quote).replace(/^\\n/,'')}}</div>`;
-        $tip.style.left = (clientX + 12) + "px";
-        $tip.style.top = (clientY + 12) + "px";
+        const rect = $c.getBoundingClientRect();
+        let left = clientX - rect.left + 10;
+        let top = clientY - rect.top + 10;
+        const tw = 260;
+        const th = 92;
+        if (left + tw > rect.width - 8) left = Math.max(8, clientX - rect.left - tw - 10);
+        if (top + th > rect.height - 8) top = Math.max(8, clientY - rect.top - th - 10);
+        $tip.style.left = left + "px";
+        $tip.style.top = top + "px";
         $tip.classList.remove("hidden");
         setHoverMarkers(n);
       }};
