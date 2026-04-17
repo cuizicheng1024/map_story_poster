@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-04-17 16:43:36",
-  "min_year": -1000,
-  "max_year": 1761,
-  "default_start": 811,
-  "default_end": 1761,
+  "generated_at": "2026-04-17 16:51:36",
+  "min_year": -800,
+  "max_year": 1840,
+  "default_start": 0,
+  "default_end": 1840,
   "nodes": [
     {
       "person": "S.M.斯季绍夫",

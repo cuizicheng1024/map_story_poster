@@ -16,8 +16,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 STORY_MD_DIR = REPO_ROOT / "main" / "storymap" / "examples" / "story"
 STORY_MAP_DIR = REPO_ROOT / "main" / "storymap" / "examples" / "story_map"
 SPOTLIGHT_JSON = REPO_ROOT / "data" / "pep_people_spotlight.json"
-MIN_YEAR = -1000
-MAX_YEAR = 1761
+MIN_YEAR = -800
+MAX_YEAR = 1840
 
 
 def _now() -> str:
@@ -435,10 +435,10 @@ def _render_index_html(title: str, data_file: str) -> str:
       let nodes = [];
       let edges = [];
       let neigh = [];
-      let minYear = -1000;
-      let maxYear = 1761;
-      let startYear = 811;
-      let endYear = 1761;
+      let minYear = -800;
+      let maxYear = 1840;
+      let startYear = 0;
+      let endYear = 1840;
       let dragMode = "";
       let dragStartX = 0;
       let dragStartA = 0;
@@ -489,7 +489,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         $startYear.textContent = String(startYear);
         $endYear.textContent = String(endYear);
         $spanYear.textContent = String(Math.max(0, endYear - startYear));
-        $minLabel.textContent = "前1000";
+        $minLabel.textContent = "前800";
         $maxLabel.textContent = String(maxYear);
         $midLabel.textContent = "0";
       }};
@@ -511,11 +511,12 @@ def _render_index_html(title: str, data_file: str) -> str:
       const renderBands = () => {{
         if (!$bands) return;
         const bands = [
-          {{ name: "唐", a: 618, b: 907 }},
-          {{ name: "宋", a: 960, b: 1279 }},
-          {{ name: "元", a: 1271, b: 1368 }},
-          {{ name: "明", a: 1368, b: 1644 }},
-          {{ name: "清", a: 1644, b: 1761 }},
+          {{ name: "春秋战国", a: -800, b: -221 }},
+          {{ name: "秦汉", a: -221, b: 220 }},
+          {{ name: "魏晋南北", a: 220, b: 589 }},
+          {{ name: "隋唐", a: 589, b: 907 }},
+          {{ name: "宋元", a: 960, b: 1368 }},
+          {{ name: "明清", a: 1368, b: 1840 }},
         ];
         const pieces = [];
         for (const b of bands) {{
@@ -890,8 +891,8 @@ def _render_index_html(title: str, data_file: str) -> str:
       window.addEventListener("mousemove", onMove);
       window.addEventListener("mouseup", onUp);
       $rail.addEventListener("dblclick", () => {{
-        startYear = 811;
-        endYear = 1761;
+        startYear = 0;
+        endYear = 1840;
         setHandles();
         updateActiveCount();
         updateMapMarkers();
@@ -957,21 +958,70 @@ def _render_index_html(title: str, data_file: str) -> str:
           picked.push(best);
         }});
 
+        const tFor = (n) => {{
+          const y = n.birth_year;
+          if (typeof y !== "number") return null;
+          return clamp((y - minYear) / (maxYear - minYear), 0, 1);
+        }};
+
+        const laneFor = (n) => {{
+          const k = groupKey(n);
+          const i = Math.abs(hash(k)) % 7;
+          return (i + 0.5) / 7;
+        }};
+
+        const cell = 12;
+        const occ = new Set();
+        const key = (cx, cy) => `${{cx}},${{cy}}`;
+        const isFree = (x, y) => {{
+          const cx = Math.round(x / cell);
+          const cy = Math.round(y / cell);
+          const k = key(cx, cy);
+          if (occ.has(k)) return false;
+          occ.add(k);
+          return true;
+        }};
+
+        const place = (dx, dy, wantX, wantY) => {{
+          const x = clamp(wantX + dx, pad, W - pad);
+          const y = clamp(wantY + dy, pad, H - pad);
+          if (isFree(x, y)) return [x, y];
+          return null;
+        }};
+
+        const offsets = [];
+        for (let r = 0; r <= 6; r++) {{
+          const step = 10;
+          for (let a = 0; a < 12; a++) {{
+            const ang = (a / 12) * Math.PI * 2;
+            offsets.push([Math.cos(ang) * r * step, Math.sin(ang) * r * step]);
+          }}
+        }}
+
         nodes = raw.map((n, idx) => {{
           const seed = hash(n.person || "");
-          const k = groupKey(n);
-          const c = centers.get(k) || {{ x: cx, y: cy }};
-          const jx = (rand01(seed + 1) - 0.5) * 170;
-          const jy = (rand01(seed + 2) - 0.5) * 120;
-          const x = clamp(c.x + jx, pad, W - pad);
-          const y = clamp(c.y + jy, pad, H - pad);
+          const t = tFor(n);
+          const x0 = t == null ? (pad + rand01(seed + 1) * (W - pad * 2)) : (pad + t * (W - pad * 2));
+          const yLane = laneFor(n);
+          const y0 = pad + yLane * (H - pad * 2) + (rand01(seed + 2) - 0.5) * 26;
+
+          let best = null;
+          for (const [dx, dy] of offsets) {{
+            const p = place(dx, dy, x0, y0);
+            if (p) {{ best = p; break; }}
+          }}
+          if (!best) {{
+            best = [clamp(x0, pad, W - pad), clamp(y0, pad, H - pad)];
+          }}
+          const x = best[0];
+          const y = best[1];
           return {{ ...n, x, y, bx: x, by: y, _idx: idx }};
         }});
         edges = (data.edges || []).filter((e) => e && typeof e.a === "number" && typeof e.b === "number");
-        minYear = data.min_year ?? -1000;
-        maxYear = data.max_year ?? 1761;
-        startYear = data.default_start ?? 811;
-        endYear = data.default_end ?? 1761;
+        minYear = data.min_year ?? -800;
+        maxYear = data.max_year ?? 1840;
+        startYear = data.default_start ?? 0;
+        endYear = data.default_end ?? 1840;
         buildNeigh();
         renderBands();
         setHandles();
@@ -993,8 +1043,8 @@ def main() -> int:
     p.add_argument("--out-index", default="index.html")
     p.add_argument("--out-data", default="stellar_home_data.json")
     p.add_argument("--title", default="故事地图")
-    p.add_argument("--default-start", type=int, default=811)
-    p.add_argument("--default-end", type=int, default=1761)
+    p.add_argument("--default-start", type=int, default=0)
+    p.add_argument("--default-end", type=int, default=1840)
     args = p.parse_args()
 
     story_map_dir = Path(args.story_map_dir).resolve()
