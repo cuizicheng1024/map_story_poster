@@ -15,10 +15,11 @@ import re
 import threading
 import time
 import uuid
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Dict, List, Optional, Tuple
-from urllib.parse import parse_qs, quote, urlparse
+from urllib.parse import parse_qs, quote, unquote, urlparse
 from urllib.request import Request, urlopen
 
 from dotenv import load_dotenv
@@ -2216,6 +2217,61 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(length))
         self.end_headers()
 
+    def _set_headers_raw(self, status: int, content_type: str, length: int, origin: Optional[str]) -> None:
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        if origin:
+            self.send_header("Access-Control-Allow-Origin", origin)
+        self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Content-Length", str(length))
+        self.end_headers()
+
+    def _static_dir(self) -> str:
+        return os.path.abspath(os.path.join(_project_root(), "storymap", "examples", "story_map"))
+
+    def _guess_content_type(self, path: str) -> str:
+        p = str(path or "").lower()
+        if p.endswith(".html"):
+            return "text/html; charset=utf-8"
+        if p.endswith(".json"):
+            return "application/json; charset=utf-8"
+        if p.endswith(".css"):
+            return "text/css; charset=utf-8"
+        if p.endswith(".js"):
+            return "application/javascript; charset=utf-8"
+        if p.endswith(".png"):
+            return "image/png"
+        if p.endswith(".jpg") or p.endswith(".jpeg"):
+            return "image/jpeg"
+        if p.endswith(".svg"):
+            return "image/svg+xml"
+        return "application/octet-stream"
+
+    def _try_serve_static(self, parsed_path: str, origin: Optional[str], head_only: bool = False) -> bool:
+        rel = unquote((parsed_path or "").lstrip("/"))
+        if parsed_path == "/" or rel == "":
+            rel = "index.html"
+
+        if not re.search(r"\.(html|json|css|js|png|jpg|jpeg|svg)$", rel, flags=re.IGNORECASE):
+            return False
+
+        static_root = Path(self._static_dir()).resolve()
+        target = (static_root / rel).resolve()
+        try:
+            target.relative_to(static_root)
+        except Exception:
+            return False
+        if not target.exists() or not target.is_file():
+            return False
+
+        body = target.read_bytes()
+        ct = self._guess_content_type(target.name)
+        self._set_headers_raw(200, ct, len(body), origin)
+        if not head_only:
+            self.wfile.write(body)
+        return True
+
     def do_OPTIONS(self):
         origin = self.headers.get("Origin", "")
         allowed = _resolve_cors_origin(origin)
@@ -2230,6 +2286,32 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
+    def do_HEAD(self):
+        origin = self.headers.get("Origin", "")
+        allowed = _resolve_cors_origin(origin)
+        if origin and not allowed:
+            self.send_response(403)
+            self.end_headers()
+            return
+        parsed = urlparse(self.path)
+        if self._try_serve_static(parsed.path, allowed, head_only=True):
+            return
+        if parsed.path == "/health":
+            payload = json.dumps({"ok": True, "service": "story_map", "version": "1"}, ensure_ascii=False).encode("utf-8")
+            self._set_headers(200, len(payload), allowed)
+            return
+        if parsed.path == "/task":
+            payload = json.dumps({"ok": False, "error": "id required"}, ensure_ascii=False).encode("utf-8")
+            self._set_headers(400, len(payload), allowed)
+            return
+        if parsed.path == "/generate":
+            payload = json.dumps({"ok": False, "error": "person required"}, ensure_ascii=False).encode("utf-8")
+            self._set_headers(400, len(payload), allowed)
+            return
+        payload = json.dumps({"ok": False, "error": "not found"}, ensure_ascii=False).encode("utf-8")
+        self._set_headers(404, len(payload), allowed)
+        return
+
     def do_GET(self):
         origin = self.headers.get("Origin", "")
         allowed = _resolve_cors_origin(origin)
@@ -2239,6 +2321,26 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             self.wfile.write(payload)
             return
         parsed = urlparse(self.path)
+        if parsed.path == "/debug_static":
+            static_dir = self._static_dir()
+            index_path = os.path.join(static_dir, "index.html")
+            payload = json.dumps(
+                {
+                    "ok": True,
+                    "static_dir": static_dir,
+                    "static_exists": os.path.exists(static_dir),
+                    "index_exists": os.path.exists(index_path),
+                    "cwd": os.getcwd(),
+                    "project_root": _project_root(),
+                    "allowed_origin": allowed,
+                },
+                ensure_ascii=False,
+            ).encode("utf-8")
+            self._set_headers(200, len(payload), allowed)
+            self.wfile.write(payload)
+            return
+        if self._try_serve_static(parsed.path, allowed):
+            return
         if parsed.path == "/health":
             payload = json.dumps({"ok": True, "service": "story_map", "version": "1"}, ensure_ascii=False).encode("utf-8")
             self._set_headers(200, len(payload), allowed)

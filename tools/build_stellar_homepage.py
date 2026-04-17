@@ -1,0 +1,964 @@
+#!/usr/bin/env python3
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+STORY_MD_DIR = REPO_ROOT / "main" / "storymap" / "examples" / "story"
+STORY_MAP_DIR = REPO_ROOT / "main" / "storymap" / "examples" / "story_map"
+SPOTLIGHT_JSON = REPO_ROOT / "data" / "pep_people_spotlight.json"
+MIN_YEAR = -1000
+MAX_YEAR = 1761
+
+
+def _now() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _sha1_int(s: str) -> int:
+    h = hashlib.sha1(s.encode("utf-8")).hexdigest()
+    return int(h[:12], 16)
+
+
+def _person_from_filename(name: str) -> str:
+    stem = Path(name).stem
+    if "__pure__" in stem:
+        return stem.split("__pure__", 1)[0]
+    return stem
+
+
+@dataclass
+class HtmlEntry:
+    person: str
+    file: str
+    mtime: float
+
+
+def _scan_latest_html(story_map_dir: Path) -> Dict[str, HtmlEntry]:
+    latest: Dict[str, HtmlEntry] = {}
+    for p in story_map_dir.glob("*.html"):
+        if not p.is_file():
+            continue
+        person = _person_from_filename(p.name).strip()
+        if not person:
+            continue
+        e = HtmlEntry(person=person, file=p.name, mtime=p.stat().st_mtime)
+        cur = latest.get(person)
+        if cur is None or e.mtime > cur.mtime:
+            latest[person] = e
+    return latest
+
+
+def _read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _scan_people_from_story_md(story_md_dir: Path) -> List[str]:
+    if not story_md_dir.exists():
+        return []
+    items = [p.stem for p in story_md_dir.glob("*.md") if p.is_file()]
+    return sorted({x.strip() for x in items if str(x).strip()})
+
+
+def _scan_people_from_story_map_html(story_map_dir: Path) -> List[str]:
+    if not story_map_dir.exists():
+        return []
+    names: List[str] = []
+    for p in story_map_dir.glob("*.html"):
+        if not p.is_file():
+            continue
+        person = _person_from_filename(p.name).strip()
+        if person:
+            names.append(person)
+    return sorted(set(names))
+
+
+def _extract_years_from_md(md_text: str) -> Tuple[Optional[int], Optional[int]]:
+    text = md_text
+
+    def pick_year(s: str) -> Optional[int]:
+        ys = re.findall(r"(?<!\d)(-?\d{1,4})(?!\d)", str(s or ""))
+        if not ys:
+            return None
+        try:
+            return int(ys[0])
+        except Exception:
+            return None
+
+    def pick_two_years(s: str) -> Tuple[Optional[int], Optional[int]]:
+        ys = re.findall(r"(?<!\d)(-?\d{1,4})(?!\d)", str(s or ""))
+        if len(ys) < 2:
+            return None, None
+        try:
+            return int(ys[0]), int(ys[1])
+        except Exception:
+            return None, None
+
+    m = re.search(r"\*\*生卒年\*\*[:：]\s*([^\n]+)", text)
+    if not m:
+        m = re.search(r"(?:生卒年|生卒)[:：]\s*([^\n]+)", text)
+    if m:
+        b, d = pick_two_years(m.group(1))
+        if b is not None or d is not None:
+            return b, d
+
+    birth = None
+    death = None
+    mb = re.search(r"\*\*出生\*\*[:：]\s*([^\n]+)", text)
+    if not mb:
+        mb = re.search(r"(?:出生)[:：]\s*([^\n]+)", text)
+    if mb:
+        birth = pick_year(mb.group(1))
+
+    md = re.search(r"\*\*(去世|逝世)\*\*[:：]\s*([^\n]+)", text)
+    if not md:
+        md = re.search(r"(去世|逝世)[:：]\s*([^\n]+)", text)
+    if md:
+        death = pick_year(md.group(2))
+
+    return birth, death
+
+
+def _extract_relations(md_text: str) -> List[str]:
+    text = md_text
+    patterns = [
+        r"(?:父亲|父)[：:\s]+([^\n]+)",
+        r"(?:母亲|母)[：:\s]+([^\n]+)",
+        r"(?:兄长|兄)[：:\s]+([^\n]+)",
+        r"(?:弟弟|弟)[：:\s]+([^\n]+)",
+        r"(?:姐姐|姐)[：:\s]+([^\n]+)",
+        r"(?:妹妹|妹)[：:\s]+([^\n]+)",
+        r"(?:子|儿子|女儿)[：:\s]+([^\n]+)",
+        r"(?:配偶|妻子|丈夫)[：:\s]+([^\n]+)",
+        r"(?:师从|师事|老师|导师)[：:\s]+([^\n]+)",
+    ]
+    out: List[str] = []
+    for pat in patterns:
+        for m in re.finditer(pat, text):
+            s = str(m.group(1) or "").strip()
+            if not s:
+                continue
+            s = re.sub(r"[，。；;].*$", "", s).strip()
+            parts = re.split(r"[、,，/｜|]", s)
+            for p in parts:
+                n = re.sub(r"[\s\(\)（）\[\]【】《》<>\"“”‘’·•]+", "", p).strip()
+                if 1 < len(n) <= 10:
+                    out.append(n)
+    seen = set()
+    dedup: List[str] = []
+    for x in out:
+        if x in seen:
+            continue
+        seen.add(x)
+        dedup.append(x)
+    return dedup[:8]
+
+
+def _dynasty_hint_from_md(md_text: str) -> str:
+    m = re.search(r"\*\*时代\*\*[:：]\s*([^\n]+)", md_text)
+    if m:
+        return m.group(1).strip()
+    m = re.search(r"时代[：:]\s*([^\n]+)", md_text)
+    if m:
+        return m.group(1).strip()
+    m = re.search(r"\*\*朝代\*\*[:：]\s*([^\n]+)", md_text)
+    if m:
+        return m.group(1).strip()
+    m = re.search(r"朝代[：:]\s*([^\n]+)", md_text)
+    if m:
+        return m.group(1).strip()
+    return ""
+
+
+def _pick_quote(spot: Dict[str, Any]) -> str:
+    s = str(spot.get("spotlight") or "").strip()
+    if s:
+        return s
+    quotes = spot.get("quotes")
+    if isinstance(quotes, list) and quotes:
+        q = str(quotes[0] or "").strip()
+        if q:
+            return q
+    intro = str(spot.get("intro") or "").strip()
+    if intro:
+        return intro
+    return ""
+
+
+def _render_index_html(title: str, data_file: str) -> str:
+    safe_title = title.strip() or "故事地图"
+    return f"""<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{safe_title}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {{
+        background: radial-gradient(900px 600px at 10% 0%, rgba(59,130,246,0.15), transparent 60%),
+                    radial-gradient(900px 700px at 90% 10%, rgba(244,63,94,0.12), transparent 55%),
+                    linear-gradient(180deg, #fff 0%, #f6f6f6 100%);
+      }}
+      .glass {{
+        background: rgba(255,255,255,0.85);
+        border: 1px solid rgba(225,225,225,0.85);
+        backdrop-filter: blur(10px);
+      }}
+      .card {{
+        border-radius: 16px;
+        box-shadow: 0 10px 28px rgba(15,23,42,0.08);
+      }}
+      .graph {{
+        background: radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,0.12), transparent 55%),
+                    radial-gradient(900px 600px at 80% 20%, rgba(244,63,94,0.10), transparent 55%),
+                    linear-gradient(135deg, #0b1b3a 0%, #0a1530 55%, #0c1130 100%);
+      }}
+      canvas {{ display:block; }}
+      .tooltip {{
+        position: absolute;
+        pointer-events: none;
+        background: rgba(15,23,42,0.88);
+        color: rgba(255,255,255,0.92);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 10px;
+        padding: 10px 12px;
+        max-width: 340px;
+        font-size: 12px;
+        line-height: 1.45;
+        box-shadow: 0 12px 24px rgba(0,0,0,0.24);
+        z-index: 50;
+      }}
+      .range-rail {{
+        height: 64px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+        border: 1px solid rgba(255,255,255,0.12);
+        touch-action: none;
+        user-select: none;
+      }}
+      .ticks {{
+        background-image:
+          repeating-linear-gradient(to right,
+            rgba(255,255,255,0.10) 0px,
+            rgba(255,255,255,0.10) 1px,
+            rgba(0,0,0,0) 1px,
+            rgba(0,0,0,0) 22px);
+        pointer-events: none;
+      }}
+      .band {{
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.10);
+        pointer-events: none;
+      }}
+      .handle {{
+        width: 14px;
+        height: 42px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.88);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+        border: 1px solid rgba(15,23,42,0.25);
+        cursor: ew-resize;
+        touch-action: none;
+      }}
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 py-6 space-y-4">
+      <div class="glass card px-6 py-5">
+        <div class="text-xl font-extrabold text-slate-900">故事地图</div>
+        <div class="text-xs text-slate-500 mt-1">以人物→时空→事件为主线，探索历史人物的时空变革</div>
+      </div>
+
+      <div class="glass card px-6 py-5">
+        <div class="text-sm font-bold text-slate-800 mb-2">检索人物</div>
+        <div class="flex items-center gap-3">
+          <input id="q" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-slate-900/10" placeholder="例如：苏轼" />
+          <button id="go" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800">查看</button>
+        </div>
+      </div>
+
+      <div class="card graph overflow-hidden relative">
+        <div class="px-6 py-4 text-sm font-bold text-white/90 flex items-center justify-between">
+          <div>人类群星闪耀时</div>
+          <div class="text-[11px] font-normal text-white/60">窗口内：<span id="activeCount">-</span></div>
+        </div>
+        <div class="px-6 pb-2 -mt-2 text-[11px] text-white/60">拖动时间窗筛选人物；悬停查看简介；点击节点进入人物页</div>
+        <div class="relative px-3 pb-3">
+          <div class="rounded-xl overflow-hidden border border-white/10">
+            <canvas id="c" width="980" height="460"></canvas>
+          </div>
+          <div id="tip" class="tooltip hidden"></div>
+        </div>
+
+        <div class="px-6 pb-6">
+          <div class="range-rail relative px-3 py-3">
+            <div class="absolute left-3 right-3 top-3 h-[12px] rounded-lg band flex items-center justify-between px-2 text-[10px] text-white/60" id="bands"></div>
+            <div class="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[34px] rounded-xl bg-white/5 border border-white/10 ticks"></div>
+            <div id="sel" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl bg-white/10 border border-white/15"></div>
+            <div id="mBirth" class="absolute top-1/2 -translate-y-1/2 h-[34px] w-[2px] bg-emerald-300/70 hidden"></div>
+            <div id="mDeath" class="absolute top-1/2 -translate-y-1/2 h-[34px] w-[2px] bg-rose-300/70 hidden"></div>
+            <div id="h1" class="handle absolute top-1/2 -translate-y-1/2"></div>
+            <div id="h2" class="handle absolute top-1/2 -translate-y-1/2"></div>
+            <div class="absolute left-5 bottom-2 text-[10px] text-white/55" id="minLabel"></div>
+            <div class="absolute right-5 bottom-2 text-[10px] text-white/55 text-right" id="maxLabel"></div>
+            <div class="absolute left-1/2 -translate-x-1/2 bottom-2 text-[10px] text-white/55" id="midLabel"></div>
+          </div>
+          <div class="flex items-center justify-between mt-2 text-[11px] text-white/55">
+            <div>起：<span id="startYear">-</span></div>
+            <div>窗口跨度：约 <span id="spanYear">-</span> 年</div>
+            <div>止：<span id="endYear">-</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-[11px] text-slate-500 px-1">数据：{data_file} · 生成：{_now()}</div>
+    </div>
+
+    <script>
+      const DATA_FILE = "{data_file}";
+      const $q = document.getElementById("q");
+      const $go = document.getElementById("go");
+      const $c = document.getElementById("c");
+      const ctx = $c.getContext("2d");
+      const $tip = document.getElementById("tip");
+      const $h1 = document.getElementById("h1");
+      const $h2 = document.getElementById("h2");
+      const $sel = document.getElementById("sel");
+      const $rail = $sel.parentElement;
+      const $bands = document.getElementById("bands");
+      const $mBirth = document.getElementById("mBirth");
+      const $mDeath = document.getElementById("mDeath");
+      const $activeCount = document.getElementById("activeCount");
+      const $startYear = document.getElementById("startYear");
+      const $endYear = document.getElementById("endYear");
+      const $spanYear = document.getElementById("spanYear");
+      const $minLabel = document.getElementById("minLabel");
+      const $maxLabel = document.getElementById("maxLabel");
+      const $midLabel = document.getElementById("midLabel");
+
+      const W = $c.width;
+      const H = $c.height;
+      const pad = 18;
+
+      const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const hash = (s) => {{
+        let h = 2166136261;
+        for (let i=0;i<s.length;i++) {{ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }}
+        return (h >>> 0);
+      }};
+      const rand01 = (seed) => {{
+        let x = seed >>> 0;
+        x ^= x << 13; x >>>= 0;
+        x ^= x >> 17; x >>>= 0;
+        x ^= x << 5; x >>>= 0;
+        return (x >>> 0) / 4294967296;
+      }};
+
+      const colorByYear = (y) => {{
+        if (y == null) return "rgba(255,255,255,0.75)";
+        if (y < 0) return "#22c55e";
+        if (y < 220) return "#ef4444";
+        if (y < 600) return "#60a5fa";
+        if (y < 907) return "#f59e0b";
+        if (y < 1279) return "#a855f7";
+        if (y < 1644) return "#10b981";
+        if (y < 1911) return "#f97316";
+        return "#eab308";
+      }};
+
+      const esc = (s) => String(s || "").replace(/[&<>\"']/g, (c) => ({{"&":"&amp;","<":"&lt;",">":"&gt;","\\\"":"&quot;","'":"&#39;"}})[c]);
+
+      let nodes = [];
+      let edges = [];
+      let neigh = [];
+      let minYear = -1000;
+      let maxYear = 1761;
+      let startYear = 811;
+      let endYear = 1761;
+      let dragMode = "";
+      let dragStartX = 0;
+      let dragStartA = 0;
+      let dragStartB = 0;
+      let hover = null;
+
+      const toT = (year) => (year - minYear) / (maxYear - minYear);
+      const fromT = (t) => Math.round(minYear + t * (maxYear - minYear));
+
+      const handlePosPx = () => {{
+        const r = $rail.getBoundingClientRect();
+        const w = r.width || 1;
+        const x1 = toT(startYear) * w;
+        const x2 = toT(endYear) * w;
+        return {{ x1, x2, w }};
+      }};
+
+      const setHoverMarkers = (n) => {{
+        if (!n) {{
+          $mBirth.classList.add("hidden");
+          $mDeath.classList.add("hidden");
+          return;
+        }}
+        const r = $rail.getBoundingClientRect();
+        const w = r.width || 1;
+        const show = (el, year) => {{
+          if (year == null) {{
+            el.classList.add("hidden");
+            return;
+          }}
+          const t = clamp(toT(year), 0, 1);
+          el.style.left = `calc(${{(t * 100).toFixed(4)}}% + 3px)`;
+          el.classList.remove("hidden");
+        }};
+        show($mBirth, n.birth_year);
+        show($mDeath, n.death_year);
+      }};
+
+      const setHandles = () => {{
+        const t1 = clamp(toT(startYear), 0, 1);
+        const t2 = clamp(toT(endYear), 0, 1);
+        const leftPct = (t1 * 100).toFixed(4) + "%";
+        const rightPct = (t2 * 100).toFixed(4) + "%";
+        $h1.style.left = `calc(${{leftPct}} - 7px)`;
+        $h2.style.left = `calc(${{rightPct}} - 7px)`;
+        $sel.style.left = leftPct;
+        $sel.style.width = ((t2 - t1) * 100).toFixed(4) + "%";
+        $startYear.textContent = String(startYear);
+        $endYear.textContent = String(endYear);
+        $spanYear.textContent = String(Math.max(0, endYear - startYear));
+        $minLabel.textContent = "前1000";
+        $maxLabel.textContent = String(maxYear);
+        $midLabel.textContent = "0";
+      }};
+
+      const inWindow = (n) => {{
+        const b = n.birth_year;
+        if (b == null) return false;
+        return b >= startYear && b <= endYear;
+      }};
+
+      const updateActiveCount = () => {{
+        let c = 0;
+        for (const n of nodes) {{
+          if (inWindow(n)) c += 1;
+        }}
+        if ($activeCount) $activeCount.textContent = String(c);
+      }};
+
+      const renderBands = () => {{
+        if (!$bands) return;
+        const bands = [
+          {{ name: "唐", a: 618, b: 907 }},
+          {{ name: "宋", a: 960, b: 1279 }},
+          {{ name: "元", a: 1271, b: 1368 }},
+          {{ name: "明", a: 1368, b: 1644 }},
+          {{ name: "清", a: 1644, b: 1761 }},
+        ];
+        const pieces = [];
+        for (const b of bands) {{
+          const l = clamp(toT(b.a), 0, 1);
+          const r = clamp(toT(b.b), 0, 1);
+          if (r <= 0 || l >= 1) continue;
+          const left = (l * 100).toFixed(4) + "%";
+          const width = ((r - l) * 100).toFixed(4) + "%";
+          pieces.push(`<div style="position:absolute;left:${{left}};width:${{width}};top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">${{esc(b.name)}}</div>`);
+        }}
+        $bands.innerHTML = pieces.join("");
+        $bands.style.position = "absolute";
+      }};
+
+      const draw = () => {{
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = "rgba(0,0,0,0)";
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.globalCompositeOperation = "source-over";
+        if (edges.length) {{
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = "rgba(255,255,255,0.10)";
+          ctx.globalAlpha = 0.10;
+          for (const e of edges) {{
+            const a = nodes[e.a];
+            const b = nodes[e.b];
+            if (!a || !b) continue;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }}
+          ctx.globalAlpha = 1.0;
+
+          ctx.strokeStyle = "rgba(147,197,253,0.60)";
+          ctx.globalAlpha = 0.25;
+          for (const e of edges) {{
+            const a = nodes[e.a];
+            const b = nodes[e.b];
+            if (!a || !b) continue;
+            if (!(inWindow(a) && inWindow(b))) continue;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }}
+          ctx.globalAlpha = 1.0;
+
+          if (hover && typeof hover._idx === "number") {{
+            const i = hover._idx;
+            const ns = neigh[i] || [];
+            ctx.strokeStyle = "rgba(34,197,94,0.85)";
+            ctx.lineWidth = 1.5;
+            ctx.globalAlpha = 0.55;
+            for (const j of ns) {{
+              const a = nodes[i];
+              const b = nodes[j];
+              if (!a || !b) continue;
+              if (!(inWindow(a) && inWindow(b))) continue;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }}
+            ctx.globalAlpha = 1.0;
+            ctx.lineWidth = 1;
+          }}
+        }}
+
+        ctx.globalCompositeOperation = "source-over";
+        for (const n of nodes) {{
+          const active = inWindow(n);
+          let r = active ? 6.2 : 4.6;
+          let alpha = active ? 0.95 : 0.14;
+          let col = active ? colorByYear(n.birth_year) : "rgba(255,255,255,0.32)";
+          if (hover && hover.person === n.person) {{
+            r = 9.0;
+            alpha = 1.0;
+            col = "#fbbf24";
+          }}
+          ctx.beginPath();
+          ctx.fillStyle = col;
+          ctx.globalAlpha = alpha;
+          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.fill();
+          if (active) {{
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(255,255,255,0.20)";
+            ctx.globalAlpha = 0.55;
+            ctx.lineWidth = 1;
+            ctx.arc(n.x, n.y, r + 2.5, 0, Math.PI * 2);
+            ctx.stroke();
+          }}
+        }}
+        ctx.globalAlpha = 1.0;
+        ctx.lineWidth = 1;
+
+        if (hover) {{
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(255,255,255,0.75)";
+          ctx.lineWidth = 2;
+          ctx.arc(hover.x, hover.y, 9, 0, Math.PI * 2);
+          ctx.stroke();
+        }}
+      }};
+
+      const reduceMotion = (() => {{
+        try {{
+          return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        }} catch (_) {{
+          return false;
+        }}
+      }})();
+
+      const animate = (nowMs) => {{
+        if (reduceMotion) return;
+        const t = (nowMs || 0) * 0.001;
+        for (const n of nodes) {{
+          const seed = hash(n.person || "");
+          const ox = Math.sin(t * 0.55 + (seed % 1000) * 0.01) * 2.0 + Math.sin(t * 0.17 + (seed % 97)) * 0.9;
+          const oy = Math.cos(t * 0.50 + (seed % 777) * 0.01) * 1.8 + Math.cos(t * 0.19 + (seed % 83)) * 0.8;
+          const bx = n.bx != null ? n.bx : n.x;
+          const by = n.by != null ? n.by : n.y;
+          n.x = clamp(bx + ox, pad, W - pad);
+          n.y = clamp(by + oy, pad, H - pad);
+        }}
+        draw();
+        window.requestAnimationFrame(animate);
+      }};
+
+      const pickNode = (mx, my) => {{
+        let best = null;
+        let bestD = 999999;
+        for (const n of nodes) {{
+          const dx = mx - n.x;
+          const dy = my - n.y;
+          const d = dx*dx + dy*dy;
+          if (d < bestD && d < 16*16) {{
+            bestD = d;
+            best = n;
+          }}
+        }}
+        return best;
+      }};
+
+      const showTip = (n, clientX, clientY) => {{
+        if (!n) {{
+          $tip.classList.add("hidden");
+          setHoverMarkers(null);
+          return;
+        }}
+        const years = (n.birth_year != null && n.death_year != null) ? `${{n.birth_year}}-${{n.death_year}}` : (n.birth_year != null ? `${{n.birth_year}}-?` : (n.death_year != null ? `?- ${{n.death_year}}` : "未知"));
+        const quote = n.quote ? `\\n${{n.quote}}` : "";
+        const dynasty = String(n.dynasty || "").trim();
+        const dline = dynasty ? `<div class="text-white/70 text-[11px] mt-1">时代：${{esc(dynasty)}}</div>` : "";
+        $tip.innerHTML = `<div class="font-bold text-white/95">${{esc(n.person)}}</div><div class="text-white/70 text-[11px] mt-1">生卒：${{esc(years)}}</div>${{dline}}<div class="text-white/85 text-[11px] mt-1 whitespace-pre-wrap">${{esc(quote).replace(/^\\n/,'')}}</div>`;
+        $tip.style.left = (clientX + 12) + "px";
+        $tip.style.top = (clientY + 12) + "px";
+        $tip.classList.remove("hidden");
+        setHoverMarkers(n);
+      }};
+
+      const openPerson = (name) => {{
+        const q = String(name || "").trim();
+        if (!q) return;
+        const n = nodes.find((x) => x.person === q);
+        if (n && n.file) {{
+          const href = "./" + encodeURIComponent(n.file).replace(/%2F/g, "/");
+          window.location.href = href;
+          return;
+        }}
+        alert("该人物暂无已生成的人物页（HTML）。");
+      }};
+
+      $go.addEventListener("click", () => openPerson($q.value));
+      $q.addEventListener("keydown", (e) => {{
+        if (e.key === "Enter") openPerson($q.value);
+      }});
+
+      const onMouseMove = (e) => {{
+        const rect = $c.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (W / rect.width);
+        const my = (e.clientY - rect.top) * (H / rect.height);
+        const n = pickNode(mx, my);
+        hover = n;
+        if (n) showTip(n, e.clientX, e.clientY);
+        else showTip(null);
+        draw();
+      }};
+
+      $c.addEventListener("mousemove", onMouseMove);
+      $c.addEventListener("mouseleave", () => {{
+        hover = null;
+        showTip(null);
+        draw();
+      }});
+      $c.addEventListener("click", (event) => {{
+        const rect = $c.getBoundingClientRect();
+        const mx = (event.clientX - rect.left) * (W / rect.width);
+        const my = (event.clientY - rect.top) * (H / rect.height);
+        const n = pickNode(mx, my);
+        if (n) openPerson(n.person);
+      }});
+
+      const railRect = () => $rail.getBoundingClientRect();
+
+      const hitTestHandle = (e) => {{
+        const r = railRect();
+        const x = e.clientX - r.left;
+        const {{x1, x2}} = handlePosPx();
+        const px1 = x1;
+        const px2 = x2;
+        if (Math.abs(x - px1) < 18) return "left";
+        if (Math.abs(x - px2) < 18) return "right";
+        if (x > px1 && x < px2) return "mid";
+        return "";
+      }};
+
+      const onDown = (e) => {{
+        const m = hitTestHandle(e);
+        if (!m) return;
+        dragMode = m;
+        dragStartX = e.clientX;
+        dragStartA = startYear;
+        dragStartB = endYear;
+        if ($rail.setPointerCapture) {{
+          try {{ $rail.setPointerCapture(e.pointerId); }} catch (_) {{}}
+        }}
+        if (e.stopPropagation) e.stopPropagation();
+        e.preventDefault();
+      }};
+
+      const onMove = (e) => {{
+        if (!dragMode) return;
+        const r = railRect();
+        const dx = e.clientX - dragStartX;
+        const dt = dx / r.width;
+        const span = dragStartB - dragStartA;
+        if (dragMode === "left") {{
+          const t = clamp(toT(dragStartA) + dt, 0, toT(dragStartB) - 0.01);
+          startYear = fromT(t);
+        }} else if (dragMode === "right") {{
+          const t = clamp(toT(dragStartB) + dt, toT(dragStartA) + 0.01, 1);
+          endYear = fromT(t);
+        }} else if (dragMode === "mid") {{
+          let a = dragStartA + Math.round(dt * (maxYear - minYear));
+          let b = a + span;
+          if (a < minYear) {{ a = minYear; b = a + span; }}
+          if (b > maxYear) {{ b = maxYear; a = b - span; }}
+          startYear = a;
+          endYear = b;
+        }}
+        if (startYear >= endYear) {{
+          if (dragMode === "left") startYear = endYear - 1;
+          else endYear = startYear + 1;
+        }}
+        setHandles();
+        updateActiveCount();
+        draw();
+      }};
+
+      const onUp = () => {{
+        if (!dragMode) return;
+        dragMode = "";
+      }};
+
+      $rail.addEventListener("pointerdown", onDown);
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+      $rail.addEventListener("mousedown", onDown);
+      window.addEventListener("mousemove", onMove);
+      window.addEventListener("mouseup", onUp);
+      $rail.addEventListener("dblclick", () => {{
+        startYear = 811;
+        endYear = 1761;
+        setHandles();
+        updateActiveCount();
+        draw();
+      }});
+
+      const groupKey = (n) => {{
+        const d = String(n.dynasty || "").trim();
+        if (d) return d.slice(0, 6);
+        const name = String(n.person || "").trim();
+        return name ? name.slice(0, 1) : "？";
+      }};
+
+      const buildNeigh = () => {{
+        neigh = Array.from({{ length: nodes.length }}, () => []);
+        for (const e of edges) {{
+          if (!e) continue;
+          const a = e.a;
+          const b = e.b;
+          if (typeof a !== "number" || typeof b !== "number") continue;
+          if (!neigh[a]) neigh[a] = [];
+          if (!neigh[b]) neigh[b] = [];
+          neigh[a].push(b);
+          neigh[b].push(a);
+        }}
+      }};
+
+      fetch(DATA_FILE).then((r) => r.json()).then((data) => {{
+        const raw = (data.nodes || []);
+        const groups = new Map();
+        raw.forEach((n) => {{
+          const k = groupKey(n);
+          if (!groups.has(k)) groups.set(k, []);
+          groups.get(k).push(n);
+        }});
+        const keys = Array.from(groups.keys()).sort();
+        const centers = new Map();
+        const cx = W / 2;
+        const cy = H / 2;
+        const ring = Math.min(W, H) * 0.34;
+        keys.forEach((k, i) => {{
+          const ang = (i / Math.max(1, keys.length)) * Math.PI * 2 - Math.PI / 2;
+          centers.set(k, {{ x: cx + Math.cos(ang) * ring, y: cy + Math.sin(ang) * ring }});
+        }});
+
+        nodes = raw.map((n, idx) => {{
+          const seed = hash(n.person || "");
+          const k = groupKey(n);
+          const c = centers.get(k) || {{ x: cx, y: cy }};
+          const jx = (rand01(seed + 1) - 0.5) * 170;
+          const jy = (rand01(seed + 2) - 0.5) * 120;
+          const x = clamp(c.x + jx, pad, W - pad);
+          const y = clamp(c.y + jy, pad, H - pad);
+          return {{ ...n, x, y, bx: x, by: y, _idx: idx }};
+        }});
+        edges = (data.edges || []).filter((e) => e && typeof e.a === "number" && typeof e.b === "number");
+        minYear = data.min_year ?? -1000;
+        maxYear = data.max_year ?? 1761;
+        startYear = data.default_start ?? 811;
+        endYear = data.default_end ?? 1761;
+        buildNeigh();
+        renderBands();
+        setHandles();
+        updateActiveCount();
+        draw();
+        window.requestAnimationFrame(animate);
+      }});
+    </script>
+  </body>
+</html>
+"""
+
+
+def main() -> int:
+    p = argparse.ArgumentParser()
+    p.add_argument("--story-map-dir", default=str(STORY_MAP_DIR))
+    p.add_argument("--story-md-dir", default=str(STORY_MD_DIR))
+    p.add_argument("--spotlight", default=str(SPOTLIGHT_JSON))
+    p.add_argument("--out-index", default="index.html")
+    p.add_argument("--out-data", default="stellar_home_data.json")
+    p.add_argument("--title", default="故事地图")
+    p.add_argument("--default-start", type=int, default=811)
+    p.add_argument("--default-end", type=int, default=1761)
+    args = p.parse_args()
+
+    story_map_dir = Path(args.story_map_dir).resolve()
+    story_md_dir = Path(args.story_md_dir).resolve()
+    spotlight_path = Path(args.spotlight).resolve()
+
+    latest_html = _scan_latest_html(story_map_dir)
+
+    md_names = _scan_people_from_story_md(story_md_dir)
+    html_names = _scan_people_from_story_map_html(story_map_dir)
+    names = sorted(set(md_names) | set(html_names))
+
+    spotlight_data = _read_json(spotlight_path)
+    spotlight_items = spotlight_data.get("items") if isinstance(spotlight_data, dict) else {}
+    if not isinstance(spotlight_items, dict):
+        spotlight_items = {}
+
+    nodes: List[Dict[str, Any]] = []
+    min_year: Optional[int] = None
+    max_year: Optional[int] = None
+    for name in names:
+        md_path = story_md_dir / f"{name}.md"
+        birth_year = None
+        death_year = None
+        dynasty = ""
+        relations: List[str] = []
+        if md_path.exists():
+            md_text = md_path.read_text(encoding="utf-8")
+            birth_year, death_year = _extract_years_from_md(md_text)
+            dynasty = _dynasty_hint_from_md(md_text)
+            relations = _extract_relations(md_text)
+        if birth_year is not None:
+            min_year = birth_year if min_year is None else min(min_year, birth_year)
+            max_year = birth_year if max_year is None else max(max_year, birth_year)
+        if death_year is not None:
+            min_year = death_year if min_year is None else min(min_year, death_year)
+            max_year = death_year if max_year is None else max(max_year, death_year)
+
+        spot = spotlight_items.get(name)
+        quote = ""
+        if isinstance(spot, dict):
+            quote = _pick_quote(spot)
+
+        html_entry = latest_html.get(name)
+        nodes.append(
+            {
+                "person": name,
+                "birth_year": birth_year,
+                "death_year": death_year,
+                "dynasty": dynasty,
+                "quote": quote,
+                "file": html_entry.file if html_entry else "",
+                "seed": _sha1_int(name),
+                "relations": relations,
+            }
+        )
+
+    person_to_idx = {n["person"]: i for i, n in enumerate(nodes)}
+    edges: List[Dict[str, int]] = []
+
+    def add_links(keys: List[int], k: int, max_edges: int) -> None:
+        nonlocal edges
+        for i, a in enumerate(keys):
+            for j in range(1, k + 1):
+                if i + j >= len(keys):
+                    break
+                b = keys[i + j]
+                edges.append({"a": a, "b": b})
+                if len(edges) >= max_edges:
+                    return
+
+    by_dyn: Dict[str, List[int]] = {}
+    by_surname: Dict[str, List[int]] = {}
+    for i, n in enumerate(nodes):
+        d = str(n.get("dynasty") or "").strip()
+        if d:
+            dk = d[:6]
+            by_dyn.setdefault(dk, []).append(i)
+        p = str(n.get("person") or "").strip()
+        if p:
+            by_surname.setdefault(p[0], []).append(i)
+
+    def sort_key(i: int) -> Tuple[int, int, str]:
+        n = nodes[i]
+        by = n.get("birth_year")
+        dy = n.get("death_year")
+        a = int(by) if isinstance(by, int) else 999999
+        b = int(dy) if isinstance(dy, int) else 999999
+        return (a, b, str(n.get("person") or ""))
+
+    max_edges = 2200
+    for dk, arr in sorted(by_dyn.items(), key=lambda x: x[0]):
+        ids = sorted(arr, key=sort_key)
+        add_links(ids[:80], k=6, max_edges=max_edges)
+        if len(edges) >= max_edges:
+            break
+
+    if len(edges) < max_edges:
+        for sk, arr in sorted(by_surname.items(), key=lambda x: x[0]):
+            ids = sorted(arr, key=sort_key)
+            add_links(ids[:40], k=3, max_edges=max_edges)
+            if len(edges) >= max_edges:
+                break
+
+    rel_edges = 0
+    for i, n in enumerate(nodes):
+        rels = n.get("relations") if isinstance(n.get("relations"), list) else []
+        for r in rels:
+            j = person_to_idx.get(r)
+            if j is None or j == i:
+                continue
+            edges.append({"a": i, "b": j})
+            rel_edges += 1
+            if len(edges) >= max_edges:
+                break
+        if len(edges) >= max_edges:
+            break
+
+    min_year_v = MIN_YEAR
+    max_year_v = MAX_YEAR
+
+    out_data = story_map_dir / str(args.out_data)
+    out_index = story_map_dir / str(args.out_index)
+    payload = {
+        "generated_at": _now(),
+        "min_year": min_year_v,
+        "max_year": max_year_v,
+        "default_start": int(args.default_start),
+        "default_end": int(args.default_end),
+        "nodes": nodes,
+        "edges": edges,
+    }
+    out_data.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    out_index.write_text(_render_index_html(args.title, out_data.name), encoding="utf-8")
+    print(json.dumps({"ok": True, "index": str(out_index), "data": str(out_data), "count": len(nodes)}, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
