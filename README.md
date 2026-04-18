@@ -24,10 +24,14 @@
 ![主页：人类群星闪耀时 + 时间轴联动](docs/assets/moler_post_03.png)
 ![人物页：地点连线与节点信息](docs/assets/moler_post_05.png)
 
+主页当前默认展示：
+- ECharts 关系图（支持拖拽节点、双击节点进入人物页）
+- ECharts 世界地图（默认以中国为中心）
+
 ### ⚙️ 后台自动流程
 项目在后台通过一套智能化的流程，为您打理好一切：
 
-1. **输入姓名**：您只需输入想讲的人物（如：`辛弃疾`）。
+1. **输入姓名**：您只需输入想讲的人物（如：`曹操`）。
 2. **生成故事**：自动整理人物档案、人生关键足迹（时间、地点、事件）以及教材中的考点。
 3. **定位古地名**：系统会自动把“润州”、“京口”等古地名精准对应到现代地图坐标。
 4. **生成课件网页**：最终打包成一个漂亮的 HTML 网页，包含时间轴和地图动效，直接用浏览器就能打开。
@@ -39,7 +43,7 @@
 #### ✅ 本地一键体验（推荐）
 1) 启动生成服务（用于“输入人名 → 自动生成 HTML”）：
 ```bash
-python3 main/storymap/script/story_map.py --serve --port 8765
+python3 storymap/script/story_map.py --serve --port 8765
 ```
 
 2) 启动静态文件服务并打开主页：
@@ -47,7 +51,17 @@ python3 main/storymap/script/story_map.py --serve --port 8765
 python3 -m http.server 8000
 ```
 浏览器打开：
-- `http://localhost:8000/outputs/output_batch_storymap_pep_history/`
+- `http://localhost:8000/storymap/examples/story_map/`
+
+#### ⏱️ 时间窗默认值
+主页时间轴默认起止来自 `storymap/examples/story_map/stellar_home_data.json` 的 `default_start/default_end`。
+可以通过脚本重建数据并指定默认时间窗，例如：
+```bash
+python3 tools/build_stellar_homepage.py --default-start 800 --default-end 1000
+```
+
+#### 🔎 未收录人物
+如果主页搜索框输入的人物不在当前名单，会跳转到 `search.html` 给出相似候选与本地生成指引（静态页无法在浏览器内直接生成新人物页）。
 
 #### 🧪 示例人物（可直接输入体验）
 - 苏轼

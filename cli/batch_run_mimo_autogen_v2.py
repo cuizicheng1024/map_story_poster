@@ -27,7 +27,7 @@
 说明
 ----
 - LLM：使用仓库根目录 `.env` 的 `API_KEY/BASE_URL/MODEL`（MiMo 的 OpenAI-compatible）。
-- 地理编码：由 `main/storymap/script/map_client.py` 决定。
+- 地理编码：由 `storymap/script/map_client.py` 决定。
   - 若存在 `QVERIS_API_URL/QVERIS_API_KEY`：可能走 QVeris→高德→GCJ02→WGS84
   - 否则：走 OSM 公共地理编码回退链路
 
@@ -55,8 +55,8 @@ from dotenv import load_dotenv
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-STORYMAP_SCRIPT_DIR = REPO_ROOT / "main" / "storymap" / "script"
-STORY_SYSTEM_PROMPT_PATH = REPO_ROOT / "main" / "storymap" / "docs" / "story_system_prompt.md"
+STORYMAP_SCRIPT_DIR = REPO_ROOT / "storymap" / "script"
+STORY_SYSTEM_PROMPT_PATH = REPO_ROOT / "storymap" / "docs" / "story_system_prompt.md"
 
 
 DEFAULT_PEOPLE: List[str] = [
@@ -538,7 +538,7 @@ def run_pipeline_only(
         write_text(Path(html_preview_path), html)
         has_bio = not bool(ensure_checks.get("empty"))
         if has_bio:
-            out_story_map_dir = REPO_ROOT / "main" / "storymap" / "examples" / "story_map"
+            out_story_map_dir = REPO_ROOT / "storymap" / "examples" / "story_map"
             html_path = str(out_story_map_dir / f"{_safe_filename(person)}__pure__{ts}.html")
             write_text(Path(html_path), html)
 

@@ -12,8 +12,8 @@
 - 如果 API_KEY 未配置或调用失败，程序将直接抛出异常，显式报错。
 
 输出：
-- Markdown: main/storymap/examples/story/<name>.md
-- HTML:     main/storymap/examples/story_map/<name>__pure__<timestamp>.html
+- Markdown: storymap/examples/story/<name>.md
+- HTML:     storymap/examples/story_map/<name>__pure__<timestamp>.html
 """
 
 from __future__ import annotations
@@ -199,7 +199,7 @@ def _repo_root() -> Path:
 
 
 def _default_story_md_path(name: str) -> Path:
-    return _repo_root() / "main" / "storymap" / "examples" / "story" / f"{name}.md"
+    return _repo_root() / "storymap" / "examples" / "story" / f"{name}.md"
 
 
 def _write_text(path: Path, content: str) -> None:

@@ -13,11 +13,12 @@ from typing import Any, Dict, List, Optional, Tuple
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-STORY_MD_DIR = REPO_ROOT / "main" / "storymap" / "examples" / "story"
-STORY_MAP_DIR = REPO_ROOT / "main" / "storymap" / "examples" / "story_map"
+STORY_MD_DIR = REPO_ROOT / "storymap" / "examples" / "story"
+STORY_MAP_DIR = REPO_ROOT / "storymap" / "examples" / "story_map"
 SPOTLIGHT_JSON = REPO_ROOT / "data" / "pep_people_spotlight.json"
+KNOWLEDGE_GRAPH_JSON = REPO_ROOT / "data" / "people_knowledge_graph.json"
 MIN_YEAR = -800
-MAX_YEAR = 1840
+MAX_YEAR = 2000
 
 
 def _now() -> str:
@@ -161,6 +162,32 @@ def _extract_years_from_md(md_text: str) -> Tuple[Optional[int], Optional[int]]:
     return birth, death
 
 
+def _extract_birthplace_from_md(md_text: str) -> Tuple[str, str, str]:
+    if not isinstance(md_text, str) or not md_text.strip():
+        return "", "", ""
+    m = re.search(r"\*\*出生\*\*[:：]\s*([^\n]+)", md_text)
+    if not m:
+        m = re.search(r"(?:出生)[:：]\s*([^\n]+)", md_text)
+    if not m:
+        return "", "", ""
+    text = m.group(1).strip()
+    parts = [p.strip() for p in re.split(r"[，,]", text) if p.strip()]
+    loc = parts[-1] if parts else text
+    loc = re.sub(r"^一说[^，,]+[，,]\s*", "", loc).strip()
+    ancient = loc
+    modern = ""
+    if "（" in loc and "）" in loc:
+        left, right = loc.split("（", 1)
+        ancient = left.strip()
+        modern = right.split("）", 1)[0].strip()
+    elif "(" in loc and ")" in loc:
+        left, right = loc.split("(", 1)
+        ancient = left.strip()
+        modern = right.split(")", 1)[0].strip()
+    modern = re.sub(r"^今", "", modern).strip()
+    return loc, ancient, modern
+
+
 def _extract_relations(md_text: str) -> List[str]:
     text = md_text
     patterns = [
@@ -229,6 +256,12 @@ def _pick_quote(spot: Dict[str, Any]) -> str:
 
 def _render_index_html(title: str, data_file: str) -> str:
     safe_title = title.strip() or "故事地图"
+    template_path = STORY_MAP_DIR / "index.html"
+    if template_path.exists():
+        html = template_path.read_text(encoding="utf-8")
+        html = re.sub(r"<title>[^<]*</title>", f"<title>{safe_title}</title>", html, flags=re.I)
+        html = re.sub(r'const DATA_FILE = "[^"]*";', f'const DATA_FILE = "{data_file}";', html)
+        return html
     return f"""<!doctype html>
 <html lang="zh-CN">
   <head>
@@ -331,7 +364,7 @@ def _render_index_html(title: str, data_file: str) -> str:
               <button id="tabMap" class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10">地图视角</button>
             </div>
           </div>
-          <div class="text-[11px] font-normal text-white/60">窗口内：<span id="activeCount">-</span></div>
+          <div class="text-[11px] font-normal text-white/60 flex items-center gap-3">窗口内：<span id="activeCount">-</span><a class="underline hover:text-white/80" href="./echarts_home.html">ECharts 版</a></div>
         </div>
         <div class="px-6 pb-2 -mt-2 text-[11px] text-white/60">拖动时间窗筛选人物；悬停查看简介；点击节点进入人物页</div>
 
@@ -692,7 +725,10 @@ def _render_index_html(title: str, data_file: str) -> str:
         const quote = n.quote ? `\\n${{n.quote}}` : "";
         const dynasty = String(n.dynasty || "").trim();
         const dline = dynasty ? `<div class="text-white/70 text-[11px] mt-1">时代：${{esc(dynasty)}}</div>` : "";
-        $tip.innerHTML = `<div class="font-bold text-white/95">${{esc(n.person)}}</div><div class="text-white/70 text-[11px] mt-1">生卒：${{esc(years)}}</div>${{dline}}<div class="text-white/85 text-[11px] mt-1 whitespace-pre-wrap">${{esc(quote).replace(/^\\n/,'')}}</div>`;
+        const bp = String(n.birthplace || "").trim();
+        const bpm = String(n.birthplace_modern || "").trim();
+        const bpline = bp ? `<div class="text-white/70 text-[11px] mt-1">籍贯：${{esc(bp)}}${{bpm ? `（${{esc(bpm)}}）` : ""}}</div>` : "";
+        $tip.innerHTML = `<div class="font-bold text-white/95">${{esc(n.person)}}</div><div class="text-white/70 text-[11px] mt-1">生卒：${{esc(years)}}</div>${{dline}}${{bpline}}<div class="text-white/85 text-[11px] mt-1 whitespace-pre-wrap">${{esc(quote).replace(/^\\n/,'')}}</div>`;
         const rect = $c.getBoundingClientRect();
         let left = clientX - rect.left + 10;
         let top = clientY - rect.top + 10;
@@ -1066,7 +1102,7 @@ def main() -> int:
     p.add_argument("--out-data", default="stellar_home_data.json")
     p.add_argument("--title", default="故事地图")
     p.add_argument("--default-start", type=int, default=0)
-    p.add_argument("--default-end", type=int, default=1840)
+    p.add_argument("--default-end", type=int, default=MAX_YEAR)
     args = p.parse_args()
 
     story_map_dir = Path(args.story_map_dir).resolve()
@@ -1093,11 +1129,15 @@ def main() -> int:
         death_year = None
         dynasty = ""
         relations: List[str] = []
+        birthplace_raw = ""
+        birthplace_ancient = ""
+        birthplace_modern = ""
         if md_path.exists():
             md_text = md_path.read_text(encoding="utf-8")
             birth_year, death_year = _extract_years_from_md(md_text)
             dynasty = _dynasty_hint_from_md(md_text)
             relations = _extract_relations(md_text)
+            birthplace_raw, birthplace_ancient, birthplace_modern = _extract_birthplace_from_md(md_text)
         if birth_year is not None:
             min_year = birth_year if min_year is None else min(min_year, birth_year)
             max_year = birth_year if max_year is None else max(max_year, birth_year)
@@ -1113,14 +1153,14 @@ def main() -> int:
         html_entry = latest_html.get(name)
         birth_lat = None
         birth_lng = None
-        birthplace = ""
         if html_entry:
             lat, lng, bp, dyn2 = _extract_birth_from_story_map_html(story_map_dir / html_entry.file)
             birth_lat = lat
             birth_lng = lng
-            birthplace = bp
             if not dynasty and dyn2:
                 dynasty = dyn2
+            if not birthplace_raw and bp:
+                birthplace_raw, birthplace_ancient, birthplace_modern = _extract_birthplace_from_md(f"**出生**：{bp}")
         nodes.append(
             {
                 "person": name,
@@ -1128,7 +1168,9 @@ def main() -> int:
                 "death_year": death_year,
                 "dynasty": dynasty,
                 "quote": quote,
-                "birthplace": birthplace,
+                "birthplace": birthplace_ancient,
+                "birthplace_raw": birthplace_raw,
+                "birthplace_modern": birthplace_modern,
                 "birth_lat": birth_lat,
                 "birth_lng": birth_lng,
                 "file": html_entry.file if html_entry else "",
@@ -1139,6 +1181,7 @@ def main() -> int:
 
     person_to_idx = {n["person"]: i for i, n in enumerate(nodes)}
     edges: List[Dict[str, int]] = []
+    kg_edges: List[Dict[str, int]] = []
 
     def add_links(keys: List[int], k: int, max_edges: int) -> None:
         nonlocal edges
@@ -1198,6 +1241,23 @@ def main() -> int:
         if len(edges) >= max_edges:
             break
 
+    try:
+        kg = _read_json(KNOWLEDGE_GRAPH_JSON)
+        raw_edges = kg.get("edges") if isinstance(kg, dict) else None
+        if isinstance(raw_edges, list):
+            for e in raw_edges:
+                if not isinstance(e, dict):
+                    continue
+                a = str(e.get("source") or "").strip()
+                b = str(e.get("target") or "").strip()
+                ia = person_to_idx.get(a)
+                ib = person_to_idx.get(b)
+                if ia is None or ib is None or ia == ib:
+                    continue
+                kg_edges.append({"a": ia, "b": ib})
+    except Exception:
+        kg_edges = []
+
     min_year_v = MIN_YEAR
     max_year_v = MAX_YEAR
 
@@ -1211,6 +1271,7 @@ def main() -> int:
         "default_end": int(args.default_end),
         "nodes": nodes,
         "edges": edges,
+        "kg_edges": kg_edges,
     }
     out_data.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     out_index.write_text(_render_index_html(args.title, out_data.name), encoding="utf-8")

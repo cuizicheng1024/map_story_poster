@@ -11,9 +11,9 @@ __pycache__/
 
 cache/
 
-main/storymap/examples/story_map/*.html
-main/storymap/examples/story_map/*.geojson
-main/storymap/examples/story_map/*.csv
+storymap/examples/story_map/*.html
+storymap/examples/story_map/*.geojson
+storymap/examples/story_map/*.csv
 
 # Temp artifacts for historical location auditing
 .tmp/

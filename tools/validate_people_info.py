@@ -19,8 +19,8 @@ from dotenv import load_dotenv
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-EXAMPLES_STORY_DIR = REPO_ROOT / "main" / "storymap" / "examples" / "story"
-FACT_CHECK_PROMPT_PATH = REPO_ROOT / "main" / "storymap" / "docs" / "fact_check_prompt.md"
+EXAMPLES_STORY_DIR = REPO_ROOT / "storymap" / "examples" / "story"
+FACT_CHECK_PROMPT_PATH = REPO_ROOT / "storymap" / "docs" / "fact_check_prompt.md"
 
 
 def _now() -> str:

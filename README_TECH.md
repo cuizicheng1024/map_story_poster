@@ -15,12 +15,12 @@
 python3 cli/auto_generate.py --name "辛弃疾"
 ```
 - 产物：
-  - Markdown：`map_story/storymap/examples/story/<人物>.md`
-  - HTML：`map_story/storymap/examples/story_map/`（或脚本输出目录）
+  - Markdown：`storymap/examples/story/<人物>.md`
+  - HTML：`storymap/examples/story_map/`（或脚本输出目录）
 
 ### 2.2 纯渲染：Markdown → HTML
 ```bash
-python3 cli/generate_pure_story_map.py --md_path map_story/storymap/examples/story/辛弃疾.md
+python3 cli/generate_pure_story_map.py --md_path storymap/examples/story/辛弃疾.md
 ```
 
 ### 2.3 批量跑数（工程回归/体检）
@@ -33,7 +33,7 @@ python3 cli/batch_run_mimo_autogen_v2.py
 1. **输入人物名**：命令行 `--name` 或上层服务/前端输入。
 2. **生成结构化 Markdown**：
    - `auto_generate.py`：以 OpenAI 兼容接口调用模型，生成 Markdown 并做基础兜底。
-   - `story_agents.py`：读取 `map_story/storymap/docs/story_system_prompt.md` 作为“真规范”，生成 Markdown。
+   - `story_agents.py`：读取 `storymap/docs/story_system_prompt.md` 作为“真规范”，生成 Markdown。
 3. **Markdown 解析与质量兜底**：
    - `story_map.py`：解析人物档案、时间线、地点段落，生成 `profile`。
    - 内部会对 Markdown 表格做容错（例如补齐 `| --- |` 分隔线）。
@@ -47,14 +47,16 @@ python3 cli/batch_run_mimo_autogen_v2.py
 
 ## 4. 目录结构（建议只关心这些）
 ```
-map_story/
-  src/                       # 网页前端（Vite/React）
-  storymap/
-    docs/                    # Prompt/规则文档（生成 Markdown 的“真规范”）
-    examples/
-      story/                 # 人物 Markdown（可手工/批量生成）
-      story_map/             # 渲染后的 HTML/导出文件
-    script/                  # 核心 Python 链路（解析/地名/渲染/服务）
+web/                         # 网页前端（Vite/React）
+  src/
+  vite.config.js
+  package.json
+storymap/                    # 核心 Python 链路（解析/地名/渲染/服务）+ 示例数据
+  docs/                      # Prompt/规则文档（生成 Markdown 的“真规范”）
+  examples/
+    story/                   # 人物 Markdown（可手工/批量生成）
+    story_map/               # 渲染后的 HTML/导出文件（*.html/*.geojson/*.csv 通常忽略提交）
+  script/
 ```
 
 ## 5. 教学相关字段（页面底部）
@@ -70,7 +72,7 @@ map_story/
 
 ## 6. 稳定性与三道防线（重要）
 1. **Prompt 与解析一致**  
-   - `map_story/storymap/docs/story_system_prompt.md` 是生成 Markdown 的“真规范”。
+   - `storymap/docs/story_system_prompt.md` 是生成 Markdown 的“真规范”。
 2. **Markdown 表格容错**  
    - 自动修复常见的表格分隔线缺失，避免解析链路崩溃。
 3. **地名解析降级策略**  
@@ -83,7 +85,7 @@ MIMO_API_KEY=你的key
 MIMO_BASE_URL=https://api.xiaomimimo.com/v1
 MODEL=mimo-v2-pro
 ```
-也支持兼容变量名：`API_KEY/BASE_URL` 或 `LLM_API_KEY/LLM_BASE_URL/LLM_MODEL_ID`。不同脚本可能还支持 QVeris 等配置，建议优先阅读对应脚本顶部说明与 `main/storymap/docs/`。
+也支持兼容变量名：`API_KEY/BASE_URL` 或 `LLM_API_KEY/LLM_BASE_URL/LLM_MODEL_ID`。不同脚本可能还支持 QVeris 等配置，建议优先阅读对应脚本顶部说明与 `storymap/docs/`。
 
 ## 8. 提交内置数据（评审可直接复现）
 - `data/pep_people_merged.json`：人教版人名合并去重结果（推荐入口）

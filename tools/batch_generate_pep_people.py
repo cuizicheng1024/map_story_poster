@@ -45,8 +45,8 @@ def main() -> int:
     if only:
         names = [n for n in names if n in set(only)]
 
-    story_map_dir = root / "map_story" / "storymap" / "examples" / "story_map"
-    story_dir = root / "map_story" / "storymap" / "examples" / "story"
+    story_map_dir = root / "storymap" / "examples" / "story_map"
+    story_dir = root / "storymap" / "examples" / "story"
     story_map_dir.mkdir(parents=True, exist_ok=True)
     story_dir.mkdir(parents=True, exist_ok=True)
 
@@ -96,4 +96,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

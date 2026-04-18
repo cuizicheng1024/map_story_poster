@@ -58,7 +58,7 @@ def _safe_filename(person: str, ts: str) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--batch-runs-dir", default=str(REPO_ROOT / "batch_runs"))
-    ap.add_argument("--story-map-dir", default=str(REPO_ROOT / "main" / "storymap" / "examples" / "story_map"))
+    ap.add_argument("--story-map-dir", default=str(REPO_ROOT / "storymap" / "examples" / "story_map"))
     ap.add_argument("--only-missing", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
@@ -96,4 +96,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

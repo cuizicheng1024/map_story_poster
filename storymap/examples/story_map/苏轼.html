@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>苏轼的人生足迹地图</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" onerror="if(!this.dataset.f){this.dataset.f='1';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='1'){this.dataset.f='2';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}"></script>
+<script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/react@18/umd/react.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';}"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/react-dom@18/umd/react-dom.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js';}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/@babel/standalone@7.24.7/babel.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js';}"></script>
+<style>
+body {
+  font-family: 'Noto Serif SC', serif;
+  background-color: #fdf6e3;
+  color: #2c3e50;
+}
+#map {
+  height: 620px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c0392b;
+  border-radius: 10px;
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(200, 180, 150, 0.3);
+}
+.desc-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.age-marker {
+  background: transparent;
+  border: none;
+}
+.age-badge {
+  background: rgba(255, 255, 255, 0.65);
+  color: #7c2d12;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  border: 1px solid rgba(200, 180, 150, 0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  white-space: nowrap;
+}
+</style>
+</head>
+<body class="p-4 md:p-8">
+    <div id="root"></div>
+    <script type="text/babel" data-presets="env,react">
+      const { useState, useEffect, useRef, useMemo } = React;
+      const data = {"person": {"name": "苏轼", "title": "唐宋八大家", "description": "苏轼生于北宋仁宗时期，历经英宗、神宗、哲宗、徽宗五朝。他成长于文化氛围浓厚的家庭，嘉祐二年（1057年）进士及第，名动京师。其仕途与王安石变法引发的新旧党争紧密相连，因政见不合，自请外放，历任杭州、密州、徐州、湖州等地。元丰二年（1079年）因“乌台诗案”险些丧命，后被贬黄州。哲宗元祐年间短暂回朝，高太后执政期间官至翰林学士，但因不容于新旧两党，再度自请外调。晚年被一贬再贬，远至惠州、儋州。徽宗即位后遇赦北归，途中病逝于常州。苏轼一生宦海沉浮，却始终豁达乐观，将人生体悟融入诗词文书画，成就了不朽的文化遗产。", "quote": "《和子由渑池怀旧》：“人生到处知何似，应似飞鸿踏雪泥。”", "dynasty": "北宋", "birthplace": "眉州眉山（今四川省眉山市）", "avatar": "", "birth": {"date": "1037年", "location": "眉州眉山（今四川省眉山市）", "lat": 30.079061, "lng": 103.8458201}, "death": {"date": "1101年", "location": "常州（今江苏省常州市）", "lat": 31.8122623, "lng": 119.9691539}, "lifespan": "六十四岁（按1037年计）", "highlights": {"honor": "唐宋八大家", "status": "北宋中期的文坛领袖，中国文学艺术史上罕见的全才，“唐宋八大家”之一。", "identities": "文学家、书画家、政治家、美食家", "achievements": "开创豪放词派；散文与欧阳修并称“欧苏”；诗歌与黄庭坚并称“苏黄”；书法为“宋四家”之一；绘画上提出“文人画”理念。", "works": [], "reviews": ["《宋史·苏轼传》：“器识之闳伟，议论之卓荦，文章之雄隽，政事之精明，四者皆能以特立之志为之主，而以迈往之气辅之。”", "王国维《文学小言》：“三代以下诗人，无过屈子、渊明、子美、子瞻者。此四子者，若无文学之天才，其人格亦自足千古。”", "林语堂《苏东坡传》：“苏东坡是一个不可救药的乐天派，一个伟大的人道主义者，一个百姓的朋友，一个大文豪，大书法家，创新的画家，造酒试验家……一个在政治上专唱反调的人，一个月夜徘徊者，一个诗人，一个小丑。”"]}}, "locations": [{"name": "眉州眉山", "ancientName": "眉州眉山", "modernName": "四川省眉山市", "lat": 30.079061, "lng": 103.8458201, "type": "birth", "event": "在家乡接受启蒙教育，与弟弟苏辙在父亲苏洵教导下苦读，奠定深厚的学识基础。", "time": "1037年—1056年", "duration": "约19年", "significance": "人生与思想的起点，形成了他早期的世界观和文学素养。", "works": [], "quoteLines": []}, {"name": "开封（汴京）", "ancientName": "汴京", "modernName": "河南省开封市", "lat": 34.604167, "lng": 114.497222, "type": "normal", "event": "嘉祐二年（1057年）与苏辙同科进士及第，深受欧阳修赏识，名动京师；嘉祐六年（1061年）应中制科入第三等，授大理评事；元丰八年（1085年）神宗去世后被召回朝，历任中书舍人、翰林学士等要职。", "time": "1056年—1057年；1061年—1064年；1069年—1071年；1085年—1089年（多次往返）", "duration": "累计数年", "significance": "政治生涯与文坛声名的起点与中心舞台，见证了其才华的巅峰展示与党争的漩涡。", "works": [], "quoteLines": ["《和子由渑池怀旧》：“人生到处知何似，应似飞鸿踏雪泥。”"]}, {"name": "凤翔府", "ancientName": "凤翔府", "modernName": "陕西省宝鸡市凤翔区", "lat": 34.52252, "lng": 107.38592, "type": "normal", "event": "任签书凤翔府判官，初涉地方政务，勤政爱民，写下著名散文《喜雨亭记》。", "time": "1061年—1064年", "duration": "3年", "significance": "首次担任地方官，积累了实际的行政经验。", "works": ["喜雨亭记"], "quoteLines": ["《和子由渑池怀旧》：“往日崎岖还记否，路长人困蹇驴嘶。”"]}, {"name": "杭州（两度任职）", "ancientName": "杭州", "modernName": "浙江省杭州市", "lat": 30.29412, "lng": 120.16862, "type": "normal", "event": "任杭州通判时遍游山水，创作大量诗词；任杭州知州时，疏浚西湖，筑造“苏堤”，赈济灾民，防治瘟疫。", "time": "1071年—1074年（通判）；1089年—1091年（知州）", "duration": "累计约5年", "significance": "文学创作的丰产之地，也是其仁政爱民、工程才能的实践地。", "works": [], "quoteLines": ["《饮湖上初晴后雨》：“欲把西湖比西子，淡妆浓抹总相宜。”", "《江城子·凤凰山下雨初晴》。"]}, {"name": "密州", "ancientName": "密州", "modernName": "山东省诸城市", "lat": 35.9957253, "lng": 119.4041185, "type": "normal", "event": "任密州知州，抗旱灭蝗，救助弃婴；写下豪放词代表作《江城子·密州出猎》和千古绝唱《水调歌头·明月几时有》。", "time": "1074年—1076年", "duration": "2年", "significance": "豪放词风的正式确立之地，展现了其治理地方的才能与深邃的亲情、人生思考。", "works": ["江城子·密州出猎", "水调歌头·明月几时有"], "quoteLines": ["《江城子·密州出猎》：“会挽雕弓如满月，西北望，射天狼。”", "《水调歌头·明月几时有》：“但愿人长久，千里共婵娟。”"]}, {"name": "徐州", "ancientName": "徐州", "modernName": "江苏省徐州市", "lat": 34.26963, "lng": 117.18768, "type": "normal", "event": "任徐州知州，黄河泛滥时亲率军民筑堤抗洪，保全城池；关心矿业、冶铁。", "time": "1077年—1079年", "duration": "2年", "significance": "抗洪功绩卓著，深受百姓爱戴，政绩斐然。", "works": [], "quoteLines": ["《浣溪沙·簌簌衣巾落枣花》。"]}, {"name": "黄州", "ancientName": "黄州", "modernName": "湖北省黄冈市", "lat": 30.44699, "lng": 114.86549, "type": "normal", "event": "因“乌台诗案”被贬为黄州团练副使，生活困顿。躬耕东坡，自号“东坡居士”。在此写下《赤壁赋》、《后赤壁赋》、《念奴娇·赤壁怀古》等巅峰之作，书法名作《寒食帖》亦成于此期。", "time": "1080年—1084年", "duration": "4年多", "significance": "人生与思想的重大转折点，文学艺术成就的最高峰，完成了从苏轼到苏东坡的精神蜕变。", "works": ["赤壁赋", "后赤壁赋", "念奴娇·赤壁怀古", "寒食帖"], "quoteLines": ["《念奴娇·赤壁怀古》：“大江东去，浪淘尽，千古风流人物。”", "《定风波·莫听穿林打叶声》：“一蓑烟雨任平生。”", "《记承天寺夜游》。"]}, {"name": "惠州", "ancientName": "惠州", "modernName": "广东省惠州市", "lat": 23.08979, "lng": 114.41498, "type": "normal", "event": "哲宗亲政后，新党得势，苏轼被贬为宁远军节度副使，惠州安置。虽处逆境，仍关心民瘼，推广农业技术，助修水利桥梁。", "time": "1094年—1097年", "duration": "约3年", "significance": "远贬岭南，生活艰苦，但其豁达乐观精神不改，创作了大量反映岭南风物和恬淡心境的诗篇。", "works": [], "quoteLines": ["《惠州一绝》：“日啖荔枝三百颗，不辞长作岭南人。”"]}, {"name": "儋州（昌化军）", "ancientName": "昌化军", "modernName": "海南省儋州市", "lat": 19.7487, "lng": 109.34164, "type": "normal", "event": "被贬至当时被视为“天涯海角”的海南岛。以著书为乐，传播文化，敷扬文教，开创海南教育之先河。", "time": "1097年—1100年", "duration": "约3年", "significance": "人生贬谪的极限之地，在极端困苦中实现了文化的传播与人格的升华。", "works": [], "quoteLines": ["《六月二十日夜渡海》：“九死南荒吾不恨，兹游奇绝冠平生。”"]}, {"name": "常州", "ancientName": "常州", "modernName": "江苏省常州市", "lat": 31.78278, "lng": 119.9523, "type": "death", "event": "宋徽宗即位大赦，苏轼得以北归。途中身体每况愈下，抵达常州后上表请老，获准。建中靖国元年七月二十八日（1101年8月24日），病逝于常州孙氏馆。", "time": "1101年", "duration": "约一个月", "significance": "生命的终点，也是其漂泊一生的最后归宿，实现了他“独终老于常”的愿望。", "works": [], "quoteLines": ["《自题金山画像》：“问汝平生功业，黄州惠州儋州。”"]}], "mapStyle": {"pathColor": "#1e40af", "markers": {"normal": {"iconUrl": "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", "color": "#3498db"}, "birth": {"iconUrl": "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", "color": "#2ecc71"}, "death": {"iconUrl": "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", "color": "#e74c3c"}}}, "textbookPoints": "### 初中阶段\n- **时代背景**：生活在**北宋中期**，社会矛盾尖锐，**王安石变法**引发激烈党争。\n- **关键事件**：**“乌台诗案”** 是其人生重大转折，由朝中高官被贬为黄州团练副使。\n- **代表作品**：词《水调歌头·明月几时有》（**“但愿人长久，千里共婵娟”**）、《江城子·密州出猎》；文《记承天寺夜游》。\n- **文学常识**：**“唐宋八大家”** 之一，与父亲**苏洵**、弟弟**苏辙**并称 **“三苏”**。开创 **“豪放派”** 词风。\n- **常见易混点**：区分其号 **“东坡居士”** 与地名“东坡”（黄州城东的坡地）的关系。\n\n### 高中阶段\n- **思想与人格**：融合**儒家**的入世、**道家**的超脱与**佛家**的空观，形成 **“旷达”** 的人生态度。在黄州时期完成思想升华。\n- **艺术成就**：书法上为 **“宋四家”**（苏黄米蔡）之首；绘画上提出 **“文人画”** 理论，强调“诗画本一律”。\n- **代表作品深度解析**：《念奴娇·赤壁怀古》体现**历史时空感**与个人功业无成的感慨；《赤壁赋》（前）通过主客问答阐述 **“变”与“不变”** 的哲理，达到超然境界。\n- **对比与拓展**：与**辛弃疾**同为豪放派代表，但苏词更显**旷达飘逸**，辛词更显**悲壮慷慨**。其贬谪文学与**刘禹锡**、**柳宗元**有精神共鸣。\n- **历史评价辨析**：理解其政治立场的复杂性，他反对新法操之过急，但也认同部分改革初衷，并非全盘否定，属于 **“温和改革派”**。\n\n---", "examPoints": "### 初中阶段考点\n1.  苏轼的字号：字**子瞻**，号**东坡居士**。\n2.  文学地位：**“唐宋八大家”** 之一，**豪放派**词代表。\n3.  代表作品：《水调歌头·明月几时有》（**中秋词**）、《江城子·密州出猎》（**出猎词**）。\n4.  “乌台诗案”是其被贬**黄州**的直接原因。\n5.  与**苏洵**、**苏辙**合称“三苏”。\n6.  名句默写：“**人有悲欢离合，月有阴晴圆缺**”、“**会挽雕弓如满月，西北望，射天狼**”。\n7.  《记承天寺夜游》的体裁是**小品文**，表达微妙心境。\n\n### 高中阶段考点\n1.  苏轼思想的复杂性：**儒释道**三家思想的融合。\n2.  “乌台诗案”的本质：新旧党争中，政敌利用其诗文进行的**文字狱**。\n3.  黄州时期的意义：创作巅峰与**人格蜕变**（从苏轼到苏东坡）。\n4.  《赤壁赋》的哲学内涵：通过水与月的比喻，阐述**变与不变**、**物我皆无尽**的哲理，达到**旷达**境界。\n5.  豪放词风的特点：突破**词为艳科**的传统，题材拓宽，意境雄浑，**以诗为词**。\n6.  与辛弃疾的对比：苏轼是**豪放派开创者**，词风**清旷**；辛弃疾是**豪放派集大成者**，词风**沉郁**。\n7.  在书法史上的地位：**“宋四家”** 之首，代表作《**寒食帖**》（天下第三行书）。\n8.  对后世的影响：成为**逆境中文化人格**的典范，影响深远。", "markdown": "# 人物 生平传记与足迹\n\n## 一、人物档案\n\n### 基本信息\n- **姓名**：苏轼（字子瞻，号东坡居士）\n- **时代**：北宋\n- **出生**：宋仁宗景祐三年十二月十九日（1037年1月8日，一说1036年），眉州眉山（今四川省眉山市）\n- **去世**：宋徽宗建中靖国元年七月二十八日（1101年8月24日），常州（今江苏省常州市）\n- **享年**：六十四岁（按1037年计）\n- **主要身份**：文学家、书画家、政治家、美食家\n- **历史地位**：北宋中期的文坛领袖，中国文学艺术史上罕见的全才，“唐宋八大家”之一。\n- **主要成就**：开创豪放词派；散文与欧阳修并称“欧苏”；诗歌与黄庭坚并称“苏黄”；书法为“宋四家”之一；绘画上提出“文人画”理念。\n\n### 生平概述\n苏轼生于北宋仁宗时期，历经英宗、神宗、哲宗、徽宗五朝。他成长于文化氛围浓厚的家庭，嘉祐二年（1057年）进士及第，名动京师。其仕途与王安石变法引发的新旧党争紧密相连，因政见不合，自请外放，历任杭州、密州、徐州、湖州等地。元丰二年（1079年）因“乌台诗案”险些丧命，后被贬黄州。哲宗元祐年间短暂回朝，高太后执政期间官至翰林学士，但因不容于新旧两党，再度自请外调。晚年被一贬再贬，远至惠州、儋州。徽宗即位后遇赦北归，途中病逝于常州。苏轼一生宦海沉浮，却始终豁达乐观，将人生体悟融入诗词文书画，成就了不朽的文化遗产。\n\n---\n\n## 二、人生足迹地图说明\n- 🗺️ **行程概览**：足迹北至开封，南至海南儋州，西起故乡眉山，东至江苏常州，覆盖北宋大半疆域。\n- ⏱️ **时间跨度**：从1037年出生至1101年去世，跨度约45年（活跃于仕途与文坛的时间）。\n- 📍 **地理范围**：大致覆盖今四川、河南、浙江、山东、江苏、湖北、广东、海南等省份。\n- 🌟 **重要节点数量**：核心地点约10个。\n\n---\n\n## 三、人生历程与重要地点（按时间顺序）\n\n### 🟢 出生地：眉州眉山\n- **公元纪年**：1037年—1056年\n- **停留时间**：约19年\n- **位置**：眉州眉山（今四川省眉山市）\n- **事迹**：在家乡接受启蒙教育，与弟弟苏辙在父亲苏洵教导下苦读，奠定深厚的学识基础。\n- **意义**：人生与思想的起点，形成了他早期的世界观和文学素养。\n\n### 📍 重要地点：开封（汴京）\n- **公元纪年**：1056年—1057年；1061年—1064年；1069年—1071年；1085年—1089年（多次往返）\n- **停留时间**：累计数年\n- **位置**：汴京（今河南省开封市）\n- **事迹**：嘉祐二年（1057年）与苏辙同科进士及第，深受欧阳修赏识，名动京师；嘉祐六年（1061年）应中制科入第三等，授大理评事；元丰八年（1085年）神宗去世后被召回朝，历任中书舍人、翰林学士等要职。\n- **意义**：政治生涯与文坛声名的起点与中心舞台，见证了其才华的巅峰展示与党争的漩涡。\n- **名篇名句**：《和子由渑池怀旧》：“人生到处知何似，应似飞鸿踏雪泥。”\n\n### 📍 重要地点：凤翔府\n- **公元纪年**：1061年—1064年\n- **停留时间**：3年\n- **位置**：凤翔府（今陕西省宝鸡市凤翔区）\n- **事迹**：任签书凤翔府判官，初涉地方政务，勤政爱民，写下著名散文《喜雨亭记》。\n- **意义**：首次担任地方官，积累了实际的行政经验。\n- **名篇名句**：《和子由渑池怀旧》：“往日崎岖还记否，路长人困蹇驴嘶。”\n\n### 📍 重要地点：杭州（两度任职）\n- **公元纪年**：1071年—1074年（通判）；1089年—1091年（知州）\n- **停留时间**：累计约5年\n- **位置**：杭州（今浙江省杭州市）\n- **事迹**：任杭州通判时遍游山水，创作大量诗词；任杭州知州时，疏浚西湖，筑造“苏堤”，赈济灾民，防治瘟疫。\n- **意义**：文学创作的丰产之地，也是其仁政爱民、工程才能的实践地。\n- **名篇名句**：《饮湖上初晴后雨》：“欲把西湖比西子，淡妆浓抹总相宜。”；《江城子·凤凰山下雨初晴》。\n\n### 📍 重要地点：密州\n- **公元纪年**：1074年—1076年\n- **停留时间**：2年\n- **位置**：密州（今山东省诸城市）\n- **事迹**：任密州知州，抗旱灭蝗，救助弃婴；写下豪放词代表作《江城子·密州出猎》和千古绝唱《水调歌头·明月几时有》。\n- **意义**：豪放词风的正式确立之地，展现了其治理地方的才能与深邃的亲情、人生思考。\n- **名篇名句**：《江城子·密州出猎》：“会挽雕弓如满月，西北望，射天狼。”；《水调歌头·明月几时有》：“但愿人长久，千里共婵娟。”\n\n### 📍 重要地点：徐州\n- **公元纪年**：1077年—1079年\n- **停留时间**：2年\n- **位置**：徐州（今江苏省徐州市）\n- **事迹**：任徐州知州，黄河泛滥时亲率军民筑堤抗洪，保全城池；关心矿业、冶铁。\n- **意义**：抗洪功绩卓著，深受百姓爱戴，政绩斐然。\n- **名篇名句**：《浣溪沙·簌簌衣巾落枣花》。\n\n### 📍 重要地点：黄州\n- **公元纪年**：1080年—1084年\n- **停留时间**：4年多\n- **位置**：黄州（今湖北省黄冈市）\n- **事迹**：因“乌台诗案”被贬为黄州团练副使，生活困顿。躬耕东坡，自号“东坡居士”。在此写下《赤壁赋》、《后赤壁赋》、《念奴娇·赤壁怀古》等巅峰之作，书法名作《寒食帖》亦成于此期。\n- **意义**：人生与思想的重大转折点，文学艺术成就的最高峰，完成了从苏轼到苏东坡的精神蜕变。\n- **名篇名句**：《念奴娇·赤壁怀古》：“大江东去，浪淘尽，千古风流人物。”；《定风波·莫听穿林打叶声》：“一蓑烟雨任平生。”；《记承天寺夜游》。\n\n### 📍 重要地点：惠州\n- **公元纪年**：1094年—1097年\n- **停留时间**：约3年\n- **位置**：惠州（今广东省惠州市）\n- **事迹**：哲宗亲政后，新党得势，苏轼被贬为宁远军节度副使，惠州安置。虽处逆境，仍关心民瘼，推广农业技术，助修水利桥梁。\n- **意义**：远贬岭南，生活艰苦，但其豁达乐观精神不改，创作了大量反映岭南风物和恬淡心境的诗篇。\n- **名篇名句**：《惠州一绝》：“日啖荔枝三百颗，不辞长作岭南人。”\n\n### 📍 重要地点：儋州（昌化军）\n- **公元纪年**：1097年—1100年\n- **停留时间**：约3年\n- **位置**：昌化军（今海南省儋州市）\n- **事迹**：被贬至当时被视为“天涯海角”的海南岛。以著书为乐，传播文化，敷扬文教，开创海南教育之先河。\n- **意义**：人生贬谪的极限之地，在极端困苦中实现了文化的传播与人格的升华。\n- **名篇名句**：《六月二十日夜渡海》：“九死南荒吾不恨，兹游奇绝冠平生。”\n\n### 🔴 去世地：常州\n- **公元纪年**：1101年\n- **停留时间**：约一个月\n- **位置**：常州（今江苏省常州市）\n- **经过**：宋徽宗即位大赦，苏轼得以北归。途中身体每况愈下，抵达常州后上表请老，获准。建中靖国元年七月二十八日（1101年8月24日），病逝于常州孙氏馆。\n- **意义**：生命的终点，也是其漂泊一生的最后归宿，实现了他“独终老于常”的愿望。\n- **名篇名句**：《自题金山画像》：“问汝平生功业，黄州惠州儋州。”\n\n---\n\n## 四、生平时间线\n\n| 年份 | 年龄 | 关键事件 |\n| :--- | :--- | :--- |\n| 1037年 | 1岁 | 生于眉州眉山。 |\n| 1056年 | 20岁 | 与弟苏辙随父苏洵赴京应试。 |\n| 1057年 | 21岁 | 进士及第，母丧，返乡守孝。 |\n| 1061年 | 25岁 | 应中制科，入第三等，授凤翔府判官。 |\n| 1065年 | 29岁 | 还朝，任判登闻鼓院。妻王弗去世。 |\n| 1066年 | 30岁 | 父苏洵去世，扶丧归蜀。 |\n| 1069年 | 33岁 | 还朝，任监官告院。王安石变法开始，上书论其不便。 |\n| 1071年 | 35岁 | 因议论变法被诬，自请外调，任杭州通判。 |\n| 1074年 | 38岁 | 移知密州。 |\n| 1077年 | 41岁 | 移知徐州，抗洪有功。 |\n| 1079年 | 43岁 | 移知湖州。“乌台诗案”发，下狱，险死。 |\n| 1080年 | 44岁 | 贬谪黄州，任团练副使。 |\n| 1082年 | 46岁 | 于黄州筑“雪堂”，躬耕东坡，创作《赤壁赋》等名篇。 |\n| 1084年 | 48岁 | 离开黄州，赴汝州，途中上表乞居常州。 |\n| 1085年 | 49岁 | 神宗去世，哲宗即位，高太后垂帘，被召回朝，任中书舍人、翰林学士。 |\n| 1089年 | 53岁 | 因不容于新旧两党，再度自请外调，出知杭州。 |\n| 1091年 | 55岁 | 被召回朝，任吏部尚书，旋即出知颍州、扬州。 |\n| 1093年 | 57岁 | 高太后去世，哲宗亲政，新党得势。出知定州。 |\n| 1094年 | 58岁 | 贬为宁远军节度副使，惠州安置。 |\n| 1097年 | 61岁 | 再贬琼州别驾，昌化军安置，渡海至海南。 |\n| 1100年 | 64岁 | 徽宗即位，大赦北归。 |\n| 1101年 | 64岁 | 于北归途中病逝于常州。 |\n\n---\n\n## 五、历史影响\n\n### 对当时的影响\n苏轼在世时已是文坛泰斗，其诗词文章广为流传，影响了一代文风。在政治上，他作为蜀党领袖，其政见虽未被完全采纳，但其地方治理的卓越成效（如抗洪、兴修水利）深得民心。他的人格魅力吸引了众多门生友朋，形成了一个有影响力的文人圈子。\n\n### 对后世的影响\n1.  **文学艺术典范**：其诗词文赋书画皆臻一流，成为后世文人追慕的全能型典范，尤其“东坡精神”成为逆境中保持豁达乐观的文化符号。\n2.  **文化人格象征**：他融合了儒家的担当、道家的超脱和佛家的圆融，构建了一种理想的文化人格，对后世士大夫的精神世界影响深远。\n3.  **生活美学开创者**：从“东坡肉”到品茶、养生，他将日常生活艺术化、审美化，提升了生活文化的品位。\n4.  **地域文化传播**：其贬谪经历客观上促进了中原文化向岭南、海南等边远地区的传播与融合。\n\n### 历史评价\n1.  《宋史·苏轼传》：“器识之闳伟，议论之卓荦，文章之雄隽，政事之精明，四者皆能以特立之志为之主，而以迈往之气辅之。”\n2.  王国维《文学小言》：“三代以下诗人，无过屈子、渊明、子美、子瞻者。此四子者，若无文学之天才，其人格亦自足千古。”\n3.  林语堂《苏东坡传》：“苏东坡是一个不可救药的乐天派，一个伟大的人道主义者，一个百姓的朋友，一个大文豪，大书法家，创新的画家，造酒试验家……一个在政治上专唱反调的人，一个月夜徘徊者，一个诗人，一个小丑。”\n\n---\n\n## 人教版教材知识点\n\n### 初中阶段\n- **时代背景**：生活在**北宋中期**，社会矛盾尖锐，**王安石变法**引发激烈党争。\n- **关键事件**：**“乌台诗案”** 是其人生重大转折，由朝中高官被贬为黄州团练副使。\n- **代表作品**：词《水调歌头·明月几时有》（**“但愿人长久，千里共婵娟”**）、《江城子·密州出猎》；文《记承天寺夜游》。\n- **文学常识**：**“唐宋八大家”** 之一，与父亲**苏洵**、弟弟**苏辙**并称 **“三苏”**。开创 **“豪放派”** 词风。\n- **常见易混点**：区分其号 **“东坡居士”** 与地名“东坡”（黄州城东的坡地）的关系。\n\n### 高中阶段\n- **思想与人格**：融合**儒家**的入世、**道家**的超脱与**佛家**的空观，形成 **“旷达”** 的人生态度。在黄州时期完成思想升华。\n- **艺术成就**：书法上为 **“宋四家”**（苏黄米蔡）之首；绘画上提出 **“文人画”** 理论，强调“诗画本一律”。\n- **代表作品深度解析**：《念奴娇·赤壁怀古》体现**历史时空感**与个人功业无成的感慨；《赤壁赋》（前）通过主客问答阐述 **“变”与“不变”** 的哲理，达到超然境界。\n- **对比与拓展**：与**辛弃疾**同为豪放派代表，但苏词更显**旷达飘逸**，辛词更显**悲壮慷慨**。其贬谪文学与**刘禹锡**、**柳宗元**有精神共鸣。\n- **历史评价辨析**：理解其政治立场的复杂性，他反对新法操之过急，但也认同部分改革初衷，并非全盘否定，属于 **“温和改革派”**。\n\n---\n\n## 初高中阶段考点\n\n### 初中阶段考点\n1.  苏轼的字号：字**子瞻**，号**东坡居士**。\n2.  文学地位：**“唐宋八大家”** 之一，**豪放派**词代表。\n3.  代表作品：《水调歌头·明月几时有》（**中秋词**）、《江城子·密州出猎》（**出猎词**）。\n4.  “乌台诗案”是其被贬**黄州**的直接原因。\n5.  与**苏洵**、**苏辙**合称“三苏”。\n6.  名句默写：“**人有悲欢离合，月有阴晴圆缺**”、“**会挽雕弓如满月，西北望，射天狼**”。\n7.  《记承天寺夜游》的体裁是**小品文**，表达微妙心境。\n\n### 高中阶段考点\n1.  苏轼思想的复杂性：**儒释道**三家思想的融合。\n2.  “乌台诗案”的本质：新旧党争中，政敌利用其诗文进行的**文字狱**。\n3.  黄州时期的意义：创作巅峰与**人格蜕变**（从苏轼到苏东坡）。\n4.  《赤壁赋》的哲学内涵：通过水与月的比喻，阐述**变与不变**、**物我皆无尽**的哲理，达到**旷达**境界。\n5.  豪放词风的特点：突破**词为艳科**的传统，题材拓宽，意境雄浑，**以诗为词**。\n6.  与辛弃疾的对比：苏轼是**豪放派开创者**，词风**清旷**；辛弃疾是**豪放派集大成者**，词风**沉郁**。\n7.  在书法史上的地位：**“宋四家”** 之首，代表作《**寒食帖**》（天下第三行书）。\n8.  对后世的影响：成为**逆境中文化人格**的典范，影响深远。\n\n## 地点坐标（自动地理编码）\n| 现称 | 现代搜索地名 | 纬度 | 经度 |\n| --- | --- | --- | --- |\n| 生于眉州眉山。 | 生于眉州眉山。 | 22.997997 | 113.377632 |\n| 进士及第，母丧，返乡守孝。 | 进士及第，母丧，返乡守孝。 | 22.272081 | 113.476971 |\n| 应中制科，入第三等，授凤翔府判官。 | 应中制科，入第三等，授凤翔府判官。 | 43.902006 | 125.446861 |\n| 还朝，任判登闻鼓院。妻王弗去世。 | 还朝，任判登闻鼓院。妻王弗去世。 | 23.656593 | 116.620422 |\n| 父苏洵去世，扶丧归蜀。 | 父苏洵去世，扶丧归蜀。 | 31.583320 | 120.363030 |\n| 还朝，任监官告院。王安石变法开始，上书论其不便。 | 还朝，任监官告院。王安石变法开始，上书论其不便。 | 23.656593 | 116.620422 |\n| 移知密州。 | 移知密州。 | 30.465722 | 114.877142 |\n| 移知徐州，抗洪有功。 | 移知徐州，抗洪有功。 | 30.053203 | 120.251042 |\n| 移知湖州。“乌台诗案”发，下狱，险死。 | 移知湖州。“乌台诗案”发，下狱，险死。 | 31.763960 | 117.227457 |\n| 贬谪黄州，任团练副使。 | 贬谪黄州，任团练副使。 | 30.912828 | 120.057988 |\n| 于黄州筑“雪堂”，躬耕东坡，创作《赤壁赋》等名篇。 | 于黄州筑“雪堂”，躬耕东坡，创作《赤壁赋》等名篇。 | 28.644384 | 118.357362 |\n| 离开黄州，赴汝州，途中上表乞居常州。 | 离开黄州，赴汝州，途中上表乞居常州。 | 22.527081 | 114.273348 |\n| 高太后去世，哲宗亲政，新党得势。出知定州。 | 高太后去世，哲宗亲政，新党得势。出知定州。 | 30.617123 | 104.017758 |\n| 徽宗即位，大赦北归。 | 徽宗即位，大赦北归。 | 36.706626 | 119.235722 |"};
+      window.__EXPORT_DATA__ = data;
+const locations = data.locations || [];
+const textbookPoints = String(data.textbookPoints || '').trim();
+const examPoints = String(data.examPoints || '').trim();
+const mapStyle = data.mapStyle || {};
+const mergedTeachingPoints = [textbookPoints, examPoints].filter(Boolean).join('\n\n');
+const mergedTeachingPointsNormalized = mergedTeachingPoints
+  .replace(/^(#{0,4}\s*)?(初中阶段|高中阶段)(考点)?\s*$/gm, '')
+  .replace(/^\s*$/gm, (m) => m);
+const markerStyles = mapStyle.markers || {};
+const defaultMarkerStyles = {
+  normal: {
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    color: '#3498db'
+  },
+  birth: {
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    color: '#2ecc71'
+  },
+  death: {
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    color: '#e74c3c'
+  }
+};
+const highlights = data.person?.highlights || {};
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+const extractYear = (text) => {
+  if (!text) return null;
+  const match = String(text).match(/(\d{3,4})\s*年/);
+  return match ? parseInt(match[1], 10) : null;
+};
+
+const renderInline = (text) => {
+  const raw = String(text || '');
+  // 支持 Markdown 的 **加粗**。如果上游文本被截断导致 ** 不成对，兜底移除残留的 **，避免页面出现星号。
+  const parts = raw.split(/(\*\*.*?\*\*)/g).filter(Boolean);
+  return parts.map((p, idx) => {
+    const m = p.match(/^\*\*(.+?)\*\*$/);
+    if (m) {
+      return <strong key={idx} className="font-extrabold text-gray-900">{m[1]}</strong>;
+    }
+    return <span key={idx}>{p.replaceAll('**', '')}</span>;
+  });
+};
+
+const safeTruncateMdBold = (text, maxLen) => {
+  const s = String(text || '');
+  if (!maxLen || maxLen <= 0) return s;
+  let out = '';
+  let visible = 0;
+  let inBold = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === '*' && s[i + 1] === '*') {
+      out += '**';
+      inBold = !inBold;
+      i += 1;
+      continue;
+    }
+    out += ch;
+    visible += 1;
+    if (visible >= maxLen) {
+      out = out.trimEnd() + '…';
+      break;
+    }
+  }
+  if (inBold) out += '**';
+  return out;
+};
+
+const renderTextbookPoints = (raw, options) => {
+  // 兼容两种换行输入：
+  // 1) 真实换行：LF / CRLF / CR
+  // 2) 字面量换行：反斜杠 + n（可能出现 1 个或多个反斜杠）
+  // 说明：这段 JS 位于 Python 三引号字符串里，为避免 Python 对转义序列做预解析，
+  // 这里用 charCode 构造换行/反斜杠字符，再用正则 split 一次性切分。
+  const LF = String.fromCharCode(10); // line feed
+  const CR = String.fromCharCode(13); // carriage return
+  const BS = String.fromCharCode(92); // backslash
+
+  // 用 RegExp 构造器 split：匹配 CRLF / CR / LF / (一个或多个反斜杠 + n)
+  const BS_RE = BS + BS;
+  const splitRe = new RegExp(`${CR}${LF}|${CR}|${LF}|${BS_RE}+n`, 'g');
+
+  const lines = String(raw || '').split(splitRe);
+  const isStageHeading = (t) => /^(#{3,4}\s*)?(初中阶段|高中阶段)(考点)?\s*$/.test(String(t || '').trim());
+  const expanded = Boolean(options && options.expanded);
+  if (expanded) {
+    return lines.map((line, idx) => {
+      const rawLine = String(line || '');
+      const leadingSpaces = rawLine.match(/^\s*/)[0].length;
+      const t = rawLine.trim();
+      if (!t) return <div key={idx} className="h-2" />;
+      if (isStageHeading(t)) return null;
+      if (/^-{3,}$/.test(t)) return <hr key={idx} className="my-3 border-[#c8b496]/50" />;
+
+      const level = leadingSpaces >= 4 ? 3 : (leadingSpaces >= 2 ? 2 : 1);
+      const indentClass = level === 1 ? 'ml-0' : (level === 2 ? 'ml-4' : 'ml-8');
+
+      if (t.startsWith('### ')) {
+        const heading = t.replace(/^###\s*/, '');
+        return (
+          <h3 key={idx} className="mt-2 text-base font-bold text-[#7c2d12]">
+            {renderInline(heading)}
+          </h3>
+        );
+      }
+
+      if (t.startsWith('#### ')) {
+        const heading = t.replace(/^####\s*/, '');
+        return (
+          <h4 key={idx} className="mt-2 text-sm font-semibold text-gray-700">
+            {renderInline(heading)}
+          </h4>
+        );
+      }
+
+      if (t.startsWith('- ')) {
+        const body = t.slice(2).trim();
+        const bullet = level === 1 ? '•' : (level === 2 ? '◦' : '▪');
+        return (
+          <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+            <span className="mt-[2px] text-[#c0392b]">{bullet}</span>
+            <div>{renderInline(body)}</div>
+          </div>
+        );
+      }
+
+      const ordered = t.match(/^(\d+)\.\s+(.*)$/);
+      if (ordered) {
+        return (
+          <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+            <span className="mt-[2px] text-gray-500">{ordered[1]}.</span>
+            <div>{renderInline(ordered[2])}</div>
+          </div>
+        );
+      }
+
+      return (
+        <p key={idx} className="text-sm leading-relaxed text-gray-700">
+          {renderInline(t)}
+        </p>
+      );
+    });
+  }
+
+  const kept = [];
+  let sectionBulletCount = 0;
+  let totalBulletCount = 0;
+  const maxTotalBullets = 12;
+  const maxBulletsPerSection = 4;
+  const maxLineLen = 64;
+  for (const line of lines) {
+    const rawLine = String(line || '');
+    const t = rawLine.trim();
+    if (!t) {
+      kept.push(rawLine);
+      continue;
+    }
+    if (isStageHeading(t)) {
+      continue;
+    }
+    if (/^-{3,}$/.test(t)) {
+      kept.push('---');
+      continue;
+    }
+    if (t.startsWith('### ') || t.startsWith('#### ')) {
+      sectionBulletCount = 0;
+      kept.push(rawLine);
+      continue;
+    }
+    const isBullet = t.startsWith('- ') || /^\d+\.\s+/.test(t);
+    if (isBullet) {
+      totalBulletCount += 1;
+      sectionBulletCount += 1;
+      if (totalBulletCount > maxTotalBullets || sectionBulletCount > maxBulletsPerSection) {
+        continue;
+      }
+      const normalized = safeTruncateMdBold(rawLine.replace(/\s+$/g, '').trim(), maxLineLen);
+      kept.push(normalized);
+      continue;
+    }
+    if (totalBulletCount < maxTotalBullets) {
+      const normalized = safeTruncateMdBold(rawLine.replace(/\s+$/g, '').trim(), maxLineLen);
+      kept.push(normalized);
+    }
+  }
+
+  return kept.map((line, idx) => {
+    const rawLine = String(line || '');
+    const leadingSpaces = rawLine.match(/^\s*/)[0].length;
+    const t = rawLine.trim();
+    if (!t) return <div key={idx} className="h-2" />;
+    if (/^-{3,}$/.test(t)) return <hr key={idx} className="my-3 border-[#c8b496]/50" />;
+
+    // Markdown 列表层级：0-1 空格为一级，2-3 空格为二级，4+ 空格为三级
+    const level = leadingSpaces >= 4 ? 3 : (leadingSpaces >= 2 ? 2 : 1);
+    const indentClass = level === 1 ? 'ml-0' : (level === 2 ? 'ml-4' : 'ml-8');
+
+    if (t.startsWith('### ')) {
+      const heading = t.replace(/^###\s*/, '');
+      return (
+        <h3 key={idx} className="mt-2 text-base font-bold text-[#7c2d12]">
+          {renderInline(heading)}
+        </h3>
+      );
+    }
+
+    if (t.startsWith('#### ')) {
+      const heading = t.replace(/^####\s*/, '');
+      return (
+        <h4 key={idx} className="mt-2 text-sm font-semibold text-gray-700">
+          {renderInline(heading)}
+        </h4>
+      );
+    }
+
+    if (t.startsWith('- ')) {
+      const body = t.slice(2).trim();
+      const bullet = level === 1 ? '•' : (level === 2 ? '◦' : '▪');
+      return (
+        <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+          <span className="mt-[2px] text-[#c0392b]">{bullet}</span>
+          <div>{renderInline(body)}</div>
+        </div>
+      );
+    }
+
+    const ordered = t.match(/^(\d+)\.\s+(.*)$/);
+    if (ordered) {
+      return (
+        <div key={idx} className={`flex ${indentClass} gap-2 text-sm leading-relaxed text-gray-700`}>
+          <span className="mt-[2px] text-gray-500">{ordered[1]}.</span>
+          <div>{renderInline(ordered[2])}</div>
+        </div>
+      );
+    }
+
+    return (
+      <p key={idx} className="text-sm leading-relaxed text-gray-700">
+        {renderInline(t)}
+      </p>
+    );
+  });
+};
+
+const App = () => {
+  const [selectedLoc, setSelectedLoc] = useState(locations[0] || null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [showTeachingFull, setShowTeachingFull] = useState(false);
+  const [splitPct, setSplitPct] = useState(30);
+  const mapRef = useRef(null);
+  const splitRef = useRef(null);
+  const draggingRef = useRef(false);
+  const totalEvents = locations.length;
+  const description = data.person?.description || '';
+  const relatedWorks = Array.isArray(highlights.works) ? highlights.works : [];
+  const relatedReviews = Array.isArray(highlights.reviews) ? highlights.reviews : [];
+  const relatedHonor = String(highlights.honor || data.person?.title || '').trim();
+  const relatedStatus = String(highlights.status || '').trim();
+  const relatedIdentities = String(highlights.identities || '').trim();
+  const surname = String(data.person?.name || '').slice(0, 1);
+  const headerSubtitle = String(relatedReviews[0] || relatedHonor || relatedWorks[0] || '').replace(/^\s*[-\d.]+\s*/, '').trim();
+  const descSegments = useMemo(() => {
+    if (!description) return [];
+    const parts = description.split(/([。！？])/);
+    const segs = [];
+    for (let i = 0; i < parts.length; i += 2) {
+      const seg = `${parts[i] || ''}${parts[i + 1] || ''}`.trim();
+      if (seg) segs.push(seg);
+    }
+    return segs;
+  }, [description]);
+  const isLongDesc = useMemo(() => description.length > 120 || descSegments.length > 3, [description, descSegments]);
+  const stats = useMemo(() => {
+    let totalDist = 0;
+    for (let i = 0; i < locations.length - 1; i++) {
+      totalDist += calculateDistance(
+        locations[i].lat, locations[i].lng,
+        locations[i+1].lat, locations[i+1].lng
+      );
+    }
+    const regions = new Set(locations.map(l => (l.modernName || l.name || '').split(/[\s/]/)[0]).filter(Boolean));
+    const lifespanDigits = parseInt((data.person?.lifespan || '').replace(/\D/g, ''), 10);
+    const b = extractYear(data.person?.birth?.date || '');
+    const d = extractYear(data.person?.death?.date || '');
+    let yearsValue = b && d && d >= b && (d - b) < 200 ? (d - b) : null;
+    if (yearsValue === null) {
+      yearsValue = Number.isFinite(lifespanDigits) && lifespanDigits > 0 ? lifespanDigits : null;
+    }
+    const yearsLabel = yearsValue === null ? '存疑' : String(yearsValue);
+    return {
+      distance: Math.round(totalDist),
+      regions: regions.size,
+      events: locations.length,
+      yearsValue,
+      yearsLabel
+    };
+  }, []);
+  const birthDate = data.person?.birth?.date || '';
+  const deathDate = data.person?.death?.date || '';
+  const lifeDates = birthDate || deathDate
+    ? `${birthDate}${birthDate && deathDate ? '-' : ''}${deathDate}`
+    : (data.person?.lifespan || '');
+  const birthYear = useMemo(() => extractYear(birthDate), [birthDate]);
+  const birthplaceParts = useMemo(() => {
+    const raw = String(data.person?.birthplace || '').trim();
+    if (!raw) return { ancient: '', modern: '' };
+    let ancient = raw;
+    let modern = '';
+    const m1 = raw.match(/^(.*?)[（(]([^）)]+)[）)]\s*$/);
+    if (m1) {
+      ancient = String(m1[1] || '').trim();
+      modern = String(m1[2] || '').trim();
+    }
+    modern = modern.replace(/^今\s*/g, '').trim();
+    return { ancient, modern };
+  }, [data.person?.birthplace]);
+  const getAgeText = (loc) => {
+    const year = extractYear(loc.time || '');
+    if (!birthYear || !year) return '';
+    const age = year - birthYear + 1;
+    if (!Number.isFinite(age) || age <= 0 || age > 150) return '';
+    return `${age}岁`;
+  };
+  const renderDescription = () => {
+    if (!description) return null;
+    return (
+      <div className="mb-4">
+        <div className={`text-gray-600 leading-relaxed ${showFullDesc ? '' : 'desc-clamp'}`}>
+          {descSegments.map((seg, idx) => {
+            const t = String(seg || '').trim();
+            if (/^-{3,}$/.test(t)) {
+              return <hr key={idx} className="my-2 border-gray-200" />;
+            }
+            return <span key={idx} className="block">{seg}</span>;
+          })}
+        </div>
+        {isLongDesc ? (
+          <button
+            onClick={() => setShowFullDesc(!showFullDesc)}
+            className="text-xs text-[#c0392b] mt-1"
+          >
+            {showFullDesc ? '收起' : '展开'}
+          </button>
+        ) : null}
+      </div>
+    );
+  };
+  const changeEvent = (nextIndex) => {
+    if (nextIndex < 0 || nextIndex >= totalEvents || nextIndex === activeIndex) return;
+    const nextLoc = locations[nextIndex] || null;
+    setActiveIndex(nextIndex);
+    setSelectedLoc(nextLoc);
+    if (mapRef.current && nextLoc) {
+      mapRef.current.setView([nextLoc.lat, nextLoc.lng], 7);
+    }
+  };
+  useEffect(() => {
+    if (!mapRef.current) {
+      const first = locations[0] || { lat: 35, lng: 105 };
+      const map = L.map('map', { zoomControl: false }).setView([first.lat, first.lng], locations.length ? 4 : 4);
+      L.control.zoom({ position: 'topright' }).addTo(map);
+      const tileSources = [
+        { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', options: { attribution: '&copy; OpenStreetMap contributors' } },
+        { url: 'https://webrd{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' } },
+        { url: 'https://webst{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', options: { subdomains: ['0', '1', '2', '3'], attribution: '&copy; 高德地图' } },
+        { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', options: { subdomains: ['a', 'b', 'c', 'd'], attribution: '&copy; OpenStreetMap contributors &copy; CARTO' } },
+        { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', options: { attribution: 'Tiles &copy; Esri' } }
+      ];
+const isInChina = (lat, lng) => lat >= 18 && lat <= 54 && lng >= 73 && lng <= 135;
+      const addTileLayer = (mapInstance, center) => {
+        let idx = isInChina(center.lat, center.lng) ? 5 : 0;
+        let errorCount = 0;
+        let tileLoadCount = 0;
+        let layer = null;
+        let timer = null;
+        let blankAdded = false;
+
+        const addBlankBase = () => {
+          if (blankAdded) return;
+          blankAdded = true;
+          const el = document.getElementById('map');
+          if (el) el.style.background = '#f6f4ee';
+          const blank = L.gridLayer({ attribution: '' });
+          blank.createTile = () => {
+            const tile = document.createElement('div');
+            tile.style.background = 'transparent';
+            return tile;
+          };
+          blank.addTo(mapInstance);
+        };
+
+        const attach = () => {
+          if (layer) {
+            mapInstance.removeLayer(layer);
+          }
+          errorCount = 0;
+          tileLoadCount = 0;
+          if (idx >= tileSources.length) {
+            addBlankBase();
+            return;
+          }
+          layer = L.tileLayer(tileSources[idx].url, tileSources[idx].options);
+
+          const handleError = () => {
+            errorCount += 1;
+            if (errorCount >= 6) {
+              idx += 1;
+              attach();
+            }
+          };
+          const handleLoad = () => {
+            tileLoadCount += 1;
+          };
+
+          layer.on('tileerror', handleError);
+          layer.on('tileload', handleLoad);
+          layer.addTo(mapInstance);
+
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(() => {
+            if (tileLoadCount === 0) {
+              idx += 1;
+              attach();
+            }
+          }, 2000);
+        };
+
+        attach();
+      };
+      addTileLayer(map, { lat: first.lat, lng: first.lng });
+L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
+      const resolveMarkerStyle = (type) => {
+        if (markerStyles[type]) return markerStyles[type];
+        if (markerStyles.normal) return markerStyles.normal;
+        return defaultMarkerStyles[type] || defaultMarkerStyles.normal;
+      };
+      const markerIcon = (type) => {
+        const iconUrl = resolveMarkerStyle(type).iconUrl || defaultMarkerStyles.normal.iconUrl;
+        return L.icon({
+          iconUrl,
+          iconSize: [25, 34],
+          iconAnchor: [12, 34],
+          popupAnchor: [0, -30]
+        });
+      };
+      const pathCoords = locations.map(l => [l.lat, l.lng]);
+      for (let i = 0; i < pathCoords.length - 1; i++) {
+        const opacity = 0.25 + (i / pathCoords.length) * 0.6;
+        L.polyline([pathCoords[i], pathCoords[i+1]], {
+          color: mapStyle.pathColor || '#1e40af',
+          weight: 3,
+          opacity: opacity
+        }).addTo(map);
+      }
+      locations.forEach((loc, idx) => {
+        const style = resolveMarkerStyle(loc.type || 'normal');
+        L.circleMarker([loc.lat, loc.lng], {
+          radius: 10,
+          color: style.color || defaultMarkerStyles.normal.color,
+          fillColor: style.color || defaultMarkerStyles.normal.color,
+          fillOpacity: 0.35,
+          weight: 2
+        }).addTo(map);
+        const marker = L.marker([loc.lat, loc.lng], { icon: markerIcon(loc.type || 'normal') }).addTo(map);
+        marker.on('click', () => {
+          setSelectedLoc(loc);
+          setActiveIndex(idx);
+          map.setView([loc.lat, loc.lng], 7);
+        });
+        const ageText = getAgeText(loc);
+        if (ageText) {
+          const ageIcon = L.divIcon({
+            className: 'age-marker',
+            html: `<div class="age-badge">${ageText}</div>`,
+            iconSize: [44, 20],
+            iconAnchor: [22, 30]
+          });
+          L.marker([loc.lat, loc.lng], { icon: ageIcon, interactive: false }).addTo(map);
+        }
+      });
+      if (pathCoords.length > 1) {
+        const bounds = L.latLngBounds(pathCoords);
+        map.fitBounds(bounds, { padding: [48, 48], maxZoom: 6 });
+      } else if (pathCoords.length === 1) {
+        map.setView(pathCoords[0], 6);
+      }
+      mapRef.current = map;
+    }
+  }, []);
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!draggingRef.current || !splitRef.current) return;
+      const rect = splitRef.current.getBoundingClientRect();
+      const next = ((e.clientX - rect.left) / rect.width) * 100;
+      if (!Number.isFinite(next)) return;
+      const clamped = Math.min(60, Math.max(20, next));
+      setSplitPct(clamped);
+    };
+    const onUp = () => {
+      draggingRef.current = false;
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, []);
+  const handleLocClick = (loc, idx) => {
+    setSelectedLoc(loc);
+    if (typeof idx === 'number') {
+      setActiveIndex(idx);
+    }
+    if (mapRef.current) {
+      mapRef.current.setView([loc.lat, loc.lng], 7);
+    }
+  };
+  return (
+    <div className="max-w-screen-2xl mx-auto space-y-6">
+      <header className="glass-panel p-6 rounded-xl shadow-sm border-l-8 border-[#c0392b] flex flex-col md:flex-row gap-6 items-center">
+        <div className="w-32 h-32 bg-[#fdf6e3] rounded-full flex items-center justify-center border-4 border-white shadow-inner overflow-hidden">
+          <span className="text-[#7c2d12] text-5xl font-black tracking-wide">{surname}</span>
+        </div>
+        <div className="flex-1 text-center md:text-left">
+          <h1 className="text-4xl font-bold">{data.person.name}</h1>
+          {headerSubtitle ? (
+            <p className="text-xs text-gray-500 mt-1 mb-2">{renderInline(headerSubtitle)}</p>
+          ) : null}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+              <p className="text-gray-400 text-sm">朝代</p>
+              <p className="font-bold">{data.person?.dynasty || ''}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">籍贯</p>
+              <p className="font-bold">{birthplaceParts.ancient || ''}</p>
+              {birthplaceParts.modern ? (
+                <p className="text-[11px] text-gray-500 mt-0.5">{birthplaceParts.modern}</p>
+              ) : null}
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">生卒</p>
+              <p className="font-bold">{lifeDates}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">享年</p>
+              <p className="font-bold">{stats.yearsValue != null ? `${stats.yearsValue}岁` : (data.person?.lifespan || '')}</p>
+            </div>
+          </div>
+        </div>
+      </header>
+      {(relatedHonor || relatedStatus || relatedIdentities || relatedWorks.length || relatedReviews.length) ? (
+        <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-white/70">
+          <div className="flex items-center justify-between gap-4 mb-3">
+            <h2 className="text-lg font-bold text-[#7c2d12]">人物要点</h2>
+            <span className="text-[10px] text-gray-500">强相关速览</span>
+          </div>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {relatedHonor ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{renderInline(relatedHonor)}</span> : null}
+            {data.person?.dynasty ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{renderInline(data.person.dynasty)}</span> : null}
+            {stats.yearsValue != null ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{renderInline(`${stats.yearsValue}岁`)}</span> : (data.person?.lifespan ? <span className="text-[11px] px-2 py-1 rounded-full bg-[#fdf6e3] border border-[#c8b496]/50">{renderInline(data.person.lifespan)}</span> : null)}
+          </div>
+          {relatedStatus ? (
+            <div className="mb-3">
+              <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">历史地位</p>
+              <p className="text-sm text-gray-700 leading-relaxed">{renderInline(relatedStatus)}</p>
+            </div>
+          ) : null}
+          {relatedIdentities ? (
+            <div className="mb-3">
+              <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">身份</p>
+              <p className="text-sm text-gray-700 leading-relaxed">{renderInline(relatedIdentities)}</p>
+            </div>
+          ) : null}
+          {relatedWorks.length ? (
+            <div className="mb-3">
+              <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">代表作</p>
+              <div className="flex flex-wrap gap-2">
+                {relatedWorks.slice(0, 6).map((w, idx) => (
+                  <span key={idx} className="text-[11px] px-2 py-1 rounded bg-gray-50 border border-gray-200">《{w}》</span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          {relatedReviews.length ? (
+            <div>
+              <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">他人评价 / 史料</p>
+              <ul className="space-y-1">
+                {relatedReviews.slice(0, 4).map((t, idx) => {
+                  const s = String(t || '').replace(/^\s*[-•]\s*/, '').trim();
+                  return <li key={idx} className="text-sm text-gray-700 leading-relaxed">- {renderInline(s)}</li>;
+                })}
+              </ul>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+      <div className="space-y-6">
+        <div ref={splitRef} className="flex flex-col lg:flex-row gap-6 items-stretch">
+          <div
+            className="glass-panel rounded-xl overflow-hidden flex flex-col h-[620px]"
+            style={{ flexBasis: `${splitPct}%`, flexGrow: 0 }}
+          >
+            <div className="p-4 bg-[#c0392b] text-white font-bold flex items-center justify-between">
+              <span>足迹时间轴</span>
+              <div className="flex items-center gap-2 text-xs">
+                <button
+                  onClick={() => changeEvent(activeIndex - 1)}
+                  disabled={activeIndex === 0}
+                  className="px-2 py-1 rounded bg-white/20 disabled:opacity-40"
+                >上一事件</button>
+                <span className="opacity-80">{totalEvents ? activeIndex + 1 : 0} / {totalEvents}</span>
+                <button
+                  onClick={() => changeEvent(activeIndex + 1)}
+                  disabled={activeIndex + 1 >= totalEvents}
+                  className="px-2 py-1 rounded bg-white/20 disabled:opacity-40"
+                >下一事件</button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3">
+              {locations.length ? (
+                locations.map((loc, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => handleLocClick(loc, idx)}
+                    className={`p-3 rounded-lg cursor-pointer transition-all border-l-4 ${
+                      idx === activeIndex
+                        ? 'bg-white shadow-md border-[#c0392b]'
+                        : 'bg-white/70 border-transparent hover:bg-white'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm truncate">{loc.name}</span>
+                          {loc.type === 'birth' ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">出生</span>
+                          ) : loc.type === 'death' ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">去世</span>
+                          ) : null}
+                        </div>
+                        <div className="text-[10px] text-gray-400 truncate">{loc.ancientName} → {loc.modernName}</div>
+                      </div>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
+                        {loc.time || '未知'}
+                      </span>
+                    </div>
+                    <div className="space-y-1 text-[11px] text-gray-500 mb-2">
+                      <div className="flex justify-between">
+                        <span>公元纪年</span>
+                        <span className="text-gray-700">{loc.time || '未知'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>停留时间</span>
+                        <span className="text-gray-700">{loc.duration || '未知'}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500">{loc.event}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-xs text-gray-400">暂无事件</div>
+              )}
+            </div>
+          </div>
+          <div
+            className="hidden lg:block w-2 rounded bg-[#c8b496]/50 hover:bg-[#c8b496] cursor-col-resize"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              draggingRef.current = true;
+            }}
+          ></div>
+          <div className="relative flex-1">
+            <div id="map"></div>
+            {selectedLoc && (
+              <div className="absolute top-4 left-4 z-[1000] w-72 glass-panel p-4 rounded-xl shadow-xl border-t-4 border-[#c0392b]">
+                <button
+                  onClick={() => setSelectedLoc(null)}
+                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                >✕</button>
+                <h3 className="text-xl font-bold text-[#c0392b] mb-1">{selectedLoc.name}</h3>
+                <p className="text-xs text-gray-400 mb-3">{selectedLoc.ancientName} → {selectedLoc.modernName}</p>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="text-gray-400 text-[10px] uppercase font-bold">公元纪年</p>
+                    <p>{selectedLoc.time || '未知'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-[10px] uppercase font-bold">停留时间</p>
+                    <p>{selectedLoc.duration || '未知'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-[10px] uppercase font-bold">事迹描述</p>
+                    <p className="leading-relaxed">{selectedLoc.event}</p>
+                  </div>
+                  {selectedLoc.poster?.png ? (
+                    <div>
+                      <p className="text-gray-400 text-[10px] uppercase font-bold">海报</p>
+                      <a href={selectedLoc.poster.png} target="_blank" rel="noreferrer">
+                        <img src={selectedLoc.poster.png} className="w-full rounded-lg border border-[#c8b496]/50" />
+                      </a>
+                    </div>
+                  ) : null}
+                  <div className="bg-[#fdf6e3] p-2 rounded border border-dashed border-[#c8b496]">
+                    <p className="text-[#c0392b] text-[10px] uppercase font-bold">历史意义</p>
+                    <p className="italic text-xs">{selectedLoc.significance}</p>
+                  </div>
+                  {selectedLoc.quoteLines?.length ? (
+                    <div>
+                      <p className="text-gray-400 text-[10px] uppercase font-bold">名篇名句</p>
+                      <ul className="space-y-1">
+                        {selectedLoc.quoteLines.map((q, idx) => (
+                          <li key={idx} className="text-xs text-gray-700">{q}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : selectedLoc.works?.length ? (
+                    <div>
+                      <p className="text-gray-400 text-[10px] uppercase font-bold">名篇名句</p>
+                      <ul className="list-disc pl-4 space-y-1">
+                        {selectedLoc.works.map((w, idx) => (
+                          <li key={idx} className="text-xs text-gray-700">《{w}》</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">🗺️</p>
+            <p className="text-xl font-bold">{stats.distance} <span className="text-xs font-normal">km</span></p>
+            <p className="text-[10px] text-gray-400 uppercase">总行程估算</p>
+          </div>
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">⏱️</p>
+            <p className="text-xl font-bold">
+              {stats.yearsLabel}{stats.yearsValue === null ? null : <span className="text-xs font-normal">年</span>}
+            </p>
+            <p className="text-[10px] text-gray-400 uppercase">生命跨度</p>
+          </div>
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">📍</p>
+            <p className="text-xl font-bold">{stats.regions} <span className="text-xs font-normal">个</span></p>
+            <p className="text-[10px] text-gray-400 uppercase">覆盖地区</p>
+          </div>
+          <div className="glass-panel p-4 rounded-xl text-center">
+            <p className="text-2xl mb-1">🌟</p>
+            <p className="text-xl font-bold">{stats.events} <span className="text-xs font-normal">件</span></p>
+            <p className="text-[10px] text-gray-400 uppercase">重要事迹</p>
+          </div>
+        </div>
+
+        {mergedTeachingPoints ? (
+          <section className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-amber-50/40">
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <h2 className="text-lg font-bold text-[#7c2d12]">教材知识点与考点</h2>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowTeachingFull(v => !v)}
+                  className="text-[11px] px-2 py-1 rounded bg-white/70 border border-[#c8b496]/50 text-[#7c2d12] hover:bg-white"
+                >
+                  {showTeachingFull ? '收起' : '展开'}
+                </button>
+                <span className="text-[10px] text-gray-500">面向教学</span>
+              </div>
+            </div>
+            <div className="space-y-1">
+              {renderTextbookPoints(mergedTeachingPointsNormalized, { expanded: showTeachingFull })}
+            </div>
+          </section>
+        ) : null}
+
+      </div>
+      <footer className="text-center text-gray-400 text-[10px] py-8 border-t border-gray-200">
+        <p>
+          built by cuicheng (
+          <a className="underline hover:text-gray-600" href="mailto:cuizicheng.1024@gmail.com">cuizicheng.1024@gmail.com</a>
+          )
+        </p>
+      </footer>
+    </div>
+  );
+};
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+// exports disabled
+</script>
+</body>
+</html>

@@ -77,7 +77,7 @@ def _parse_story_md(path: Path) -> Dict[str, Any]:
 
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
-    story_dir = repo_root / "map_story" / "storymap" / "examples" / "story"
+    story_dir = repo_root / "storymap" / "examples" / "story"
     data_dir = repo_root / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
 

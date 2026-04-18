@@ -187,7 +187,7 @@ def _append_cached_resolved_places(cache_path: Path, places: Sequence[ResolvedPl
 def _load_llm_config() -> Dict[str, object]:
     root = repo_root()
     load_dotenv(root / ".env")
-    load_dotenv(root / "map_story" / "storymap" / "script" / ".env")
+    load_dotenv(root / "storymap" / "script" / ".env")
 
     api_key = (os.getenv("API_KEY") or os.getenv("OPENAI_API_KEY") or "").strip()
     base_url = (os.getenv("BASE_URL") or os.getenv("OPENAI_BASE_URL") or "").strip()
