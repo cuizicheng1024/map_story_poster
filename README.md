@@ -86,3 +86,4 @@ python3 tools/build_stellar_homepage.py --default-start 800 --default-end 1000
 
 TODO：
 - 优化时间轴效果
+- 用女娲.skill蒸馏历史人物，可以和用户对话
