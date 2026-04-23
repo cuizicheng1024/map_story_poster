@@ -119,12 +119,12 @@ def render_profile_html(data: Dict[str, object]) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>__TITLE__</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" onerror="if(!this.dataset.f){this.dataset.f='1';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='1'){this.dataset.f='2';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}" />
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}"></script>
-<script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/react@18/umd/react.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';}"></script>
-<script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/react-dom@18/umd/react-dom.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js';}"></script>
-<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://unpkg.com/@babel/standalone@7.24.7/babel.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js';}"></script>
+<script src="/vendor/tailwindcss.js" onerror="this.onerror=null;this.src='https://cdn.tailwindcss.com';"></script>
+<link rel="stylesheet" href="/vendor/leaflet.css" onerror="if(!this.dataset.f){this.dataset.f='1';this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='1'){this.dataset.f='2';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='2'){this.dataset.f='3';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}" />
+<script src="/vendor/leaflet.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}"></script>
+<script src="/vendor/react.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/react@18/umd/react.production.min.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';}"></script>
+<script src="/vendor/react-dom.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/react-dom@18/umd/react-dom.production.min.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js';}"></script>
+<script src="/vendor/babel.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/@babel/standalone@7.24.7/babel.min.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js';}"></script>
 <style>
 body {
   font-family: 'Noto Serif SC', serif;
@@ -176,11 +176,24 @@ body {
 </style>
 </head>
 <body class="p-4 md:p-8">
+    <div id="boot-fallback" class="max-w-screen-2xl mx-auto mb-4 glass-panel p-4 rounded-xl border border-[#c8b496]/40 bg-white/70">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <div class="text-sm font-semibold text-[#7c2d12]">页面加载中…</div>
+          <div class="text-[11px] text-gray-600 mt-1">若长时间停留在此，请检查 /vendor/ 资源是否可访问（服务端会自动转发 CDN 资源）。</div>
+        </div>
+        <div class="text-[11px] text-gray-500">提示</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="text/babel" data-presets="env,react">
       const { useState, useEffect, useRef, useMemo } = React;
       const data = __DATA__;
       window.__EXPORT_DATA__ = data;
+const hideBootFallback = () => {
+  const el = document.getElementById('boot-fallback');
+  if (el) el.style.display = 'none';
+};
 const locations = data.locations || [];
 const textbookPoints = String(data.textbookPoints || '').trim();
 const examPoints = String(data.examPoints || '').trim();
@@ -561,6 +574,7 @@ const App = () => {
     }
   };
   useEffect(() => {
+    hideBootFallback();
     if (!mapRef.current) {
       const first = locations[0] || { lat: 35, lng: 105 };
       const map = L.map('map', { zoomControl: false }).setView([first.lat, first.lng], locations.length ? 4 : 4);

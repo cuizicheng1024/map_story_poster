@@ -628,6 +628,73 @@ _CACHE_LOCK = threading.Lock()
 _MAX_TEXT_LEN = 200
 _ALLOWED_ORIGINS = [o.strip() for o in os.getenv("STORY_MAP_ALLOWED_ORIGINS", "*").split(",") if o.strip()]
 
+_VENDOR_CACHE: Dict[str, Tuple[str, bytes]] = {}
+_VENDOR_LOCK = threading.Lock()
+_VENDOR_SOURCES: Dict[str, List[str]] = {
+    "tailwindcss.js": [
+        "https://cdn.tailwindcss.com",
+    ],
+    "leaflet.css": [
+        "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css",
+        "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css",
+    ],
+    "leaflet.js": [
+        "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js",
+        "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js",
+    ],
+    "react.production.min.js": [
+        "https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js",
+        "https://unpkg.com/react@18/umd/react.production.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js",
+    ],
+    "react-dom.production.min.js": [
+        "https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js",
+        "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js",
+    ],
+    "babel.min.js": [
+        "https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js",
+        "https://unpkg.com/@babel/standalone@7.24.7/babel.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js",
+    ],
+}
+
+
+def _vendor_content_type(name: str) -> str:
+    n = (name or "").lower()
+    if n.endswith(".css"):
+        return "text/css; charset=utf-8"
+    if n.endswith(".js"):
+        return "application/javascript; charset=utf-8"
+    return "application/octet-stream"
+
+
+def _fetch_vendor_bytes(name: str) -> Tuple[str, bytes]:
+    urls = _VENDOR_SOURCES.get(name) or []
+    if not urls:
+        raise RuntimeError("vendor_not_found")
+    last_err: Optional[Exception] = None
+    for url in urls:
+        try:
+            req = Request(
+                url=url,
+                method="GET",
+                headers={
+                    "User-Agent": "Mozilla/5.0 (compatible; story_map/1.0)",
+                    "Accept": "*/*",
+                },
+            )
+            with urlopen(req, timeout=12) as resp:
+                data = resp.read()
+            if data:
+                return _vendor_content_type(name), data
+        except Exception as e:
+            last_err = e
+            continue
+    raise RuntimeError(str(last_err) if last_err else "vendor_fetch_failed")
+
 
 def _resolve_cors_origin(origin: str) -> Optional[str]:
     if not origin:
@@ -2290,6 +2357,35 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             self.wfile.write(body)
         return True
 
+    def _try_serve_vendor(self, parsed_path: str, origin: Optional[str], head_only: bool = False) -> bool:
+        if not (parsed_path or "").startswith("/vendor/"):
+            return False
+        name = unquote((parsed_path or "").split("/vendor/", 1)[-1]).strip().lstrip("/")
+        if not re.fullmatch(r"[a-zA-Z0-9_.@-]+\.(js|css)", name):
+            return False
+        with _VENDOR_LOCK:
+            cached = _VENDOR_CACHE.get(name)
+        if cached:
+            ct, body = cached
+            self._set_headers_raw(200, ct, len(body), origin)
+            if not head_only:
+                self.wfile.write(body)
+            return True
+        try:
+            ct, body = _fetch_vendor_bytes(name)
+        except Exception:
+            payload = json.dumps({"ok": False, "error": "vendor fetch failed", "name": name}, ensure_ascii=False).encode("utf-8")
+            self._set_headers(502, len(payload), origin)
+            if not head_only:
+                self.wfile.write(payload)
+            return True
+        with _VENDOR_LOCK:
+            _VENDOR_CACHE[name] = (ct, body)
+        self._set_headers_raw(200, ct, len(body), origin)
+        if not head_only:
+            self.wfile.write(body)
+        return True
+
     def do_OPTIONS(self):
         origin = self.headers.get("Origin", "")
         allowed = _resolve_cors_origin(origin)
@@ -2312,6 +2408,8 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
         parsed = urlparse(self.path)
+        if self._try_serve_vendor(parsed.path, allowed, head_only=True):
+            return
         if self._try_serve_static(parsed.path, allowed, head_only=True):
             return
         if parsed.path == "/health":
@@ -2356,6 +2454,8 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             ).encode("utf-8")
             self._set_headers(200, len(payload), allowed)
             self.wfile.write(payload)
+            return
+        if self._try_serve_vendor(parsed.path, allowed):
             return
         if self._try_serve_static(parsed.path, allowed):
             return

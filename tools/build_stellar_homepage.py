@@ -268,9 +268,7 @@ def _render_index_html(title: str, data_file: str) -> str:
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{safe_title}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" onerror="if(!this.dataset.f){{this.dataset.f='1';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}}else if(this.dataset.f==='1'){{this.dataset.f='2';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}}" />
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" onerror="if(!this.dataset.f){{this.dataset.f='1';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}}else if(this.dataset.f==='1'){{this.dataset.f='2';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}}"></script>
+    <script src="/vendor/tailwindcss.js" onerror="this.onerror=null;this.src='https://cdn.tailwindcss.com';"></script>
     <style>
       body {{
         background: radial-gradient(900px 600px at 10% 0%, rgba(59,130,246,0.15), transparent 60%),
@@ -761,10 +759,104 @@ def _render_index_html(title: str, data_file: str) -> str:
 
       let currentTab = "graph";
       let mapInited = false;
-      let map = null;
-      let geoLayer = null;
       let markers = [];
-      let mapRenderer = null;
+      let amap = null;
+      let amapLoading = false;
+
+      const _getAmapKey = () => {{
+        let k = "";
+        try {{
+          k = (new URLSearchParams(window.location.search).get("amapKey") || "").trim();
+        }} catch (_) {{}}
+        if (!k) k = (window.AMAP_KEY || localStorage.getItem("AMAP_KEY") || "").trim();
+        return k;
+      }};
+      const _getAmapSecurity = () => {{
+        let s = "";
+        try {{
+          s = (new URLSearchParams(window.location.search).get("amapSec") || "").trim();
+        }} catch (_) {{}}
+        if (!s) s = (window.AMAP_SECURITY || localStorage.getItem("AMAP_SECURITY") || "").trim();
+        return s;
+      }};
+      const _ensureAmap = () => new Promise((resolve, reject) => {{
+        if (window.AMap && typeof window.AMap.Map === "function") return resolve(true);
+        const key = _getAmapKey();
+        if (!key) return reject(new Error("AMAP_KEY_REQUIRED"));
+        const sec = _getAmapSecurity();
+        if (sec) {{
+          window._AMapSecurityConfig = {{ securityJsCode: sec }};
+        }}
+        if (amapLoading) {{
+          const t0 = Date.now();
+          const tick = () => {{
+            if (window.AMap && typeof window.AMap.Map === "function") return resolve(true);
+            if (Date.now() - t0 > 12000) return reject(new Error("AMAP_LOAD_TIMEOUT"));
+            setTimeout(tick, 80);
+          }};
+          return tick();
+        }}
+        amapLoading = true;
+        const sEl = document.createElement("script");
+        sEl.async = true;
+        sEl.src = `https://webapi.amap.com/maps?v=2.0&key=${{encodeURIComponent(key)}}`;
+        sEl.onload = () => {{
+          amapLoading = false;
+          if (window.AMap && typeof window.AMap.Map === "function") resolve(true);
+          else reject(new Error("AMAP_LOAD_FAILED"));
+        }};
+        sEl.onerror = () => {{
+          amapLoading = false;
+          reject(new Error("AMAP_LOAD_FAILED"));
+        }};
+        document.head.appendChild(sEl);
+      }});
+
+      const _amapKeyGate = () => {{
+        if (!$chinaMap) return null;
+        const wrap = document.createElement("div");
+        wrap.style.position = "absolute";
+        wrap.style.left = "0";
+        wrap.style.top = "0";
+        wrap.style.right = "0";
+        wrap.style.bottom = "0";
+        wrap.style.zIndex = "10";
+        wrap.style.display = "flex";
+        wrap.style.alignItems = "center";
+        wrap.style.justifyContent = "center";
+        wrap.style.background = "rgba(2,6,23,0.55)";
+        wrap.innerHTML = `
+          <div style="width:min(520px,92vw);border-radius:14px;padding:16px 16px 14px;background:rgba(255,255,255,0.92);border:1px solid rgba(255,255,255,0.35);box-shadow:0 18px 44px rgba(0,0,0,0.28)">
+            <div style="font-weight:800;color:#0f172a;font-size:14px">地图需要高德 Web Key</div>
+            <div style="margin-top:6px;color:rgba(15,23,42,0.65);font-size:12px;line-height:1.4">
+              由于环境 DNS 无法访问 AutoNavi 瓦片域名，这里改用 AMap JS API（webapi.amap.com）。请填入 Key（可选填 securityJsCode）。
+            </div>
+            <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+              <input id="amap-key" placeholder="AMAP_KEY" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(15,23,42,0.15);outline:none;font-size:12px" />
+              <input id="amap-sec" placeholder="AMAP_SECURITY（可选）" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(15,23,42,0.15);outline:none;font-size:12px" />
+              <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button id="amap-save" style="padding:9px 12px;border-radius:10px;background:#0ea5e9;color:white;font-size:12px;font-weight:700">保存并加载</button>
+              </div>
+            </div>
+          </div>
+        `;
+        const keyEl = wrap.querySelector("#amap-key");
+        const secEl = wrap.querySelector("#amap-sec");
+        const saveEl = wrap.querySelector("#amap-save");
+        if (keyEl) keyEl.value = _getAmapKey();
+        if (secEl) secEl.value = _getAmapSecurity();
+        if (saveEl) {{
+          saveEl.addEventListener("click", () => {{
+            const k = (keyEl && keyEl.value ? String(keyEl.value) : "").trim();
+            const s = (secEl && secEl.value ? String(secEl.value) : "").trim();
+            if (k) localStorage.setItem("AMAP_KEY", k);
+            if (s) localStorage.setItem("AMAP_SECURITY", s);
+            wrap.remove();
+            initMapOnce();
+          }});
+        }}
+        return wrap;
+      }};
 
       const setTab = (tab) => {{
         currentTab = tab;
@@ -788,72 +880,63 @@ def _render_index_html(title: str, data_file: str) -> str:
       const initMapOnce = () => {{
         if (mapInited) return;
         if (!$chinaMap) return;
-        if (typeof L === "undefined") return;
+        if (!$chinaMap.style.position) $chinaMap.style.position = "relative";
         mapInited = true;
-        mapRenderer = L.canvas({{ padding: 0.5 }});
-        map = L.map($chinaMap, {{
-          zoomControl: false,
-          attributionControl: false,
-          scrollWheelZoom: true,
-          preferCanvas: true,
-          renderer: mapRenderer,
-        }}).setView([35.5, 105.0], 4);
-
-        try {{
-          const amapUrl = "https://webrd{{s}}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={{x}}&y={{y}}&z={{z}}";
-          L.tileLayer(amapUrl, {{
-            subdomains: ["0", "1", "2", "3"],
-            maxZoom: 18,
-            attribution: "&copy; 高德地图",
-          }}).addTo(map);
-        }} catch (_) {{}}
-
-        fetch("https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json").then((r) => r.json()).then((gj) => {{
-          try {{
-            geoLayer = L.geoJSON(gj, {{
-              style: () => ({{
-                color: "rgba(255,255,255,0.28)",
-                weight: 1,
-                fillColor: "rgba(59,130,246,0.06)",
-                fillOpacity: 1,
-              }})
-            }}).addTo(map);
-            map.fitBounds(geoLayer.getBounds(), {{ padding: [12, 12] }});
-          }} catch (_) {{}}
-        }}).catch(() => {{}});
-
-        const addMarker = (n) => {{
-          const lat = n.birth_lat;
-          const lng = n.birth_lng;
-          if (typeof lat !== "number" || typeof lng !== "number") return;
-          const mk = L.circleMarker([lat, lng], {{
-            radius: 4.5,
-            color: "rgba(255,255,255,0.35)",
-            weight: 1,
-            fillColor: "rgba(255,255,255,0.28)",
-            fillOpacity: 0.4,
-            renderer: mapRenderer,
+        _ensureAmap().then(() => {{
+          if (!window.AMap) return;
+          amap = new window.AMap.Map($chinaMap, {{
+            zoom: 4,
+            center: [105.0, 35.5],
+            viewMode: "2D",
+            mapStyle: "amap://styles/darkblue",
+            resizeEnable: true,
           }});
-          mk.on("click", () => openPerson(n.person));
-          mk.addTo(map);
-          markers.push({{ mk, n }});
-        }};
 
-        for (const n of nodes) addMarker(n);
-        updateMapMarkers();
+          const addMarker = (n) => {{
+            const lat = n.birth_lat;
+            const lng = n.birth_lng;
+            if (typeof lat !== "number" || typeof lng !== "number") return;
+            const mk = new window.AMap.CircleMarker({{
+              center: [lng, lat],
+              radius: 5.0,
+              strokeColor: "rgba(255,255,255,0.30)",
+              strokeOpacity: 0.9,
+              strokeWeight: 1,
+              fillColor: "rgba(255,255,255,0.20)",
+              fillOpacity: 0.35,
+              zIndex: 10,
+              bubble: true,
+              cursor: "pointer",
+            }});
+            mk.setMap(amap);
+            mk.on("click", () => openPerson(n.person));
+            markers.push({{ mk, n }});
+          }};
+
+          for (const n of nodes) addMarker(n);
+          updateMapMarkers();
+        }}).catch((e) => {{
+          mapInited = false;
+          const gate = _amapKeyGate();
+          if (gate && $chinaMap && !$chinaMap.querySelector("#amap-key")) {{
+            $chinaMap.appendChild(gate);
+          }}
+        }});
       }};
 
       const updateMapMarkers = () => {{
-        if (!mapInited) return;
+        if (!mapInited || !amap) return;
         for (const it of markers) {{
           const n = it.n;
           const active = inWindow(n);
-          it.mk.setStyle({{
-            radius: active ? 6.2 : 4.2,
-            color: active ? "rgba(34,197,94,0.65)" : "rgba(255,255,255,0.20)",
-            weight: active ? 1.2 : 1,
-            fillColor: active ? "rgba(34,197,94,0.55)" : "rgba(255,255,255,0.20)",
-            fillOpacity: active ? 0.85 : 0.30,
+          it.mk.setOptions({{
+            radius: active ? 7.0 : 4.8,
+            strokeColor: active ? "rgba(34,197,94,0.75)" : "rgba(255,255,255,0.18)",
+            strokeOpacity: active ? 0.95 : 0.7,
+            strokeWeight: active ? 1.2 : 1,
+            fillColor: active ? "rgba(34,197,94,0.55)" : "rgba(255,255,255,0.16)",
+            fillOpacity: active ? 0.9 : 0.28,
+            zIndex: active ? 20 : 10,
           }});
         }}
       }};
