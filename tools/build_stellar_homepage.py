@@ -799,6 +799,15 @@ def _render_index_html(title: str, data_file: str) -> str:
           renderer: mapRenderer,
         }}).setView([35.5, 105.0], 4);
 
+        try {{
+          const amapUrl = "https://webrd{{s}}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={{x}}&y={{y}}&z={{z}}";
+          L.tileLayer(amapUrl, {{
+            subdomains: ["0", "1", "2", "3"],
+            maxZoom: 18,
+            attribution: "&copy; 高德地图",
+          }}).addTo(map);
+        }} catch (_) {{}}
+
         fetch("https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json").then((r) => r.json()).then((gj) => {{
           try {{
             geoLayer = L.geoJSON(gj, {{

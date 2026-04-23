@@ -85,5 +85,9 @@ python3 tools/build_stellar_homepage.py --default-start 800 --default-end 1000
 
 
 TODO：
+- 各年份的实际边界
+- 秦占位太小，优化
+- 人物详情页的信息优化
+- 增加黑龙江的漠河到云南的腾冲作为分界线
 - 优化时间轴效果
 - 用女娲.skill蒸馏历史人物，可以和用户对话
