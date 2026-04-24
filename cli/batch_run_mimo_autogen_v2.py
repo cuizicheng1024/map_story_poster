@@ -371,6 +371,7 @@ def fact_check_with_mimo(
 
 
 def load_latest_person_html(person: str) -> str:
+    """读取该人物最新生成的一份 story_map HTML（按 mtime 取最新），用于事实修订时提供额外上下文。"""
     html_dir = REPO_ROOT / "storymap" / "examples" / "story_map"
     prefix = _safe_filename(person)
     cands = [
@@ -399,6 +400,7 @@ def repair_markdown_with_mimo(
     retries: int,
     retry_backoff_s: float,
 ) -> Tuple[Optional[str], ApiAttempt]:
+    """调用 OpenAI-compatible LLM，对人物 Markdown 做知识性错误修订并返回修订后的 Markdown。"""
     sys_msg = (
         "你是严谨的历史人物知识性错误校对编辑。你将收到某位人物的中文 Markdown（为人物页来源）"
         "以及该人物页的 HTML（仅供参考）。请对内容做事实核查与修订，纠正明显的知识性错误与自相矛盾处。"
@@ -782,6 +784,7 @@ def run_one_fact_repair(
     retries: int,
     retry_backoff_s: float,
 ) -> RunResult:
+    """对单个人物做“事实修订”跑数：读入现有 Markdown/HTML -> LLM 修订 -> 走 pipeline 重渲 HTML。"""
     run_dir = out_dir / "runs" / person
     run_dir.mkdir(parents=True, exist_ok=True)
 
