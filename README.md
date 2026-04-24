@@ -50,13 +50,6 @@ python3 storymap/script/story_map.py --serve --port 8765
 2) 浏览器打开主页：
 - `http://localhost:8765/`
 
-#### ⏱️ 时间窗默认值
-主页时间轴默认起止来自 `storymap/examples/story_map/stellar_home_data.json` 的 `default_start/default_end`。
-可以通过脚本重建数据并指定默认时间窗，例如：
-```bash
-python3 tools/build_stellar_homepage.py --default-start 800 --default-end 1000
-```
-
 #### 🔎 未收录人物
 如果主页搜索框输入的人物不在当前库中，会通过服务端实时生成（依赖模型接口配置），生成完成后自动跳转到人物页。
 

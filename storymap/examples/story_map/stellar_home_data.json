@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24 21:10:49",
+  "generated_at": "2026-04-24 21:33:53",
   "min_year": -800,
   "max_year": 2000,
   "default_start": 0,
@@ -7,16 +7,16 @@
   "nodes": [
     {
       "person": "S.M.斯季绍夫",
-      "birth_year": 1897,
-      "death_year": 1975,
-      "dynasty": "苏联时期",
+      "birth_year": null,
+      "death_year": null,
+      "dynasty": "苏联时期（存疑）",
       "quote": "",
-      "birthplace": "俄罗斯帝国切尔尼戈夫省",
-      "birthplace_raw": "俄罗斯帝国切尔尼戈夫省（今属乌克兰切尔尼戈夫州）",
-      "birthplace_modern": "属乌克兰切尔尼戈夫州",
+      "birthplace": "年份与地点存疑",
+      "birthplace_raw": "年份与地点存疑",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
-      "file": "",
+      "file": "S.M.斯季绍夫__pure__20260424_212814.html",
       "seed": 269673128281145,
       "relations": []
     },
@@ -38,15 +38,15 @@
     {
       "person": "一丈青大娘",
       "birth_year": 19,
-      "death_year": null,
-      "dynasty": "20世纪30年代（中华民国时期）",
+      "death_year": 20,
+      "dynasty": "清末至民国时期（小说《蒲柳人家》背景）",
       "quote": "",
-      "birthplace": "；北运河畔某村庄",
-      "birthplace_raw": "；北运河畔某村庄",
+      "birthplace": "约19世纪末",
+      "birthplace_raw": "约19世纪末",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
-      "file": "",
+      "file": "一丈青大娘__pure__20260424_213035.html",
       "seed": 90047886782073,
       "relations": []
     },
@@ -4595,7 +4595,7 @@
       "birthplace_modern": "江西省樟树市",
       "birth_lat": 28.0567,
       "birth_lng": 115.5465,
-      "file": "",
+      "file": "王安石.html",
       "seed": 219397523909815,
       "relations": []
     },
@@ -7356,7 +7356,7 @@
       "birthplace_modern": "德国莱茵兰-普法尔茨州特里尔市",
       "birth_lat": 49.75,
       "birth_lng": 6.64,
-      "file": "",
+      "file": "马克思.html",
       "seed": 37246876114703,
       "relations": []
     },
@@ -7716,7 +7716,7 @@
       "birthplace_modern": "江西省九江市修水县",
       "birth_lat": 29.0,
       "birth_lng": 114.5,
-      "file": "",
+      "file": "黄庭坚.html",
       "seed": 204247087188958,
       "relations": []
     },
@@ -10957,10 +10957,6 @@
     {
       "a": 34,
       "b": 133
-    },
-    {
-      "a": 188,
-      "b": 0
     },
     {
       "a": 285,

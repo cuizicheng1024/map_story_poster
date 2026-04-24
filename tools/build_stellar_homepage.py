@@ -570,6 +570,7 @@ def _render_index_html(title: str, data_file: str) -> str:
       }};
 
       const esc = (s) => String(s || "").replace(/[&<>\"']/g, (c) => ({{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}})[c]);
+      const stripMd = (s) => String(s || "").replace(/\*\*/g, "").replace(/__/g, "");
 
       let nodes = [];
       let edges = [];
@@ -966,7 +967,7 @@ def _render_index_html(title: str, data_file: str) -> str:
           return;
         }}
         const years = (n.birth_year != null && n.death_year != null) ? `${{n.birth_year}}-${{n.death_year}}` : (n.birth_year != null ? `${{n.birth_year}}-?` : (n.death_year != null ? `?- ${{n.death_year}}` : "未知"));
-        const quote = n.quote ? `\\n${{n.quote}}` : "";
+        const quote = n.quote ? `\n${{stripMd(n.quote)}}` : "";
         const dynasty = String(n.dynasty || "").trim();
         const dline = dynasty ? `<div class="text-white/70 text-[11px] mt-1">时代：${{esc(dynasty)}}</div>` : "";
         const bp = String(n.birthplace || "").trim();
@@ -1530,7 +1531,7 @@ def _render_index_html(title: str, data_file: str) -> str:
                 const dynasty = String(n.dynasty || "").trim();
                 const bp = String(n.birthplace || "").trim();
                 const bpm = String(n.birthplace_modern || "").trim();
-                const quote = String(n.quote || "").trim();
+                const quote = stripMd(String(n.quote || "").trim());
                 const personJs = String(n.person || "").replace(/'/g, "\\\\'");
                 let html = '';
                 html += '<div style="min-width:220px;max-width:280px">';
