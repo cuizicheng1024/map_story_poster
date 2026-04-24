@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24 22:38:02",
+  "generated_at": "2026-04-24 22:41:16",
   "min_year": -800,
   "max_year": 2000,
   "default_start": 0,
@@ -46,7 +46,7 @@
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
-      "file": "一丈青大娘__pure__20260424_213035.html",
+      "file": "一丈青大娘__pure__20260424_224059.html",
       "seed": 90047886782073,
       "relations": []
     },
@@ -91,7 +91,7 @@
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
-      "file": "乔纳森__pure__20260424_213642.html",
+      "file": "乔纳森__pure__20260424_224051.html",
       "seed": 199847294592384,
       "relations": []
     },
@@ -121,7 +121,7 @@
       "birthplace_modern": "天津市宁河区",
       "birth_lat": 39.3306,
       "birth_lng": 117.8267,
-      "file": "于敏__pure__20260424_213733.html",
+      "file": "于敏__pure__20260424_223941.html",
       "seed": 220447964230530,
       "relations": []
     },
@@ -166,7 +166,7 @@
       "birthplace_modern": "说法不一",
       "birth_lat": null,
       "birth_lng": null,
-      "file": "于谦__pure__20260424_213840.html",
+      "file": "于谦__pure__20260424_223955.html",
       "seed": 69989932584850,
       "relations": []
     },
@@ -196,7 +196,7 @@
       "birthplace_modern": "希腊中马其顿大区佩拉",
       "birth_lat": 40.7614,
       "birth_lng": 22.5264,
-      "file": "亚历山大大帝__pure__20260424_213947.html",
+      "file": "亚历山大大帝__pure__20260424_224003.html",
       "seed": 9285777243086,
       "relations": []
     },
@@ -211,7 +211,7 @@
       "birthplace_modern": "希腊中马其顿斯塔吉拉",
       "birth_lat": 40.5333,
       "birth_lng": 23.7,
-      "file": "亚里士多德__pure__20260424_214049.html",
+      "file": "亚里士多德__pure__20260424_224039.html",
       "seed": 202145516651771,
       "relations": [
         "**柏拉图**二十年"
@@ -228,7 +228,7 @@
       "birthplace_modern": "天津市",
       "birth_lat": 39.0842,
       "birth_lng": 117.2009,
-      "file": "任世江__pure__20260424_214036.html",
+      "file": "任世江__pure__20260424_224036.html",
       "seed": 100526913619528,
       "relations": []
     },
@@ -335,7 +335,9 @@
       "birth_lng": 121.126558,
       "file": "侠女柠柠__pure__20260424_214822.html",
       "seed": 7059404817032,
-      "relations": []
+      "relations": [
+        "反清义士"
+      ]
     },
     {
       "person": "侯建新",
@@ -413,7 +415,11 @@
       "birth_lng": 108.94,
       "file": "元稹__pure__20260424_215016.html",
       "seed": 75311726740104,
-      "relations": []
+      "relations": [
+        "白居易",
+        "**白居易**",
+        "宦官常受后世批评"
+      ]
     },
     {
       "person": "克里孟梭",
@@ -473,7 +479,10 @@
       "birth_lng": 111.007,
       "file": "关羽__pure__20260424_215508.html",
       "seed": 194341714439314,
-      "relations": []
+      "relations": [
+        "刘备",
+        "张飞"
+      ]
     },
     {
       "person": "冯如",
@@ -548,7 +557,9 @@
       "birth_lng": 36.5697,
       "file": "列夫·托尔斯泰__pure__20260424_215758.html",
       "seed": 41071778622333,
-      "relations": []
+      "relations": [
+        "陀思妥耶夫斯基"
+      ]
     },
     {
       "person": "列子",
@@ -564,7 +575,9 @@
       "file": "列子__pure__20260424_220420.html",
       "seed": 52020824802813,
       "relations": [
-        "##人物档案"
+        "##人物档案",
+        "老子",
+        "庄子"
       ]
     },
     {
@@ -685,7 +698,10 @@
       "birth_lng": 120.7585,
       "file": "刘禹锡__pure__20260424_215602.html",
       "seed": 97682519616480,
-      "relations": []
+      "relations": [
+        "柳宗元",
+        "白居易"
+      ]
     },
     {
       "person": "刘胡权",
@@ -775,7 +791,10 @@
       "birth_lng": -2.2426,
       "file": "劳合·乔治__pure__20260424_220104.html",
       "seed": 258634009635822,
-      "relations": []
+      "relations": [
+        "克列孟梭",
+        "威尔逊"
+      ]
     },
     {
       "person": "华国锋",
@@ -850,7 +869,10 @@
       "birth_lng": 121.3341987,
       "file": "卞之琳.html",
       "seed": 25623886221578,
-      "relations": []
+      "relations": [
+        "何其芳",
+        "李广田"
+      ]
     },
     {
       "person": "卡夫卡",
@@ -1000,7 +1022,9 @@
       "birth_lng": 114.9136,
       "file": "司马光__pure__20260424_221136.html",
       "seed": 43863601648801,
-      "relations": []
+      "relations": [
+        "史学成就"
+      ]
     },
     {
       "person": "司马迁",
@@ -1075,7 +1099,9 @@
       "birth_lng": 118.2725,
       "file": "吴敬梓__pure__20260424_220541.html",
       "seed": 35594181464324,
-      "relations": []
+      "relations": [
+        "文人"
+      ]
     },
     {
       "person": "吴蓉",
@@ -1106,7 +1132,8 @@
       "file": "吴道子__pure__20260424_221447.html",
       "seed": 215081324563101,
       "relations": [
-        "##人物档案"
+        "##人物档案",
+        "**张僧繇**"
       ]
     },
     {
@@ -1137,7 +1164,10 @@
       "birth_lng": 111.6002,
       "file": "周敦颐__pure__20260424_223656.html",
       "seed": 8179845022882,
-      "relations": []
+      "relations": [
+        "二程",
+        "朱熹等"
+      ]
     },
     {
       "person": "周晔",
@@ -1242,7 +1272,9 @@
       "birth_lng": 108.1775,
       "file": "唐太宗.html",
       "seed": 153731060476845,
-      "relations": []
+      "relations": [
+        "豪杰"
+      ]
     },
     {
       "person": "唐玄宗",
@@ -1257,7 +1289,9 @@
       "birth_lng": 112.454,
       "file": "唐玄宗__pure__20260424_220602.html",
       "seed": 5583845950154,
-      "relations": []
+      "relations": [
+        "豪杰"
+      ]
     },
     {
       "person": "唐银平",
@@ -1348,7 +1382,8 @@
       "file": "墨子__pure__20260424_221529.html",
       "seed": 259551380311610,
       "relations": [
-        "##人物档案"
+        "##人物档案",
+        "儒家"
       ]
     },
     {
@@ -1746,7 +1781,8 @@
       "file": "孟子__pure__20260424_221631.html",
       "seed": 43089782119628,
       "relations": [
-        "##人物档案"
+        "##人物档案",
+        "孔子"
       ]
     },
     {
@@ -1807,7 +1843,9 @@
       "birth_lng": 115.3833,
       "file": "宋应星__pure__20260424_221538.html",
       "seed": 66024348817755,
-      "relations": []
+      "relations": [
+        "友人"
+      ]
     },
     {
       "person": "宋濂",
@@ -1822,7 +1860,11 @@
       "birth_lng": 119.6915,
       "file": "宋濂__pure__20260424_223632.html",
       "seed": 249899627933704,
-      "relations": []
+      "relations": [
+        "刘基",
+        "高启",
+        "了一批文人学者"
+      ]
     },
     {
       "person": "宗璞",
@@ -1897,7 +1939,9 @@
       "birth_lng": 108.9825594,
       "file": "小华__pure__20260424_222940.html",
       "seed": 209856475744873,
-      "relations": []
+      "relations": [
+        "文友"
+      ]
     },
     {
       "person": "小岩",
@@ -1912,7 +1956,9 @@
       "birth_lng": 120.1551,
       "file": "小岩__pure__20260424_222914.html",
       "seed": 48898946051732,
-      "relations": []
+      "relations": [
+        "当地文人"
+      ]
     },
     {
       "person": "小眉",
@@ -2015,7 +2061,7 @@
       "birthplace_modern": "湖北省宜昌市秭归县",
       "birth_lat": 30.8235,
       "birth_lng": 110.9775,
-      "file": "",
+      "file": "屈原__pure__20260424_223919.html",
       "seed": 216537935653348,
       "relations": []
     },
@@ -2075,7 +2121,7 @@
       "birthplace_modern": "",
       "birth_lat": 32.437431,
       "birth_lng": 117.301832,
-      "file": "",
+      "file": "岳飞__pure__20260424_224105.html",
       "seed": 68232400389779,
       "relations": []
     },
@@ -2103,11 +2149,15 @@
       "birthplace": "齐州全节",
       "birthplace_raw": "齐州全节（今山东省济南市）（一说生于652年",
       "birthplace_modern": "山东省济南市",
-      "birth_lat": 36.6512,
-      "birth_lng": 116.9972,
-      "file": "",
+      "birth_lat": 29.4559106,
+      "birth_lng": 121.3927289,
+      "file": "崔融__pure__20260424_223830.html",
       "seed": 156712814247982,
-      "relations": []
+      "relations": [
+        "李峤",
+        "苏味道",
+        "杜审言"
+      ]
     },
     {
       "person": "川端康成",
@@ -2213,7 +2263,9 @@
       "file": "",
       "seed": 66027450541400,
       "relations": [
-        "##人物档案"
+        "##人物档案",
+        "老子",
+        "屈原"
       ]
     },
     {
@@ -2289,7 +2341,10 @@
       "birth_lng": 117.0063,
       "file": "",
       "seed": 94814703833232,
-      "relations": []
+      "relations": [
+        "季羡林",
+        "金克木"
+      ]
     },
     {
       "person": "张作霖",
@@ -2317,7 +2372,7 @@
       "birthplace_modern": "河北省衡水市深州市",
       "birth_lat": 38.0015,
       "birth_lng": 115.5603,
-      "file": "",
+      "file": "张子善__pure__20260424_223803.html",
       "seed": 219610025858253,
       "relations": []
     },
@@ -2347,7 +2402,7 @@
       "birthplace_modern": "一说为辽宁省盘锦市大洼区",
       "birth_lat": 41.3869,
       "birth_lng": 122.4297,
-      "file": "",
+      "file": "张学良__pure__20260424_224026.html",
       "seed": 116584037553564,
       "relations": []
     },
@@ -2379,7 +2434,9 @@
       "birth_lng": 120.5853,
       "file": "",
       "seed": 39322337656686,
-      "relations": []
+      "relations": [
+        "文友"
+      ]
     },
     {
       "person": "张广宇",
@@ -2578,18 +2635,20 @@
     },
     {
       "person": "张飞",
-      "birth_year": 167,
+      "birth_year": 166,
       "death_year": 221,
-      "dynasty": "东汉末年至三国时期",
+      "dynasty": "东汉末年·三国",
       "quote": "- 陈寿《三国志》：\"飞雄壮威猛，亚于关羽，然羽善待士卒而骄于士大夫，飞爱敬君子而不恤小人。\"",
-      "birthplace": "公元？年—约公元167年（涿郡涿县",
-      "birthplace_raw": "公元？年—约公元167年（涿郡涿县",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "幽州涿郡",
+      "birthplace_raw": "幽州涿郡（今河北省保定市涿州市）",
+      "birthplace_modern": "河北省保定市涿州市",
+      "birth_lat": 39.485684,
+      "birth_lng": 115.97444,
       "file": "",
       "seed": 45985167543723,
-      "relations": []
+      "relations": [
+        "关羽"
+      ]
     },
     {
       "person": "张骞",
@@ -2608,16 +2667,16 @@
     },
     {
       "person": "归有光",
-      "birth_year": 1507,
+      "birth_year": 1506,
       "death_year": 1571,
       "dynasty": "明代",
       "quote": "“然余居于此，多可喜，亦多可悲。”",
-      "birthplace": "南直隶苏州府昆山县",
-      "birthplace_raw": "南直隶苏州府昆山县（今江苏省苏州市昆山市）",
-      "birthplace_modern": "江苏省苏州市昆山市",
-      "birth_lat": 31.39,
-      "birth_lng": 121.11,
-      "file": "",
+      "birthplace": "",
+      "birthplace_raw": "（一说1507年）",
+      "birthplace_modern": "一说1507年",
+      "birth_lat": null,
+      "birth_lng": null,
+      "file": "归有光__pure__20260424_223856.html",
       "seed": 170828601128717,
       "relations": []
     },
@@ -2627,26 +2686,29 @@
       "death_year": 1974,
       "dynasty": "近现代",
       "quote": "“山高路远坑深”",
-      "birthplace": "古称",
-      "birthplace_raw": "古称（今湖南省湘潭市）彭家围子",
-      "birthplace_modern": "湖南省湘潭市",
-      "birth_lat": 27.7167,
-      "birth_lng": 112.9167,
+      "birthplace": "湖南省湘潭县彭家围子",
+      "birthplace_raw": "湖南省湘潭县彭家围子（说法不一）",
+      "birthplace_modern": "说法不一",
+      "birth_lat": 27.835,
+      "birth_lng": 112.955,
       "file": "",
       "seed": 163031973560698,
-      "relations": []
+      "relations": [
+        "27.835",
+        "112.955"
+      ]
     },
     {
       "person": "彼得一世",
       "birth_year": 1672,
       "death_year": 1725,
-      "dynasty": "沙皇俄国/俄罗斯帝国时期（17世纪末至18世纪初）",
+      "dynasty": "17世纪下半叶至18世纪上半叶（俄罗斯沙皇国/俄罗斯帝国时期）",
       "quote": "",
-      "birthplace": "莫斯科",
-      "birthplace_raw": "莫斯科",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "莫斯科公国莫斯科",
+      "birthplace_raw": "莫斯科公国莫斯科（今俄罗斯莫斯科）",
+      "birthplace_modern": "俄罗斯莫斯科",
+      "birth_lat": 55.7558,
+      "birth_lng": 37.6173,
       "file": "",
       "seed": 248779884323673,
       "relations": []
@@ -2657,9 +2719,9 @@
       "death_year": 1633,
       "dynasty": "明朝",
       "quote": "“此书为用至广，在此时尤所急需。”",
-      "birthplace": "明嘉靖四十一年（1562年",
-      "birthplace_raw": "明嘉靖四十一年（1562年",
-      "birthplace_modern": "",
+      "birthplace": "明嘉靖四十一年",
+      "birthplace_raw": "明嘉靖四十一年（1562年）",
+      "birthplace_modern": "1562年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -2724,7 +2786,9 @@
       "birth_lng": 7.1676,
       "file": "",
       "seed": 236567045484291,
-      "relations": []
+      "relations": [
+        "马克思"
+      ]
     },
     {
       "person": "成平",
@@ -2829,7 +2893,9 @@
       "birth_lng": null,
       "file": "",
       "seed": 253859487042051,
-      "relations": []
+      "relations": [
+        "前来迎亲的松赞干布"
+      ]
     },
     {
       "person": "斐波纳契",
@@ -3131,7 +3197,9 @@
       "birth_lng": 116.4074,
       "file": "",
       "seed": 40647106267062,
-      "relations": []
+      "relations": [
+        "四方学者"
+      ]
     },
     {
       "person": "朱小蔓",
@@ -3251,7 +3319,11 @@
       "birth_lng": 120.0873,
       "file": "",
       "seed": 80106904383525,
-      "relations": []
+      "relations": [
+        "薛涛",
+        "鱼玄机",
+        "刘采春"
+      ]
     },
     {
       "person": "李剑波",
@@ -3281,7 +3353,9 @@
       "birth_lng": null,
       "file": "",
       "seed": 158896251918664,
-      "relations": []
+      "relations": [
+        "杜牧"
+      ]
     },
     {
       "person": "李四光",
@@ -3431,7 +3505,9 @@
       "birth_lng": 121.3927289,
       "file": "李白__pure__20260424_114547.html",
       "seed": 50120796916189,
-      "relations": []
+      "relations": [
+        "杜甫"
+      ]
     },
     {
       "person": "李红勃",
@@ -3461,7 +3537,10 @@
       "birth_lng": 112.178,
       "file": "",
       "seed": 262411776685144,
-      "relations": []
+      "relations": [
+        "李白",
+        "李商隐"
+      ]
     },
     {
       "person": "李鸿章",
@@ -3506,7 +3585,9 @@
       "birth_lng": 108.94802,
       "file": "",
       "seed": 82342336323643,
-      "relations": []
+      "relations": [
+        "李商隐"
+      ]
     },
     {
       "person": "杜甫",
@@ -3521,7 +3602,11 @@
       "birth_lng": null,
       "file": "",
       "seed": 131570002082087,
-      "relations": []
+      "relations": [
+        "李白",
+        "**李白**",
+        "文士"
+      ]
     },
     {
       "person": "杨万里",
@@ -3536,7 +3621,11 @@
       "birth_lng": null,
       "file": "",
       "seed": 121350295444942,
-      "relations": []
+      "relations": [
+        "陆游",
+        "尤袤",
+        "范成大"
+      ]
     },
     {
       "person": "杨利伟",
@@ -3896,7 +3985,10 @@
       "birth_lng": null,
       "file": "",
       "seed": 205855064378139,
-      "relations": []
+      "relations": [
+        "颜真卿",
+        "**颜真卿**"
+      ]
     },
     {
       "person": "柳宗元",
@@ -3911,7 +4003,10 @@
       "birth_lng": 108.94,
       "file": "",
       "seed": 90906357254468,
-      "relations": []
+      "relations": [
+        "韦应物",
+        "韩愈"
+      ]
     },
     {
       "person": "柳永",
@@ -3971,7 +4066,9 @@
       "birth_lng": 108.02976,
       "file": "",
       "seed": 275982564786343,
-      "relations": []
+      "relations": [
+        "康有为"
+      ]
     },
     {
       "person": "梁思成",
@@ -4061,7 +4158,9 @@
       "birth_lng": 104.6796,
       "file": "",
       "seed": 230038828599489,
-      "relations": []
+      "relations": [
+        "文坛同道"
+      ]
     },
     {
       "person": "歌德",
@@ -4091,7 +4190,9 @@
       "birth_lng": 105.8395358,
       "file": "武则天.html",
       "seed": 141007259807112,
-      "relations": []
+      "relations": [
+        "高宗"
+      ]
     },
     {
       "person": "母亲",
@@ -4226,7 +4327,9 @@
       "birth_lng": 116.3583,
       "file": "",
       "seed": 131667544295546,
-      "relations": []
+      "relations": [
+        "文人"
+      ]
     },
     {
       "person": "汪曾祺",
@@ -4556,7 +4659,11 @@
       "birth_lng": 110.71,
       "file": "",
       "seed": 92322761692088,
-      "relations": []
+      "relations": [
+        "杨炯",
+        "卢照邻",
+        "骆宾王"
+      ]
     },
     {
       "person": "王坤",
@@ -4631,7 +4738,9 @@
       "birth_lng": null,
       "file": "",
       "seed": 102623336454692,
-      "relations": []
+      "relations": [
+        "宋濂"
+      ]
     },
     {
       "person": "王承玥",
@@ -4721,7 +4830,9 @@
       "birth_lng": 111.0,
       "file": "",
       "seed": 84345889517534,
-      "relations": []
+      "relations": [
+        "孟浩然"
+      ]
     },
     {
       "person": "王羲之",
@@ -4781,7 +4892,11 @@
       "birth_lng": null,
       "file": "",
       "seed": 68562041346677,
-      "relations": []
+      "relations": [
+        "孔子",
+        "孟子",
+        "朱熹"
+      ]
     },
     {
       "person": "王雪飞",
@@ -4826,7 +4941,10 @@
       "birth_lng": 108.7086,
       "file": "",
       "seed": 140768615199099,
-      "relations": []
+      "relations": [
+        "司马迁",
+        "名士"
+      ]
     },
     {
       "person": "班禅额尔德尼·确吉坚赞",
@@ -4931,7 +5049,9 @@
       "birth_lng": 113.741,
       "file": "",
       "seed": 135480706296608,
-      "relations": []
+      "relations": [
+        "**刘禹锡**"
+      ]
     },
     {
       "person": "白求恩",
@@ -5037,7 +5157,8 @@
       "file": "",
       "seed": 267593214557540,
       "relations": [
-        "**祖冲之**的遗愿"
+        "**祖冲之**的遗愿",
+        "父亲"
       ]
     },
     {
@@ -5158,7 +5279,10 @@
       "birth_lng": null,
       "file": "",
       "seed": 78088956769098,
-      "relations": []
+      "relations": [
+        "达芬奇",
+        "拉斐尔"
+      ]
     },
     {
       "person": "纪伯伦",
@@ -5188,7 +5312,9 @@
       "birth_lng": 116.12,
       "file": "",
       "seed": 197124443455778,
-      "relations": []
+      "relations": [
+        "聊斋志异"
+      ]
     },
     {
       "person": "纳兰性德",
@@ -5203,7 +5329,9 @@
       "birth_lng": 116.4074,
       "file": "",
       "seed": 187177839397033,
-      "relations": []
+      "relations": [
+        "汉族文人学者"
+      ]
     },
     {
       "person": "罗先生",
@@ -5505,7 +5633,10 @@
       "birth_lng": null,
       "file": "",
       "seed": 8999769108135,
-      "relations": []
+      "relations": [
+        "其子苏轼",
+        "苏辙"
+      ]
     },
     {
       "person": "苏舜钦",
@@ -5520,7 +5651,10 @@
       "birth_lng": 114.497222,
       "file": "",
       "seed": 207024312068121,
-      "relations": []
+      "relations": [
+        "梅尧臣",
+        "**梅尧臣**"
+      ]
     },
     {
       "person": "苏轼",
@@ -5535,7 +5669,10 @@
       "birth_lng": 103.8458201,
       "file": "苏轼__pure__20260424_110302.html",
       "seed": 210624475883170,
-      "relations": []
+      "relations": [
+        "欧阳修",
+        "黄庭坚"
+      ]
     },
     {
       "person": "苏辙",
@@ -5550,7 +5687,11 @@
       "birth_lng": 103.8458201,
       "file": "苏辙.html",
       "seed": 60551928389800,
-      "relations": []
+      "relations": [
+        "父苏洵",
+        "兄苏轼",
+        "父兄"
+      ]
     },
     {
       "person": "苏金伞",
@@ -5882,7 +6023,12 @@
       "birth_lng": null,
       "file": "",
       "seed": 100953997125674,
-      "relations": []
+      "relations": [
+        "兄虞世基",
+        "欧阳询",
+        "褚遂良",
+        "薛稷"
+      ]
     },
     {
       "person": "袁世凯",
@@ -6017,7 +6163,9 @@
       "birth_lng": 113.633,
       "file": "",
       "seed": 46098952962906,
-      "relations": []
+      "relations": [
+        "维新人士"
+      ]
     },
     {
       "person": "谷超豪",
@@ -6092,7 +6240,9 @@
       "birth_lng": 117.590738,
       "file": "",
       "seed": 126789312234892,
-      "relations": []
+      "relations": [
+        "**郭小川**"
+      ]
     },
     {
       "person": "贾宪",
@@ -6152,7 +6302,9 @@
       "birth_lng": 112.454,
       "file": "",
       "seed": 232571918392623,
-      "relations": []
+      "relations": [
+        "屈原"
+      ]
     },
     {
       "person": "赫留金",
@@ -6197,7 +6349,11 @@
       "birth_lng": null,
       "file": "",
       "seed": 181809763935501,
-      "relations": []
+      "relations": [
+        "徐照",
+        "徐玑",
+        "翁卷"
+      ]
     },
     {
       "person": "赵文君",
@@ -6257,7 +6413,10 @@
       "birth_lng": null,
       "file": "",
       "seed": 112285489686622,
-      "relations": []
+      "relations": [
+        "袁枚",
+        "蒋士铨"
+      ]
     },
     {
       "person": "辛弃疾",
@@ -6272,7 +6431,9 @@
       "birth_lng": null,
       "file": "",
       "seed": 265904254535117,
-      "relations": []
+      "relations": [
+        "苏轼"
+      ]
     },
     {
       "person": "达·芬奇",
@@ -6287,7 +6448,10 @@
       "birth_lng": 10.9236,
       "file": "",
       "seed": 216767378267473,
-      "relations": []
+      "relations": [
+        "米开朗基罗",
+        "拉斐尔"
+      ]
     },
     {
       "person": "达尔文",
@@ -6557,7 +6721,10 @@
       "birth_lng": null,
       "file": "",
       "seed": 67735807056341,
-      "relations": []
+      "relations": [
+        "齐桓公",
+        "**齐桓公**"
+      ]
     },
     {
       "person": "鉴真",
@@ -6737,7 +6904,9 @@
       "birth_lng": null,
       "file": "",
       "seed": 36428134624271,
-      "relations": []
+      "relations": [
+        "名士"
+      ]
     },
     {
       "person": "阿发",
@@ -6860,7 +7029,9 @@
       "birth_lng": null,
       "file": "",
       "seed": 96848738039200,
-      "relations": []
+      "relations": [
+        "托尔斯泰"
+      ]
     },
     {
       "person": "陆定一",
@@ -6905,7 +7076,10 @@
       "birth_lng": 128.804418,
       "file": "",
       "seed": 52495977269263,
-      "relations": []
+      "relations": [
+        "诗僧皎然",
+        "书法家颜真"
+      ]
     },
     {
       "person": "陈伯达",
@@ -6936,7 +7110,9 @@
       "file": "",
       "seed": 131137975390684,
       "relations": [
-        "**陈寔**"
+        "**陈寔**",
+        "其父陈寔",
+        "弟陈谌"
       ]
     },
     {
@@ -7012,7 +7188,11 @@
       "birth_lng": null,
       "file": "",
       "seed": 56302268678716,
-      "relations": []
+      "relations": [
+        "同郡荀淑",
+        "钟皓",
+        "韩韶"
+      ]
     },
     {
       "person": "陈延年",
@@ -7222,7 +7402,9 @@
       "birth_lng": 117.301832,
       "file": "",
       "seed": 215813099656322,
-      "relations": []
+      "relations": [
+        "柳宗元"
+      ]
     },
     {
       "person": "韩翃",
@@ -7317,7 +7499,10 @@
       "birth_lng": 108.939645,
       "file": "",
       "seed": 13066811303388,
-      "relations": []
+      "relations": [
+        "柳公权",
+        "**柳公权**"
+      ]
     },
     {
       "person": "马丁·路德",
@@ -7422,7 +7607,11 @@
       "birth_lng": 116.4074,
       "file": "",
       "seed": 80415511047346,
-      "relations": []
+      "relations": [
+        "关汉卿",
+        "白朴",
+        "郑光祖"
+      ]
     },
     {
       "person": "马超",
@@ -7437,7 +7626,9 @@
       "birth_lng": 108.4830556,
       "file": "马超.html",
       "seed": 163307170173115,
-      "relations": []
+      "relations": [
+        "**吕布**"
+      ]
     },
     {
       "person": "骆宾王",
@@ -7542,7 +7733,11 @@
       "birth_lng": 116.268,
       "file": "",
       "seed": 175624581089314,
-      "relations": []
+      "relations": [
+        "岑参",
+        "李白",
+        "杜甫"
+      ]
     },
     {
       "person": "魏学洢",
@@ -7617,7 +7812,10 @@
       "birth_lng": 121.126999,
       "file": "",
       "seed": 90501506342241,
-      "relations": []
+      "relations": [
+        "谢灵运",
+        "颜延之"
+      ]
     },
     {
       "person": "麦克阿瑟",
@@ -7677,7 +7875,11 @@
       "birth_lng": 112.9388,
       "file": "",
       "seed": 17540782669862,
-      "relations": []
+      "relations": [
+        "孙中山",
+        "**孙中山**",
+        "革命志士"
+      ]
     },
     {
       "person": "黄大年",
@@ -7722,7 +7924,11 @@
       "birth_lng": 114.5,
       "file": "黄庭坚.html",
       "seed": 204247087188958,
-      "relations": []
+      "relations": [
+        "苏轼",
+        "米芾",
+        "蔡襄"
+      ]
     },
     {
       "person": "黄继光",
@@ -7782,10 +7988,160 @@
       "birth_lng": 120.1551,
       "file": "",
       "seed": 40756896659896,
-      "relations": []
+      "relations": [
+        "学者名士"
+      ]
     }
   ],
   "edges": [
+    {
+      "a": 26,
+      "b": 326
+    },
+    {
+      "a": 30,
+      "b": 38
+    },
+    {
+      "a": 30,
+      "b": 170
+    },
+    {
+      "a": 35,
+      "b": 454
+    },
+    {
+      "a": 36,
+      "b": 349
+    },
+    {
+      "a": 36,
+      "b": 145
+    },
+    {
+      "a": 44,
+      "b": 258
+    },
+    {
+      "a": 44,
+      "b": 326
+    },
+    {
+      "a": 50,
+      "b": 104
+    },
+    {
+      "a": 108,
+      "b": 114
+    },
+    {
+      "a": 145,
+      "b": 349
+    },
+    {
+      "a": 132,
+      "b": 145
+    },
+    {
+      "a": 179,
+      "b": 487
+    },
+    {
+      "a": 216,
+      "b": 231
+    },
+    {
+      "a": 226,
+      "b": 232
+    },
+    {
+      "a": 226,
+      "b": 228
+    },
+    {
+      "a": 216,
+      "b": 228
+    },
+    {
+      "a": 233,
+      "b": 456
+    },
+    {
+      "a": 257,
+      "b": 484
+    },
+    {
+      "a": 258,
+      "b": 478
+    },
+    {
+      "a": 146,
+      "b": 262
+    },
+    {
+      "a": 301,
+      "b": 493
+    },
+    {
+      "a": 119,
+      "b": 306
+    },
+    {
+      "a": 108,
+      "b": 316
+    },
+    {
+      "a": 114,
+      "b": 316
+    },
+    {
+      "a": 210,
+      "b": 316
+    },
+    {
+      "a": 66,
+      "b": 319
+    },
+    {
+      "a": 364,
+      "b": 367
+    },
+    {
+      "a": 268,
+      "b": 366
+    },
+    {
+      "a": 366,
+      "b": 511
+    },
+    {
+      "a": 132,
+      "b": 407
+    },
+    {
+      "a": 366,
+      "b": 415
+    },
+    {
+      "a": 183,
+      "b": 454
+    },
+    {
+      "a": 29,
+      "b": 491
+    },
+    {
+      "a": 226,
+      "b": 499
+    },
+    {
+      "a": 232,
+      "b": 499
+    },
+    {
+      "a": 111,
+      "b": 508
+    },
     {
       "a": 472,
       "b": 473
@@ -7924,10 +8280,6 @@
     },
     {
       "a": 226,
-      "b": 484
-    },
-    {
-      "a": 257,
       "b": 484
     },
     {
@@ -8260,10 +8612,6 @@
     },
     {
       "a": 216,
-      "b": 231
-    },
-    {
-      "a": 216,
       "b": 233
     },
     {
@@ -8336,10 +8684,6 @@
     },
     {
       "a": 317,
-      "b": 454
-    },
-    {
-      "a": 183,
       "b": 454
     },
     {
