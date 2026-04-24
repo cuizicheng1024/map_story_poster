@@ -120,6 +120,7 @@ def render_profile_html(data: Dict[str, object]) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>__TITLE__</title>
 <script src="/vendor/tailwindcss.js" onerror="this.onerror=null;this.src='https://cdn.tailwindcss.com';"></script>
+<script src="/amap-config.js"></script>
 <link rel="stylesheet" href="/vendor/leaflet.css" onerror="if(!this.dataset.f){this.dataset.f='1';this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='1'){this.dataset.f='2';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='2'){this.dataset.f='3';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}" />
 <script src="/vendor/leaflet.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}"></script>
 <script src="/vendor/react.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/react@18/umd/react.production.min.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';}"></script>
@@ -181,11 +182,61 @@ body {
         <div>
           <div class="text-sm font-semibold text-[#7c2d12]">页面加载中…</div>
           <div class="text-[11px] text-gray-600 mt-1">若长时间停留在此，请检查 /vendor/ 资源是否可访问（服务端会自动转发 CDN 资源）。</div>
+          <div id="boot-diag" class="text-[11px] text-gray-600 mt-2 whitespace-pre-wrap"></div>
         </div>
         <div class="text-[11px] text-gray-500">提示</div>
       </div>
     </div>
     <div id="root"></div>
+    <script>
+      (() => {
+        let firstErr = "";
+        const diag = (msg) => {
+          const el = document.getElementById("boot-diag");
+          if (!el) return;
+          el.textContent = msg;
+        };
+        const append = (msg) => {
+          const el = document.getElementById("boot-diag");
+          if (!el) return;
+          el.textContent = el.textContent ? (el.textContent + "\\n" + msg) : msg;
+        };
+        const head = async (url) => {
+          try {
+            const r = await fetch(url, { method: "GET", cache: "no-store" });
+            return `${url} -> ${r.status}`;
+          } catch (e) {
+            return `${url} -> ERR`;
+          }
+        };
+        window.addEventListener("error", (e) => {
+          if (!firstErr) firstErr = `JS Error: ${String(e?.message || e)}`;
+          diag(firstErr);
+        });
+        window.addEventListener("unhandledrejection", (e) => {
+          if (!firstErr) firstErr = `Promise Rejection: ${String(e?.reason || e)}`;
+          diag(firstErr);
+        });
+        setTimeout(async () => {
+          const root = document.getElementById("root");
+          const empty = !root || root.childElementCount === 0;
+          if (!empty) return;
+          const parts = [];
+          const hasCreateRoot = !!(window.ReactDOM && typeof window.ReactDOM.createRoot === "function");
+          const babelAuto = !!(window.Babel && typeof window.Babel.transformScriptTags === "function");
+          const babelTags = document.querySelectorAll('script[type="text/babel"]').length;
+          parts.push(`Globals: React=${!!window.React} ReactDOM=${!!window.ReactDOM} createRoot=${hasCreateRoot} Babel=${!!window.Babel} babelAuto=${babelAuto} babelTags=${babelTags} Leaflet=${!!window.L} AMap=${!!window.AMap}`);
+          parts.push(await head("/amap-config.js"));
+          parts.push(await head("/vendor/react.production.min.js"));
+          parts.push(await head("/vendor/react-dom.production.min.js"));
+          parts.push(await head("/vendor/babel.min.js"));
+          parts.push(await head("/vendor/leaflet.js"));
+          parts.push(await head("/vendor/leaflet.css"));
+          if (firstErr) diag(firstErr);
+          append(parts.join("\\n"));
+        }, 1800);
+      })();
+    </script>
     <script type="text/babel" data-presets="env,react">
       const { useState, useEffect, useRef, useMemo } = React;
       const data = __DATA__;
@@ -469,6 +520,7 @@ const App = () => {
   const draggingRef = useRef(false);
   const chatListRef = useRef(null);
   const chatSectionRef = useRef(null);
+  const locItemRefs = useRef([]);
   const totalEvents = locations.length;
   const description = data.person?.description || '';
   const relatedWorks = Array.isArray(highlights.works) ? highlights.works : [];
@@ -533,6 +585,36 @@ const App = () => {
     modern = modern.replace(/^今\\s*/g, '').trim();
     return { ancient, modern };
   }, [data.person?.birthplace]);
+  const birthplaceMeta = useMemo(() => {
+    const raw = String(data.person?.birthplace || '').trim();
+    const doubtful = /存疑|一说|或说|又说|另说|未详|不详/.test(raw);
+    const direct = data.person?.birthplace_candidates;
+    if (Array.isArray(direct)) {
+      const seen = new Set();
+      const out = [];
+      for (const x of direct) {
+        const t = String(x || '').trim();
+        if (!t || seen.has(t)) continue;
+        seen.add(t);
+        out.push(t);
+        if (out.length >= 6) break;
+      }
+      return { doubtful: doubtful || out.length > 0, candidates: out };
+    }
+    if (!raw || !doubtful) return { doubtful: false, candidates: [] };
+    let s = raw.replace(/^[^存疑]*存疑[:：]?\\s*/g, '').replace(/存疑/g, '').trim();
+    s = s.replace(/(?:一说|或说|又说|另说)[:：]?\\s*/g, ';');
+    const parts = s.split(/[；;\\/、|]/).map((t) => String(t || '').trim()).filter(Boolean);
+    const seen = new Set();
+    const out = [];
+    for (const t of parts) {
+      if (seen.has(t)) continue;
+      seen.add(t);
+      out.push(t);
+      if (out.length >= 6) break;
+    }
+    return { doubtful: true, candidates: out };
+  }, [data.person?.birthplace, data.person?.birthplace_candidates]);
   const getAgeText = (loc) => {
     const year = extractYear(loc.time || '');
     if (!birthYear || !year) return '';
@@ -577,65 +659,233 @@ const App = () => {
     hideBootFallback();
     if (!mapRef.current) {
       const first = locations[0] || { lat: 35, lng: 105 };
-      const map = L.map('map', { zoomControl: false }).setView([first.lat, first.lng], locations.length ? 4 : 4);
-      L.control.zoom({ position: 'topright' }).addTo(map);
-      __LEAFLET_TILES_PROFILE__
-      const resolveMarkerStyle = (type) => {
-        if (markerStyles[type]) return markerStyles[type];
-        if (markerStyles.normal) return markerStyles.normal;
-        return defaultMarkerStyles[type] || defaultMarkerStyles.normal;
+      // Prefer AMap JS (if a key is available) because tile servers may be
+      // blocked by DNS/HTTP policy in some environments. Fall back to Leaflet
+      // when AMap can't be initialized.
+      const getAmapKey = () => {
+        let k = '';
+        try { k = (new URLSearchParams(window.location.search).get('amapKey') || '').trim(); } catch (_) {}
+        if (!k) k = (window.AMAP_KEY || localStorage.getItem('AMAP_KEY') || '').trim();
+        return k;
       };
-      const markerIcon = (type) => {
-        const iconUrl = resolveMarkerStyle(type).iconUrl || defaultMarkerStyles.normal.iconUrl;
-        return L.icon({
-          iconUrl,
-          iconSize: [25, 34],
-          iconAnchor: [12, 34],
-          popupAnchor: [0, -30]
-        });
+      const getAmapSecurity = () => {
+        let s = '';
+        try { s = (new URLSearchParams(window.location.search).get('amapSec') || '').trim(); } catch (_) {}
+        if (!s) s = (window.AMAP_SECURITY || localStorage.getItem('AMAP_SECURITY') || '').trim();
+        return s;
       };
-      const pathCoords = locations.map(l => [l.lat, l.lng]);
-      for (let i = 0; i < pathCoords.length - 1; i++) {
-        const opacity = 0.25 + (i / pathCoords.length) * 0.6;
-        L.polyline([pathCoords[i], pathCoords[i+1]], {
-          color: mapStyle.pathColor || '#1e40af',
-          weight: 3,
-          opacity: opacity
-        }).addTo(map);
-      }
-      locations.forEach((loc, idx) => {
-        const style = resolveMarkerStyle(loc.type || 'normal');
-        L.circleMarker([loc.lat, loc.lng], {
-          radius: 10,
-          color: style.color || defaultMarkerStyles.normal.color,
-          fillColor: style.color || defaultMarkerStyles.normal.color,
-          fillOpacity: 0.35,
-          weight: 2
-        }).addTo(map);
-        const marker = L.marker([loc.lat, loc.lng], { icon: markerIcon(loc.type || 'normal') }).addTo(map);
-        marker.on('click', () => {
-          setSelectedLoc(loc);
-          setActiveIndex(idx);
-          map.setView([loc.lat, loc.lng], 7);
-        });
-        const ageText = getAgeText(loc);
-        if (ageText) {
-          const ageIcon = L.divIcon({
-            className: 'age-marker',
-            html: `<div class="age-badge">${ageText}</div>`,
-            iconSize: [44, 20],
-            iconAnchor: [22, 30]
-          });
-          L.marker([loc.lat, loc.lng], { icon: ageIcon, interactive: false }).addTo(map);
-        }
+      const ensureAmap = () => new Promise((resolve, reject) => {
+        // Dynamically load AMap JS only when needed.
+        if (window.AMap && typeof window.AMap.Map === 'function') return resolve(true);
+        const key = getAmapKey();
+        if (!key) return reject(new Error('AMAP_KEY_REQUIRED'));
+        const sec = getAmapSecurity();
+        if (sec) window._AMapSecurityConfig = { securityJsCode: sec };
+        const sEl = document.createElement('script');
+        sEl.async = true;
+        sEl.src = `https://webapi.amap.com/maps?v=2.0&key=${encodeURIComponent(key)}`;
+        sEl.onload = () => {
+          if (window.AMap && typeof window.AMap.Map === 'function') resolve(true);
+          else reject(new Error('AMAP_LOAD_FAILED'));
+        };
+        sEl.onerror = () => reject(new Error('AMAP_LOAD_FAILED'));
+        document.head.appendChild(sEl);
       });
-      if (pathCoords.length > 1) {
-        const bounds = L.latLngBounds(pathCoords);
-        map.fitBounds(bounds, { padding: [48, 48], maxZoom: 6 });
-      } else if (pathCoords.length === 1) {
-        map.setView(pathCoords[0], 6);
-      }
-      mapRef.current = map;
+      const initLeaflet = () => {
+        // Leaflet version: keeps working when no AMap key is provided.
+        if (typeof L === 'undefined') return;
+        const map = L.map('map', { zoomControl: false }).setView([first.lat, first.lng], locations.length ? 4 : 4);
+        L.control.zoom({ position: 'topright' }).addTo(map);
+        __LEAFLET_TILES_PROFILE__
+        const overlays = [];
+        const resolveMarkerStyle = (type) => {
+          if (markerStyles[type]) return markerStyles[type];
+          if (markerStyles.normal) return markerStyles.normal;
+          return defaultMarkerStyles[type] || defaultMarkerStyles.normal;
+        };
+        const markerIcon = (type, active) => {
+          const iconUrl = resolveMarkerStyle(type).iconUrl || defaultMarkerStyles.normal.iconUrl;
+          const iconSize = active ? [30, 41] : [25, 34];
+          const iconAnchor = active ? [15, 41] : [12, 34];
+          return L.icon({
+            iconUrl,
+            iconSize,
+            iconAnchor,
+            popupAnchor: [0, -30]
+          });
+        };
+        const setActive = (activeIdx) => {
+          overlays.forEach((o) => {
+            const active = o.idx === activeIdx;
+            try {
+              o.circle.setRadius(active ? 12 : 10);
+              o.circle.setStyle({
+                color: active ? 'rgba(192,57,43,0.85)' : (o.color || defaultMarkerStyles.normal.color),
+                weight: active ? 3 : 2,
+                fillOpacity: active ? 0.45 : 0.35
+              });
+            } catch (_) {}
+            try {
+              o.marker.setIcon(markerIcon(o.type, active));
+            } catch (_) {}
+          });
+        };
+        const pathCoords = locations.map(l => [l.lat, l.lng]);
+        for (let i = 0; i < pathCoords.length - 1; i++) {
+          const opacity = 0.25 + (i / pathCoords.length) * 0.6;
+          L.polyline([pathCoords[i], pathCoords[i+1]], {
+            color: mapStyle.pathColor || '#1e40af',
+            weight: 3,
+            opacity: opacity
+          }).addTo(map);
+        }
+        locations.forEach((loc, idx) => {
+          const style = resolveMarkerStyle(loc.type || 'normal');
+          const circle = L.circleMarker([loc.lat, loc.lng], {
+            radius: idx === activeIndex ? 12 : 10,
+            color: idx === activeIndex ? 'rgba(192,57,43,0.85)' : (style.color || defaultMarkerStyles.normal.color),
+            fillColor: style.color || defaultMarkerStyles.normal.color,
+            fillOpacity: 0.35,
+            weight: 2
+          }).addTo(map);
+          const marker = L.marker([loc.lat, loc.lng], { icon: markerIcon(loc.type || 'normal', idx === activeIndex) }).addTo(map);
+          overlays.push({ idx, type: loc.type || 'normal', color: style.color || defaultMarkerStyles.normal.color, circle, marker });
+          marker.on('click', () => {
+            setSelectedLoc(loc);
+            setActiveIndex(idx);
+            map.setView([loc.lat, loc.lng], 7);
+          });
+          const ageText = getAgeText(loc);
+          if (ageText) {
+            const ageIcon = L.divIcon({
+              className: 'age-marker',
+              html: `<div class="age-badge">${ageText}</div>`,
+              iconSize: [44, 20],
+              iconAnchor: [22, 30]
+            });
+            L.marker([loc.lat, loc.lng], { icon: ageIcon, interactive: false }).addTo(map);
+          }
+        });
+        if (pathCoords.length > 1) {
+          const bounds = L.latLngBounds(pathCoords);
+          map.fitBounds(bounds, { padding: [48, 48], maxZoom: 6 });
+        } else if (pathCoords.length === 1) {
+          map.setView(pathCoords[0], 6);
+        }
+        mapRef.current = {
+          _type: 'leaflet',
+          setView: (latlng, z) => map.setView(latlng, Number.isFinite(z) ? z : 7),
+          setActive
+        };
+        setActive(activeIndex);
+      };
+      const initAmap = async () => {
+        // AMap version: renders a clearer basemap in China and avoids tile DNS issues.
+        const key = getAmapKey();
+        if (!key) return false;
+        await ensureAmap();
+        if (!window.AMap) return false;
+        const amap = new window.AMap.Map('map', {
+          zoom: 4,
+          center: [first.lng, first.lat],
+          viewMode: '2D',
+          resizeEnable: true,
+          mapStyle: 'amap://styles/normal'
+        });
+        const path = locations.map((l) => [l.lng, l.lat]);
+        if (path.length > 1) {
+          const pl = new window.AMap.Polyline({
+            path,
+            strokeColor: mapStyle.pathColor || '#1e40af',
+            strokeWeight: 4,
+            strokeOpacity: 0.65
+          });
+          pl.setMap(amap);
+        }
+        const overlayList = [];
+        const points = [];
+        const setActive = (activeIdx) => {
+          for (const p of points) {
+            const active = p.idx === activeIdx;
+            try {
+              p.cm.setOptions({
+                radius: active ? 9 : 6,
+                strokeColor: active ? 'rgba(192,57,43,0.65)' : 'rgba(255,255,255,0.35)',
+                strokeWeight: active ? 2 : 1,
+                fillOpacity: active ? 0.48 : 0.35,
+                zIndex: active ? 20 : 10
+              });
+            } catch (_) {}
+          }
+        };
+        locations.forEach((loc, idx) => {
+          const activeColor = (markerStyles[loc.type] || markerStyles.normal || defaultMarkerStyles[loc.type] || defaultMarkerStyles.normal).color || '#22c55e';
+          const cm = new window.AMap.CircleMarker({
+            center: [loc.lng, loc.lat],
+            radius: idx === activeIndex ? 9 : 6,
+            strokeColor: 'rgba(255,255,255,0.35)',
+            strokeOpacity: 0.9,
+            strokeWeight: idx === activeIndex ? 2 : 1,
+            fillColor: activeColor,
+            fillOpacity: 0.35,
+            cursor: 'pointer',
+            zIndex: idx === activeIndex ? 20 : 10
+          });
+          cm.setMap(amap);
+          points.push({ idx, cm });
+          cm.on('click', () => {
+            setSelectedLoc(loc);
+            setActiveIndex(idx);
+            amap.setZoomAndCenter(7, [loc.lng, loc.lat]);
+          });
+          overlayList.push(cm);
+          const ageText = getAgeText(loc);
+          if (ageText) {
+            const t = new window.AMap.Text({
+              text: ageText,
+              position: [loc.lng, loc.lat],
+              offset: new window.AMap.Pixel(0, -26),
+              style: {
+                'background': 'rgba(255, 255, 255, 0.65)',
+                'border': '1px solid rgba(200, 180, 150, 0.5)',
+                'border-radius': '10px',
+                'padding': '2px 6px',
+                'font-size': '10px',
+                'color': '#7c2d12',
+                'box-shadow': '0 2px 6px rgba(0, 0, 0, 0.12)',
+                'white-space': 'nowrap'
+              }
+            });
+            t.setMap(amap);
+            overlayList.push(t);
+          }
+        });
+        try {
+          if (overlayList.length) amap.setFitView(overlayList);
+        } catch (_) {}
+        mapRef.current = {
+          _type: 'amap',
+          setView: (latlng, z) => {
+            const lat = Array.isArray(latlng) ? latlng[0] : latlng?.lat;
+            const lng = Array.isArray(latlng) ? latlng[1] : latlng?.lng;
+            const zoom = Number.isFinite(z) ? z : 7;
+            if (typeof lat === 'number' && typeof lng === 'number') {
+              amap.setZoomAndCenter(zoom, [lng, lat]);
+            }
+          },
+          setActive
+        };
+        setActive(activeIndex);
+        return true;
+      };
+      (async () => {
+        try {
+          const ok = await initAmap();
+          if (!ok) initLeaflet();
+        } catch (_) {
+          initLeaflet();
+        }
+      })();
     }
   }, []);
   useEffect(() => {
@@ -666,6 +916,19 @@ const App = () => {
       mapRef.current.setView([loc.lat, loc.lng], 7);
     }
   };
+  useEffect(() => {
+    const el = locItemRefs.current[activeIndex];
+    if (el && typeof el.scrollIntoView === 'function') {
+      try {
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } catch (_) {
+        try { el.scrollIntoView(); } catch (_) {}
+      }
+    }
+    if (mapRef.current && typeof mapRef.current.setActive === 'function') {
+      mapRef.current.setActive(activeIndex);
+    }
+  }, [activeIndex]);
   const historyChatSystemPrompt = useMemo(() => {
     const p = data?.person || {};
     const personName = String(p.name || '').trim();
@@ -714,7 +977,8 @@ const App = () => {
       locLines ? `【足迹时间线】\\n${locLines}` : '',
       quotes ? `【名句摘录】\\n${quotes}` : ''
     ].filter(Boolean).join('\\n\\n');
-    return `${identity}\\n\\n你的目标：与用户进行“与历史对话”，围绕人物的行走迁徙、关键抉择、时代处境与影响来回答。\\n\\n对话规则：\\n${rules}\\n\\n可用资料：\\n${knowledge}`;
+    const chatTitle = personName ? `跟${personName}对话` : '与历史对话';
+    return `${identity}\\n\\n你的目标：与用户进行“${chatTitle}”，围绕人物的行走迁徙、关键抉择、时代处境与影响来回答。\\n\\n对话规则：\\n${rules}\\n\\n可用资料：\\n${knowledge}`;
   }, [chatStrict, data, locations]);
   useEffect(() => {
     if (!chatOpen) return;
@@ -787,16 +1051,24 @@ const App = () => {
           {headerSubtitle ? (
             <p className="text-xs text-gray-500 mt-1 mb-2">{renderInline(headerSubtitle)}</p>
           ) : null}
+          {renderDescription()}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
               <p className="text-gray-400 text-sm">朝代</p>
               <p className="font-bold">{data.person?.dynasty || ''}</p>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">籍贯</p>
+              <p className="text-gray-400 text-sm">籍贯{birthplaceMeta.doubtful ? <span className="text-[10px] text-amber-600 ml-1">存疑</span> : null}</p>
               <p className="font-bold">{birthplaceParts.ancient || ''}</p>
               {birthplaceParts.modern ? (
                 <p className="text-[11px] text-gray-500 mt-0.5">{birthplaceParts.modern}</p>
+              ) : null}
+              {birthplaceMeta.candidates.length ? (
+                <div className="mt-1 flex flex-wrap gap-1 justify-center md:justify-start">
+                  {birthplaceMeta.candidates.map((t, i) => (
+                    <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">{renderInline(t)}</span>
+                  ))}
+                </div>
               ) : null}
             </div>
             <div>
@@ -847,7 +1119,7 @@ const App = () => {
             <div>
               <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">他人评价 / 史料</p>
               <ul className="space-y-1">
-                {relatedReviews.slice(0, 4).map((t, idx) => {
+                {relatedReviews.slice(0, 6).map((t, idx) => {
                   const s = String(t || '').replace(/^\s*[-•]\s*/, '').trim();
                   return <li key={idx} className="text-sm text-gray-700 leading-relaxed">- {renderInline(s)}</li>;
                 })}
@@ -884,6 +1156,7 @@ const App = () => {
                   <div
                     key={idx}
                     onClick={() => handleLocClick(loc, idx)}
+                    ref={(el) => { locItemRefs.current[idx] = el; }}
                     className={`p-3 rounded-lg cursor-pointer transition-all border-l-4 ${
                       idx === activeIndex
                         ? 'bg-white shadow-md border-[#c0392b]'
@@ -1018,7 +1291,7 @@ const App = () => {
         <section ref={chatSectionRef} className="glass-panel p-6 rounded-xl shadow-sm border border-[#c8b496]/40 bg-white/70">
           <div className="flex items-center justify-between gap-4 mb-3">
             <div>
-              <h2 className="text-lg font-bold text-[#7c2d12]">与历史对话</h2>
+              <h2 className="text-lg font-bold text-[#7c2d12]">{data.person?.name ? `跟${data.person.name}对话` : '与历史对话'}</h2>
               <p className="text-[11px] text-gray-500 mt-1">进入足迹内容后，以第一人称与人物对话（支持严格史实 / 适度想象）。</p>
             </div>
             <div className="flex items-center gap-2">
@@ -1046,7 +1319,7 @@ const App = () => {
                       ? 'bg-[#c0392b] text-white ml-auto'
                       : 'bg-white text-gray-800 mr-auto';
                     const wrapClass = isUser ? 'justify-end' : 'justify-start';
-                    const lines = String(m.content || '').split(/\n+/g).map(s => String(s || '').trim()).filter(Boolean);
+                  const lines = String(m.content || '').split(/\\n+/g).map(s => String(s || '').trim()).filter(Boolean);
                     return (
                       <div key={idx} className={`flex ${wrapClass}`}>
                         <div className={`max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-sm border border-[#c8b496]/30 ${bubbleClass}`}>
@@ -1171,7 +1444,7 @@ const App = () => {
         className="fixed bottom-6 right-6 z-[1200] flex items-center gap-2 px-4 py-2 rounded-full bg-[#c0392b] text-white shadow-lg border border-white/20 hover:bg-[#a93226]"
       >
         <span className="inline-flex h-2 w-2 rounded-full bg-emerald-300"></span>
-        <span className="text-sm font-semibold">与历史对话</span>
+        <span className="text-sm font-semibold">{data.person?.name ? `跟${data.person.name}对话` : '与历史对话'}</span>
         {!chatOpen ? (
           <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/15 border border-white/20">NEW</span>
         ) : null}
@@ -1189,7 +1462,23 @@ const App = () => {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
 // exports disabled
-</script>
+    </script>
+    <script>
+      (() => {
+        const tryTransform = () => {
+          try {
+            const root = document.getElementById("root");
+            const empty = !root || root.childElementCount === 0;
+            if (!empty) return;
+            if (window.Babel && typeof window.Babel.transformScriptTags === "function") {
+              window.Babel.transformScriptTags();
+            }
+          } catch (_) {}
+        };
+        setTimeout(tryTransform, 0);
+        setTimeout(tryTransform, 1500);
+      })();
+    </script>
 </body>
 </html>"""
     return (

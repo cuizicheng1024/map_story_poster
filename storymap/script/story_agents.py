@@ -64,14 +64,22 @@ class StoryAgentLLM:
         - LLM_API_KEY   -> Qveris API Key
         - LLM_BASE_URL  -> Qveris API Base URL (例如 https://qveris.ai/api/v1)
         """
-        fallback_model = os.getenv("MODEL")
-        fallback_key = os.getenv("MIMO_API_KEY") or os.getenv("API_KEY")
+        fallback_model = os.getenv("MODEL") or os.getenv("MIMO_MODEL") or os.getenv("MIMO_MODEL_ID")
+        fallback_key = (
+            os.getenv("MIMO_API_KEY")
+            or os.getenv("MIMO_API_Key")
+            or os.getenv("MIMO_APIKEY")
+            or os.getenv("API_KEY")
+            or os.getenv("API_Key")
+        )
         fallback_base = os.getenv("MIMO_BASE_URL") or os.getenv("BASE_URL") or "https://api.xiaomimimo.com/v1"
 
-        self.model = model or os.getenv("LLM_MODEL_ID") or fallback_model or "mimo-v2-pro"
+        resolved_base = (baseUrl or os.getenv("LLM_BASE_URL") or fallback_base or "").strip()
+        default_model = "mimo-v2.5-pro" if "xiaomimimo.com" in resolved_base else "mimo-v2-pro"
+        self.model = model or os.getenv("LLM_MODEL_ID") or fallback_model or default_model
         self.event_callback = event_callback
         self.apiKey = apiKey or os.getenv("LLM_API_KEY") or fallback_key
-        self.baseUrl = baseUrl or os.getenv("LLM_BASE_URL") or fallback_base
+        self.baseUrl = resolved_base or fallback_base
         # Increase default timeout to 300 seconds (5 minutes)
         self.timeout = timeout or int(os.getenv("LLM_TIMEOUT", "300"))
         provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
@@ -140,9 +148,12 @@ class StoryAgentLLM:
     def _think_mimo(self, messages: List[Dict[str, str]], temperature: float = 0) -> Optional[str]:
         url = f"{self.baseUrl.rstrip('/')}/chat/completions"
         headers = {
-            "api-key": self.apiKey,
             "Content-Type": "application/json",
         }
+        if self.apiKey:
+            headers["api-key"] = self.apiKey
+            headers["x-api-key"] = self.apiKey
+            headers["Authorization"] = f"Bearer {self.apiKey}"
         payload: Dict[str, object] = {
             "model": self.model,
             "messages": messages,

@@ -256,12 +256,8 @@ def _pick_quote(spot: Dict[str, Any]) -> str:
 
 def _render_index_html(title: str, data_file: str) -> str:
     safe_title = title.strip() or "故事地图"
-    template_path = STORY_MAP_DIR / "index.html"
-    if template_path.exists():
-        html = template_path.read_text(encoding="utf-8")
-        html = re.sub(r"<title>[^<]*</title>", f"<title>{safe_title}</title>", html, flags=re.I)
-        html = re.sub(r'const DATA_FILE = "[^"]*";', f'const DATA_FILE = "{data_file}";', html)
-        return html
+    # Always render a fresh index.html instead of patching an existing template.
+    # This prevents older inline JS/CSS (e.g. outdated AMap style) from lingering.
     return f"""<!doctype html>
 <html lang="zh-CN">
   <head>
@@ -269,6 +265,7 @@ def _render_index_html(title: str, data_file: str) -> str:
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{safe_title}</title>
     <script src="/vendor/tailwindcss.js" onerror="this.onerror=null;this.src='https://cdn.tailwindcss.com';"></script>
+    <script src="/amap-config.js"></script>
     <style>
       body {{
         background: radial-gradient(900px 600px at 10% 0%, rgba(59,130,246,0.15), transparent 60%),
@@ -326,6 +323,17 @@ def _render_index_html(title: str, data_file: str) -> str:
         border: 1px solid rgba(255,255,255,0.10);
         pointer-events: none;
       }}
+      .range-mask {{
+        background: rgba(2,6,23,0.48);
+        border: 1px solid rgba(255,255,255,0.06);
+        pointer-events: none;
+      }}
+      .range-sel {{
+        background: linear-gradient(90deg, rgba(34,197,94,0.22), rgba(56,189,248,0.16));
+        border: 1px solid rgba(255,255,255,0.26);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(34,197,94,0.18);
+        pointer-events: none;
+      }}
       .handle {{
         width: 14px;
         height: 42px;
@@ -362,7 +370,7 @@ def _render_index_html(title: str, data_file: str) -> str:
               <button id="tabMap" class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10">地图视角</button>
             </div>
           </div>
-          <div class="text-[11px] font-normal text-white/60 flex items-center gap-3">窗口内：<span id="activeCount">-</span><a class="underline hover:text-white/80" href="./echarts_home.html">ECharts 版</a></div>
+          <div class="text-[11px] font-normal text-white/60 flex items-center gap-3">窗口内：<span id="activeCount">-</span><span class="text-white/30">|</span>坐标点：<span id="coordCount">-</span></div>
         </div>
         <div class="px-6 pb-2 -mt-2 text-[11px] text-white/60">拖动时间窗筛选人物；悬停查看简介；点击节点进入人物页</div>
 
@@ -384,7 +392,9 @@ def _render_index_html(title: str, data_file: str) -> str:
           <div class="range-rail relative px-3 py-3">
             <div class="absolute left-3 right-3 top-3 h-[12px] rounded-lg band flex items-center justify-between px-2 text-[10px] text-white/60" id="bands"></div>
             <div class="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[34px] rounded-xl bg-white/5 border border-white/10 ticks"></div>
-            <div id="sel" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl bg-white/10 border border-white/15"></div>
+            <div id="maskL" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl range-mask"></div>
+            <div id="maskR" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl range-mask"></div>
+            <div id="sel" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl range-sel"></div>
             <div id="mBirth" class="absolute top-1/2 -translate-y-1/2 h-[34px] w-[2px] bg-emerald-300/70 hidden"></div>
             <div id="mDeath" class="absolute top-1/2 -translate-y-1/2 h-[34px] w-[2px] bg-rose-300/70 hidden"></div>
             <div id="h1" class="handle absolute top-1/2 -translate-y-1/2"></div>
@@ -413,11 +423,14 @@ def _render_index_html(title: str, data_file: str) -> str:
       const $h1 = document.getElementById("h1");
       const $h2 = document.getElementById("h2");
       const $sel = document.getElementById("sel");
+      const $maskL = document.getElementById("maskL");
+      const $maskR = document.getElementById("maskR");
       const $rail = $sel.parentElement;
       const $bands = document.getElementById("bands");
       const $mBirth = document.getElementById("mBirth");
       const $mDeath = document.getElementById("mDeath");
       const $activeCount = document.getElementById("activeCount");
+      const $coordCount = document.getElementById("coordCount");
       const $startYear = document.getElementById("startYear");
       const $endYear = document.getElementById("endYear");
       const $spanYear = document.getElementById("spanYear");
@@ -516,6 +529,14 @@ def _render_index_html(title: str, data_file: str) -> str:
         $h2.style.left = `calc(${{rightPct}} - 7px)`;
         $sel.style.left = leftPct;
         $sel.style.width = ((t2 - t1) * 100).toFixed(4) + "%";
+        if ($maskL) {{
+          $maskL.style.left = "0%";
+          $maskL.style.width = leftPct;
+        }}
+        if ($maskR) {{
+          $maskR.style.left = rightPct;
+          $maskR.style.width = ((1 - t2) * 100).toFixed(4) + "%";
+        }}
         $startYear.textContent = String(startYear);
         $endYear.textContent = String(endYear);
         $spanYear.textContent = String(Math.max(0, endYear - startYear));
@@ -536,6 +557,14 @@ def _render_index_html(title: str, data_file: str) -> str:
           if (inWindow(n)) c += 1;
         }}
         if ($activeCount) $activeCount.textContent = String(c);
+      }};
+
+      const updateCoordCount = () => {{
+        let c = 0;
+        for (const n of nodes) {{
+          if (typeof n.birth_lat === "number" && typeof n.birth_lng === "number") c += 1;
+        }}
+        if ($coordCount) $coordCount.textContent = `${{c}}/${{nodes.length}}`;
       }};
 
       const renderBands = () => {{
@@ -799,7 +828,9 @@ def _render_index_html(title: str, data_file: str) -> str:
         amapLoading = true;
         const sEl = document.createElement("script");
         sEl.async = true;
-        sEl.src = `https://webapi.amap.com/maps?v=2.0&key=${{encodeURIComponent(key)}}`;
+        // Load AMap JS with clustering + geocoder plugins.
+        // Different AMap versions expose different globals (MarkerCluster / MarkerClusterer).
+        sEl.src = `https://webapi.amap.com/maps?v=2.0&key=${{encodeURIComponent(key)}}&plugin=AMap.MarkerCluster,AMap.MarkerClusterer,AMap.Geocoder`;
         sEl.onload = () => {{
           amapLoading = false;
           if (window.AMap && typeof window.AMap.Map === "function") resolve(true);
@@ -888,33 +919,132 @@ def _render_index_html(title: str, data_file: str) -> str:
             zoom: 4,
             center: [105.0, 35.5],
             viewMode: "2D",
-            mapStyle: "amap://styles/darkblue",
+            mapStyle: "amap://styles/normal",
             resizeEnable: true,
           }});
 
+          const COORD_CACHE_KEY = "stellar_birth_coords_v1";
+          const readCoordCache = () => {{
+            try {{
+              const raw = localStorage.getItem(COORD_CACHE_KEY);
+              const obj = raw ? JSON.parse(raw) : null;
+              return (obj && typeof obj === "object") ? obj : {{}};
+            }} catch (_) {{
+              return {{}};
+            }}
+          }};
+          const writeCoordCache = (cache) => {{
+            try {{
+              localStorage.setItem(COORD_CACHE_KEY, JSON.stringify(cache));
+            }} catch (_) {{}}
+          }};
+          const coordCache = readCoordCache();
+          for (const n of nodes) {{
+            const k = String(n.person || "").trim();
+            const v = k ? coordCache[k] : null;
+            if (v && typeof n.birth_lat !== "number" && typeof n.birth_lng !== "number" && Array.isArray(v) && v.length >= 2) {{
+              const lat = Number(v[0]);
+              const lng = Number(v[1]);
+              if (Number.isFinite(lat) && Number.isFinite(lng)) {{
+                n.birth_lat = lat;
+                n.birth_lng = lng;
+              }}
+            }}
+          }}
+
+          // Use markers (+ optional clusterer) to make dense distributions readable.
           const addMarker = (n) => {{
             const lat = n.birth_lat;
             const lng = n.birth_lng;
             if (typeof lat !== "number" || typeof lng !== "number") return;
-            const mk = new window.AMap.CircleMarker({{
-              center: [lng, lat],
-              radius: 5.0,
-              strokeColor: "rgba(255,255,255,0.30)",
-              strokeOpacity: 0.9,
-              strokeWeight: 1,
-              fillColor: "rgba(255,255,255,0.20)",
-              fillOpacity: 0.35,
-              zIndex: 10,
-              bubble: true,
-              cursor: "pointer",
+            const mk = new window.AMap.Marker({{
+              position: [lng, lat],
+              offset: new window.AMap.Pixel(-6, -6),
+              content: '<div style="width:14px;height:14px;border-radius:999px;background:rgba(34,197,94,0.78);border:2px solid rgba(15,23,42,0.55);box-shadow:0 10px 22px rgba(34,197,94,0.22)"></div>',
+              anchor: "center",
+              clickable: true,
             }});
-            mk.setMap(amap);
             mk.on("click", () => openPerson(n.person));
+            try {{ mk.setMap(amap); }} catch (_) {{}}
             markers.push({{ mk, n }});
           }};
 
           for (const n of nodes) addMarker(n);
+          updateCoordCount();
+          try {{
+            const Cluster = window.AMap.MarkerClusterer || window.AMap.MarkerCluster;
+            let clustered = false;
+            if (Cluster) {{
+              try {{
+                new Cluster(amap, markers.map((x) => x.mk), {{
+                  gridSize: 80,
+                  maxZoom: 12,
+                }});
+                clustered = true;
+              }} catch (_) {{
+                clustered = false;
+              }}
+            }}
+            void clustered;
+          }} catch (_) {{}}
           updateMapMarkers();
+
+          const geocodeText = (n) => {{
+            const m = String(n.birthplace_modern || "").trim().replace(/^今\\s*/g, "");
+            if (m) return m;
+            const raw = String(n.birthplace_raw || "").trim();
+            if (raw) {{
+              const t = raw.split(/[；;，,]/)[0].replace(/[（(].*?[）)]/g, "").replace(/^约\\s*/g, "").replace(/^公元前?\\d+年\\s*/g, "").trim();
+              if (t) return t;
+            }}
+            const bp = String(n.birthplace || "").trim();
+            return bp.split(/[；;，,]/)[0].replace(/[（(].*?[）)]/g, "").trim();
+          }};
+
+          const autoFillCoords = () => {{
+            let need = 0;
+            for (const n of nodes) {{
+              if (typeof n.birth_lat !== "number" || typeof n.birth_lng !== "number") need += 1;
+            }}
+            if (need <= 0) return;
+            if (!window.AMap || !window.AMap.Geocoder) return;
+            const geocoder = new window.AMap.Geocoder({{ city: "全国" }});
+            const pending = nodes.filter((n) => (typeof n.birth_lat !== "number" || typeof n.birth_lng !== "number"));
+            const limit = 120;
+            let idx = 0;
+            const tick = () => {{
+              if (idx >= pending.length || idx >= limit) {{
+                writeCoordCache(coordCache);
+                updateCoordCount();
+                updateMapMarkers();
+                return;
+              }}
+              const n = pending[idx++];
+              const q = geocodeText(n);
+              const person = String(n.person || "").trim();
+              if (!q || !person) return setTimeout(tick, 80);
+              geocoder.getLocation(q, (status, result) => {{
+                if (status === "complete" && result && result.geocodes && result.geocodes.length) {{
+                  const loc = result.geocodes[0].location;
+                  if (loc && typeof loc.getLng === "function" && typeof loc.getLat === "function") {{
+                    const lng = Number(loc.getLng());
+                    const lat = Number(loc.getLat());
+                    if (Number.isFinite(lat) && Number.isFinite(lng)) {{
+                      n.birth_lat = lat;
+                      n.birth_lng = lng;
+                      coordCache[person] = [lat, lng];
+                      addMarker(n);
+                      updateCoordCount();
+                      updateMapMarkers();
+                    }}
+                  }}
+                }}
+                setTimeout(tick, 140);
+              }});
+            }};
+            setTimeout(tick, 400);
+          }};
+          autoFillCoords();
         }}).catch((e) => {{
           mapInited = false;
           const gate = _amapKeyGate();
@@ -929,15 +1059,11 @@ def _render_index_html(title: str, data_file: str) -> str:
         for (const it of markers) {{
           const n = it.n;
           const active = inWindow(n);
-          it.mk.setOptions({{
-            radius: active ? 7.0 : 4.8,
-            strokeColor: active ? "rgba(34,197,94,0.75)" : "rgba(255,255,255,0.18)",
-            strokeOpacity: active ? 0.95 : 0.7,
-            strokeWeight: active ? 1.2 : 1,
-            fillColor: active ? "rgba(34,197,94,0.55)" : "rgba(255,255,255,0.16)",
-            fillOpacity: active ? 0.9 : 0.28,
-            zIndex: active ? 20 : 10,
-          }});
+          const bg = active ? "rgba(34,197,94,0.55)" : "rgba(255,255,255,0.22)";
+          const br = active ? "rgba(34,197,94,0.80)" : "rgba(255,255,255,0.28)";
+          const sh = active ? "0 10px 18px rgba(34,197,94,0.20)" : "0 6px 14px rgba(0,0,0,0.16)";
+          it.mk.setContent(`<div style="width:${{active ? 14 : 12}}px;height:${{active ? 14 : 12}}px;border-radius:999px;background:${{bg}};border:1px solid ${{br}};box-shadow:${{sh}}"></div>`);
+          it.mk.setOffset(new window.AMap.Pixel(-(active ? 7 : 6), -(active ? 7 : 6)));
         }}
       }};
 
@@ -1024,6 +1150,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         }}
         setHandles();
         updateActiveCount();
+        updateCoordCount();
         updateMapMarkers();
         draw();
       }};
@@ -1045,6 +1172,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         endYear = 1840;
         setHandles();
         updateActiveCount();
+        updateCoordCount();
         updateMapMarkers();
         draw();
       }});
@@ -1176,6 +1304,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         renderBands();
         setHandles();
         updateActiveCount();
+        updateCoordCount();
         draw();
         window.requestAnimationFrame(animate);
       }});

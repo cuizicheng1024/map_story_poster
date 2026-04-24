@@ -631,6 +631,9 @@ _ALLOWED_ORIGINS = [o.strip() for o in os.getenv("STORY_MAP_ALLOWED_ORIGINS", "*
 _VENDOR_CACHE: Dict[str, Tuple[str, bytes]] = {}
 _VENDOR_LOCK = threading.Lock()
 _VENDOR_SOURCES: Dict[str, List[str]] = {
+    # Frontend pages rely on CDN-hosted assets (React/Babel/Leaflet/Tailwind).
+    # In restricted networks these CDNs may be blocked; serving them via the
+    # same origin (this server) avoids CORS/DNS issues and makes pages usable.
     "tailwindcss.js": [
         "https://cdn.tailwindcss.com",
     ],
@@ -661,6 +664,108 @@ _VENDOR_SOURCES: Dict[str, List[str]] = {
     ],
 }
 
+def _amap_config_js() -> bytes:
+    # Expose AMap configuration to browsers without hardcoding secrets into
+    # generated HTML. This endpoint is same-origin and can read local .env.
+    #
+    # Notes:
+    # - Amap_API_Key is a common key name used in this repo's .env.
+    # - "securityJsCode" is OPTIONAL and is NOT the same as WebService secret.
+    key = (
+        os.getenv("AMAP_KEY")
+        or os.getenv("Amap_API_Key")
+        or os.getenv("AMAP_API_KEY")
+        or ""
+    ).strip()
+    sec = (
+        os.getenv("AMAP_SECURITY")
+        or os.getenv("AMAP_SECURITY_JS_CODE")
+        or os.getenv("AMAP_SCODE")
+        or ""
+    ).strip()
+    payload = {
+        "key": key,
+        "security": sec,
+    }
+    return (
+        # Keep it tiny and deterministic so browsers can cache it.
+        "window.AMAP_KEY={key};window.AMAP_SECURITY={security};".format(
+            key=json.dumps(payload["key"], ensure_ascii=False),
+            security=json.dumps(payload["security"], ensure_ascii=False),
+        ).encode("utf-8")
+    )
+
+
+def _local_history_reply(messages: object) -> str:
+    # Offline fallback for "talk with history" so the page remains interactive
+    # even when LLM credentials are not configured. This intentionally stays
+    # conservative and prompts for clarification instead of fabricating facts.
+    if not isinstance(messages, list):
+        return "史料未载；我不敢妄言。"
+    last_user = ""
+    sys_text = ""
+    for m in messages:
+        if not isinstance(m, dict):
+            continue
+        role = str(m.get("role") or "").strip()
+        content = str(m.get("content") or "")
+        if role == "system":
+            sys_text = content
+        if role == "user":
+            last_user = content
+
+    name = ""
+    dynasty = ""
+    birthplace = ""
+    life = ""
+    if sys_text:
+        m = re.search(r"扮演历史人物[:：]\s*([^\n。]+)", sys_text)
+        if m:
+            name = m.group(1).strip()
+        m = re.search(r"朝代[:：]\s*([^\n]+)", sys_text)
+        if m:
+            dynasty = m.group(1).strip()
+        m = re.search(r"籍贯[:：]\s*([^\n]+)", sys_text)
+        if m:
+            birthplace = m.group(1).strip()
+        m = re.search(r"生卒[:：]\s*([^\n]+)", sys_text)
+        if m:
+            life = m.group(1).strip()
+
+    if not name:
+        name = "在下"
+
+    q = (last_user or "").strip()
+    q2 = re.sub(r"\s+", " ", q)
+
+    intro_lines = []
+    header = name if name != "在下" else "在下"
+    intro_lines.append(f"{header}在此。")
+    meta = "；".join([t for t in [dynasty and f"时在{dynasty}", birthplace and f"籍贯{birthplace}", life and f"生卒{life}"] if t])
+    if meta:
+        intro_lines.append(meta + "。")
+
+    if any(k in q2 for k in ["你是谁", "你是誰", "何人", "何许人", "介绍你", "自我介绍"]):
+        body = "我以所历与所闻相告：所述若无据，必言“史料未载”。"
+        return "\n".join(intro_lines + [body])
+
+    tl = ""
+    if sys_text:
+        m = re.search(r"【足迹时间线】\n([\s\S]*?)(?:\n\n【|$)", sys_text)
+        if m:
+            lines = [ln.strip() for ln in m.group(1).splitlines() if ln.strip()]
+            tl = "\n".join(lines[:8])
+
+    if any(k in q2 for k in ["足迹", "行程", "去过", "走过", "迁", "路", "到过", "在哪", "哪里"]):
+        if tl:
+            return "\n".join(intro_lines + ["我大略记得行止如下：", tl, "若你要细问某一站，我可据此展开。"])
+        return "\n".join(intro_lines + ["史料未载；我不敢妄言。"])
+
+    hint = "你可问：我何以作此抉择？此事在当时意味着什么？我最难忘的一次远行在何处？"
+    if tl:
+        return "\n".join(intro_lines + ["此问我尽力答之；可据足迹旁证：", tl, hint])
+    return "\n".join(intro_lines + ["史料未载；我不敢妄言。", hint])
+
 
 def _vendor_content_type(name: str) -> str:
     n = (name or "").lower()
@@ -672,6 +777,8 @@ def _vendor_content_type(name: str) -> str:
 
 
 def _fetch_vendor_bytes(name: str) -> Tuple[str, bytes]:
+    # Try multiple mirrors to maximize the chance of getting the asset under
+    # different network policies.
     urls = _VENDOR_SOURCES.get(name) or []
     if not urls:
         raise RuntimeError("vendor_not_found")
@@ -2335,6 +2442,8 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
 
     def _try_serve_static(self, parsed_path: str, origin: Optional[str], head_only: bool = False) -> bool:
         rel = unquote((parsed_path or "").lstrip("/"))
+        if rel.startswith("storymap/examples/story_map/"):
+            rel = rel.split("storymap/examples/story_map/", 1)[-1]
         if parsed_path == "/" or rel == "":
             rel = "index.html"
 
@@ -2408,6 +2517,10 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
         parsed = urlparse(self.path)
+        if parsed.path == "/amap-config.js":
+            body = _amap_config_js()
+            self._set_headers_raw(200, "application/javascript; charset=utf-8", len(body), allowed)
+            return
         if self._try_serve_vendor(parsed.path, allowed, head_only=True):
             return
         if self._try_serve_static(parsed.path, allowed, head_only=True):
@@ -2437,6 +2550,13 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             self.wfile.write(payload)
             return
         parsed = urlparse(self.path)
+        if parsed.path == "/amap-config.js":
+            # Make AMap key available to homepage + person pages. The HTML reads
+            # window.AMAP_KEY / window.AMAP_SECURITY from this script.
+            body = _amap_config_js()
+            self._set_headers_raw(200, "application/javascript; charset=utf-8", len(body), allowed)
+            self.wfile.write(body)
+            return
         if parsed.path == "/debug_static":
             static_dir = self._static_dir()
             index_path = os.path.join(static_dir, "index.html")
@@ -2507,6 +2627,8 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             
         # Add proxy for LLM calls from frontend
         if self.path == "/api/ai/proxy":
+            # Browser -> server proxy for LLM calls. This keeps API keys on the
+            # server side and avoids CORS issues.
             length = int(self.headers.get("Content-Length", "0") or "0")
             body = self.rfile.read(length).decode("utf-8", errors="ignore") if length else ""
             if not body:
@@ -2519,9 +2641,17 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
                 data = json.loads(body)
                 messages = data.get("messages", [])
                 temperature = data.get("temperature", 0.1)
-                
-                client = _get_llm_client()
-                content = client.think(messages, temperature=temperature)
+
+                content = ""
+                try:
+                    client = _get_llm_client()
+                    content = client.think(messages, temperature=temperature)
+                except Exception:
+                    # When LLM is not configured (or temporarily unavailable),
+                    # return a deterministic local reply so UI doesn't hang.
+                    content = _local_history_reply(messages)
+                if not content:
+                    content = _local_history_reply(messages)
                 
                 # Ensure content is valid string and clean surrogate pairs if any
                 if content:
