@@ -393,8 +393,8 @@ def _render_index_html(title: str, data_file: str) -> str:
         pointer-events: none;
       }}
       .band {{
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.035);
+        border: 1px solid rgba(255,255,255,0.08);
         pointer-events: none;
       }}
       .range-mask {{
@@ -476,11 +476,12 @@ def _render_index_html(title: str, data_file: str) -> str:
 
         <div class="px-6 pb-6">
           <div class="range-rail relative px-3 py-3">
-            <div class="absolute left-3 right-3 top-3 h-[12px] rounded-lg band flex items-center justify-between px-2 text-[10px] text-white/60" id="bands"></div>
-            <div class="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[34px] rounded-xl bg-white/5 border border-white/10 ticks"></div>
+            <div class="absolute left-3 right-3 top-2 h-[12px] rounded-lg band flex items-start justify-between px-2 pt-[1px] text-[10px] text-white/55" id="bands"></div>
+            <div id="ticks" class="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-[34px] rounded-xl bg-white/5 border border-white/10 ticks"></div>
             <div id="maskL" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl range-mask"></div>
             <div id="maskR" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl range-mask"></div>
             <div id="sel" class="absolute top-1/2 -translate-y-1/2 h-[34px] rounded-xl range-sel"></div>
+            <div id="lifeBar" class="absolute top-1/2 -translate-y-1/2 h-[6px] rounded-full bg-white/15 border border-white/20 hidden"></div>
             <div id="mBirth" class="absolute top-1/2 -translate-y-1/2 h-[34px] w-[2px] bg-emerald-300/70 hidden"></div>
             <div id="mDeath" class="absolute top-1/2 -translate-y-1/2 h-[34px] w-[2px] bg-rose-300/70 hidden"></div>
             <div id="h1" class="handle absolute top-1/2 -translate-y-1/2"></div>
@@ -521,6 +522,8 @@ def _render_index_html(title: str, data_file: str) -> str:
       const $bands = document.getElementById("bands");
       const $mBirth = document.getElementById("mBirth");
       const $mDeath = document.getElementById("mDeath");
+      const $lifeBar = document.getElementById("lifeBar");
+      const $ticks = document.getElementById("ticks");
       const $activeCount = document.getElementById("activeCount");
       const $coordCount = document.getElementById("coordCount");
       const $spanYear = document.getElementById("spanYear");
@@ -583,6 +586,8 @@ def _render_index_html(title: str, data_file: str) -> str:
       let dragStartX = 0;
       let dragStartA = 0;
       let dragStartB = 0;
+      let brushStartX = 0;
+      let brushStartYear = 0;
       let hover = null;
       let selectedIdx = -1;
       let selected = null;
@@ -613,6 +618,7 @@ def _render_index_html(title: str, data_file: str) -> str:
           spotlightIdx = -1;
           spotlight = null;
           showTip(null);
+          setLifeBar(null);
           draw();
           return;
         }}
@@ -621,23 +627,144 @@ def _render_index_html(title: str, data_file: str) -> str:
         spotlightIdx = -1;
         spotlight = null;
         showTip(null);
+        setLifeBar(selected);
         draw();
       }};
       const setSpotlight = (n, clientX, clientY) => {{
         if (!n || typeof n._idx !== "number") {{
           spotlightIdx = -1;
           spotlight = null;
+          setLifeBar(selected);
           draw();
           return;
         }}
         spotlightIdx = n._idx;
         spotlight = n;
         showTip(n, clientX, clientY);
+        setLifeBar(spotlight);
         draw();
       }};
 
       const toT = (year) => (year - minYear) / (maxYear - minYear);
       const fromT = (t) => Math.round(minYear + t * (maxYear - minYear));
+
+      const formatYear = (y) => {{
+        const yy = Math.round(Number(y));
+        if (!Number.isFinite(yy)) return "";
+        if (yy < 0) return `前${{-yy}}`;
+        return String(yy);
+      }};
+
+      const pickTickStep = (span) => {{
+        const s = Math.max(1, Math.round(Number(span) || 1));
+        if (s <= 60) return 5;
+        if (s <= 120) return 10;
+        if (s <= 240) return 20;
+        if (s <= 500) return 50;
+        if (s <= 900) return 100;
+        if (s <= 1600) return 200;
+        return 500;
+      }};
+
+      const formatTickLabel = (y, span, step) => {{
+        const yy = Math.round(Number(y));
+        if (!Number.isFinite(yy)) return "";
+        if (span >= 1200 || step >= 200) {{
+          if (yy < 0) {{
+            const c = Math.floor(((-yy) - 1) / 100) + 1;
+            return `前${{c}}世纪`;
+          }}
+          const c = Math.floor((yy - 1) / 100) + 1;
+          return `${{c}}世纪`;
+        }}
+        return formatYear(yy);
+      }};
+
+      const renderTicks = () => {{
+        if (!$ticks) return;
+        const span = Math.max(1, endYear - startYear);
+        const step = pickTickStep(span);
+        const r = $rail.getBoundingClientRect();
+        const w = r.width || 1;
+        const x0 = clamp(toT(startYear), 0, 1) * w;
+        const x1 = clamp(toT(endYear), 0, 1) * w;
+        const ww = Math.max(1, x1 - x0);
+        const density = Math.max(1, Math.floor((span / step)));
+        const labelEvery = density > 14 ? 2 : 1;
+        let y0 = Math.floor(startYear / step) * step;
+        if (y0 > startYear) y0 -= step;
+        let html = "";
+        let idx = 0;
+        for (let y = y0; y <= endYear + step; y += step) {{
+          if (y < startYear - step) continue;
+          if (y > endYear + step) break;
+          const t = clamp((y - startYear) / span, 0, 1);
+          const left = x0 + (t * ww);
+          const major = (idx % labelEvery) === 0;
+          const h = major ? 16 : 10;
+          const op = major ? 0.42 : 0.22;
+          html += `<div style="position:absolute;left:${{left.toFixed(2)}}px;bottom:6px;width:1px;height:${{h}}px;background:rgba(255,255,255,${{op}})"></div>`;
+          if (major) {{
+            const lab = formatTickLabel(y, span, step);
+            if (lab) {{
+              html += `<div style="position:absolute;left:${{left.toFixed(2)}}px;top:3px;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,0.62);white-space:nowrap">${{esc(lab)}}</div>`;
+            }}
+          }}
+          idx += 1;
+        }}
+        $ticks.innerHTML = html;
+      }};
+
+      const setLifeBar = (n) => {{
+        if (!$lifeBar) return;
+        const pick = n && typeof n === "object" ? n : null;
+        const b = pick ? pick.birth_year : null;
+        const d = pick ? pick.death_year : null;
+        if (b == null && d == null) {{
+          $lifeBar.classList.add("hidden");
+          return;
+        }}
+        const r = $rail.getBoundingClientRect();
+        const w = r.width || 1;
+        let a = (b != null) ? b : d;
+        let z = (d != null) ? d : b;
+        if (a == null || z == null) {{
+          $lifeBar.classList.add("hidden");
+          return;
+        }}
+        if (a > z) {{ const t = a; a = z; z = t; }}
+        const t1 = clamp(toT(a), 0, 1);
+        const t2 = clamp(toT(z), 0, 1);
+        const minW = 6 / w;
+        const tt2 = Math.max(t2, t1 + minW);
+        $lifeBar.style.left = `${{(t1 * 100).toFixed(4)}}%`;
+        $lifeBar.style.width = `${{((tt2 - t1) * 100).toFixed(4)}}%`;
+        $lifeBar.classList.remove("hidden");
+      }};
+
+      const zoomToFitWindowNodes = () => {{
+        if (!nodes || !nodes.length) return;
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        let c = 0;
+        for (const n of nodes) {{
+          if (!inWindow(n)) continue;
+          if (typeof n.x !== "number" || typeof n.y !== "number") continue;
+          minX = Math.min(minX, n.x);
+          minY = Math.min(minY, n.y);
+          maxX = Math.max(maxX, n.x);
+          maxY = Math.max(maxY, n.y);
+          c += 1;
+        }}
+        if (c < 2 || !Number.isFinite(minX) || !Number.isFinite(minY) || !Number.isFinite(maxX) || !Number.isFinite(maxY)) return;
+        const bw = Math.max(10, maxX - minX);
+        const bh = Math.max(10, maxY - minY);
+        const margin = 36;
+        const sx = (W - margin * 2) / bw;
+        const sy = (H - margin * 2) / bh;
+        camScale = clamp(Math.min(sx, sy), 0.35, 3.8);
+        camOffX = (W - (minX + maxX) * camScale) / 2;
+        camOffY = (H - (minY + maxY) * camScale) / 2;
+      }};
 
       const setYearInputs = () => {{
         if ($startYearInput) $startYearInput.value = String(startYear);
@@ -716,6 +843,8 @@ def _render_index_html(title: str, data_file: str) -> str:
         $minLabel.textContent = "前800";
         $maxLabel.textContent = String(maxYear);
         $midLabel.textContent = "0";
+        renderTicks();
+        setLifeBar(spotlight || selected);
       }};
 
       const inWindow = (n) => {{
@@ -1757,12 +1886,22 @@ def _render_index_html(title: str, data_file: str) -> str:
       }};
 
       const onDown = (e) => {{
+        if (typeof e.button === "number" && e.button !== 0) return;
+        const r = railRect();
+        const rx = clamp(e.clientX - r.left, 0, r.width || 1);
         const m = hitTestHandle(e);
-        if (!m) return;
-        dragMode = m;
-        dragStartX = e.clientX;
-        dragStartA = startYear;
-        dragStartB = endYear;
+        if (!m) {{
+          dragMode = "brush";
+          brushStartX = rx;
+          brushStartYear = fromT(clamp(rx / (r.width || 1), 0, 1));
+          startYear = brushStartYear;
+          endYear = clamp(brushStartYear + 1, minYear, maxYear);
+        }} else {{
+          dragMode = m;
+          dragStartX = e.clientX;
+          dragStartA = startYear;
+          dragStartB = endYear;
+        }}
         if ($rail.setPointerCapture) {{
           try {{ $rail.setPointerCapture(e.pointerId); }} catch (_) {{}}
         }}
@@ -1773,22 +1912,34 @@ def _render_index_html(title: str, data_file: str) -> str:
       const onMove = (e) => {{
         if (!dragMode) return;
         const r = railRect();
-        const dx = e.clientX - dragStartX;
-        const dt = dx / r.width;
-        const span = dragStartB - dragStartA;
-        if (dragMode === "left") {{
-          const t = clamp(toT(dragStartA) + dt, 0, toT(dragStartB) - 0.01);
-          startYear = fromT(t);
-        }} else if (dragMode === "right") {{
-          const t = clamp(toT(dragStartB) + dt, toT(dragStartA) + 0.01, 1);
-          endYear = fromT(t);
-        }} else if (dragMode === "mid") {{
-          let a = dragStartA + Math.round(dt * (maxYear - minYear));
-          let b = a + span;
-          if (a < minYear) {{ a = minYear; b = a + span; }}
-          if (b > maxYear) {{ b = maxYear; a = b - span; }}
+        if (dragMode === "brush") {{
+          const rx = clamp(e.clientX - r.left, 0, r.width || 1);
+          const y = fromT(clamp(rx / (r.width || 1), 0, 1));
+          let a = Math.min(brushStartYear, y);
+          let b = Math.max(brushStartYear, y);
+          a = clamp(a, minYear, maxYear);
+          b = clamp(b, minYear, maxYear);
+          if (a === b) b = clamp(a + 1, minYear, maxYear);
           startYear = a;
           endYear = b;
+        }} else {{
+          const dx = e.clientX - dragStartX;
+          const dt = dx / r.width;
+          const span = dragStartB - dragStartA;
+          if (dragMode === "left") {{
+            const t = clamp(toT(dragStartA) + dt, 0, toT(dragStartB) - 0.01);
+            startYear = fromT(t);
+          }} else if (dragMode === "right") {{
+            const t = clamp(toT(dragStartB) + dt, toT(dragStartA) + 0.01, 1);
+            endYear = fromT(t);
+          }} else if (dragMode === "mid") {{
+            let a = dragStartA + Math.round(dt * (maxYear - minYear));
+            let b = a + span;
+            if (a < minYear) {{ a = minYear; b = a + span; }}
+            if (b > maxYear) {{ b = maxYear; a = b - span; }}
+            startYear = a;
+            endYear = b;
+          }}
         }}
         if (startYear >= endYear) {{
           if (dragMode === "left") startYear = endYear - 1;
@@ -1803,7 +1954,12 @@ def _render_index_html(title: str, data_file: str) -> str:
 
       const onUp = () => {{
         if (!dragMode) return;
+        const wasBrush = (dragMode === "brush");
         dragMode = "";
+        if (wasBrush && currentTab === "graph") {{
+          zoomToFitWindowNodes();
+          draw();
+        }}
       }};
 
       $rail.addEventListener("pointerdown", onDown);
