@@ -592,8 +592,21 @@ def run_one_full(
     run_dir.mkdir(parents=True, exist_ok=True)
 
     # meta
-    api_key = (os.getenv("MIMO_API_KEY") or os.getenv("API_KEY") or os.getenv("LLM_API_KEY") or "").strip()
-    base_url = (os.getenv("MIMO_BASE_URL") or os.getenv("BASE_URL") or os.getenv("LLM_BASE_URL") or "https://api.xiaomimimo.com/v1").strip()
+    api_key = (
+        os.getenv("MIMO_API_KEY")
+        or os.getenv("MIMO_API_Key")
+        or os.getenv("MIMO_APIKEY")
+        or os.getenv("API_KEY")
+        or os.getenv("LLM_API_KEY")
+        or ""
+    ).strip()
+    base_url = (
+        os.getenv("MIMO_BASE_URL")
+        or os.getenv("BASE_URL")
+        or os.getenv("LLM_BASE_URL")
+        or os.getenv("Amap_API_Base_URL")
+        or "https://api.xiaomimimo.com/v1"
+    ).strip()
     model = (os.getenv("MODEL") or os.getenv("LLM_MODEL_ID") or "mimo-v2-pro").strip()
 
     write_text(
@@ -919,6 +932,17 @@ def main() -> int:
     parser.add_argument("--out-dir", type=str, default="", help="指定输出目录（用于断点续跑）；不填则新建 batch_runs/<ts>")
     parser.add_argument("--people", type=str, default="", help="逗号分隔的人物列表；不填则用内置 16 人")
     parser.add_argument("--people-json", type=str, default="", help="读取人物列表的 JSON 文件（数组）")
+    parser.add_argument(
+        "--missing-html",
+        action="store_true",
+        help="自动扫描 storymap/examples/story/*.md 与 storymap/examples/story_map/*.html，只跑缺失人物页的那批人",
+    )
+    parser.add_argument(
+        "--missing-limit",
+        type=int,
+        default=int(os.getenv("MISSING_LIMIT", "0") or "0"),
+        help="仅生成缺失人物页的前 N 个（0 表示不限制）",
+    )
     parser.add_argument("--timeout", type=int, default=int(os.getenv("TIMEOUT", "300")), help="单次 API timeout（秒）")
     parser.add_argument("--retries", type=int, default=int(os.getenv("BATCH_RETRIES", "3")), help="API 最大重试次数")
     parser.add_argument("--retry-backoff", type=float, default=float(os.getenv("BATCH_RETRY_BACKOFF_S", "2")), help="重试退避基数（秒）")
@@ -939,8 +963,28 @@ def main() -> int:
 
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    def _person_from_filename(fn: str) -> str:
+        stem = Path(fn).stem
+        if "__pure__" in stem:
+            stem = stem.split("__pure__", 1)[0]
+        return stem.strip()
+
+    def _missing_people() -> List[str]:
+        md_dir = REPO_ROOT / "storymap" / "examples" / "story"
+        html_dir = REPO_ROOT / "storymap" / "examples" / "story_map"
+        md = {p.stem.strip() for p in md_dir.glob("*.md") if p.is_file() and p.stem.strip()}
+        html_files = [p for p in html_dir.glob("*.html") if p.is_file() and p.name != "index.html"]
+        html_people = {_person_from_filename(p.name) for p in html_files if _person_from_filename(p.name)}
+        missing = sorted(md - html_people)
+        lim = int(args.missing_limit or 0)
+        if lim > 0:
+            missing = missing[:lim]
+        return missing
+
     # people
-    if args.people_json.strip():
+    if args.missing_html:
+        people = _missing_people()
+    elif args.people_json.strip():
         people_path = Path(args.people_json)
         if not people_path.is_absolute():
             people_path = REPO_ROOT / args.people_json
