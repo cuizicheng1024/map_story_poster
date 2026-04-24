@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-24 12:06:49",
+  "generated_at": "2026-04-24 21:10:49",
   "min_year": -800,
   "max_year": 2000,
   "default_start": 0,
@@ -41,9 +41,9 @@
       "death_year": null,
       "dynasty": "20世纪30年代（中华民国时期）",
       "quote": "",
-      "birthplace": "约19世纪末；北运河畔某村庄",
-      "birthplace_raw": "约19世纪末；北运河畔某村庄（具体地点存疑）",
-      "birthplace_modern": "具体地点存疑",
+      "birthplace": "；北运河畔某村庄",
+      "birthplace_raw": "；北运河畔某村庄",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -74,8 +74,8 @@
       "birthplace": "北京",
       "birthplace_raw": "北京",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.904179,
+      "birth_lng": 116.407387,
       "file": "",
       "seed": 46462142687271,
       "relations": []
@@ -119,8 +119,8 @@
       "birthplace": "河北省宁河县",
       "birthplace_raw": "河北省宁河县（今天津市宁河区）",
       "birthplace_modern": "天津市宁河区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.329749,
+      "birth_lng": 117.826674,
       "file": "",
       "seed": 220447964230530,
       "relations": []
@@ -162,10 +162,10 @@
       "dynasty": "明朝",
       "quote": "“要留清白在人间”",
       "birthplace": "钱塘县",
-      "birthplace_raw": "钱塘县（今浙江省杭州市）（出生月份存疑）",
+      "birthplace_raw": "钱塘县（今浙江省杭州市）",
       "birthplace_modern": "浙江省杭州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.2741,
+      "birth_lng": 120.1551,
       "file": "",
       "seed": 69989932584850,
       "relations": []
@@ -187,23 +187,23 @@
     },
     {
       "person": "亚历山大大帝",
-      "birth_year": 356,
-      "death_year": 323,
+      "birth_year": -356,
+      "death_year": -323,
       "dynasty": "古希腊马其顿王国时期（公元前4世纪）",
       "quote": "“**英雄主义**”",
       "birthplace": "佩拉",
       "birthplace_raw": "佩拉（今希腊中马其顿大区佩拉）",
       "birthplace_modern": "希腊中马其顿大区佩拉",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 40.76,
+      "birth_lng": 22.52,
       "file": "",
       "seed": 9285777243086,
       "relations": []
     },
     {
       "person": "亚里士多德",
-      "birth_year": 384,
-      "death_year": 322,
+      "birth_year": -384,
+      "death_year": -322,
       "dynasty": "古希腊（古典时代）",
       "quote": "“吾爱吾师，吾更爱真理。”",
       "birthplace": "马其顿王国斯塔吉拉",
@@ -222,8 +222,8 @@
       "dynasty": "存疑（无法确定具体朝代）",
       "quote": "",
       "birthplace": "存疑",
-      "birthplace_raw": "存疑（出生年份与出生地均不详）",
-      "birthplace_modern": "出生年份与出生地均不详",
+      "birthplace_raw": "存疑",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -269,8 +269,8 @@
       "birthplace": "比萨",
       "birthplace_raw": "比萨（今意大利托斯卡纳比萨）",
       "birthplace_modern": "意大利托斯卡纳比萨",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 43.7228,
+      "birth_lng": 10.4017,
       "file": "",
       "seed": 264181573682116,
       "relations": []
@@ -284,8 +284,8 @@
       "birthplace": "佛罗伦萨",
       "birthplace_raw": "佛罗伦萨（今意大利佛罗伦萨）",
       "birthplace_modern": "意大利佛罗伦萨",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 43.7696,
+      "birth_lng": 11.2558,
       "file": "",
       "seed": 216069422671265,
       "relations": []
@@ -311,9 +311,9 @@
       "death_year": 2017,
       "dynasty": "当代（1928-2017）",
       "quote": "“蓝墨水的上游是汨罗江”",
-      "birthplace": "一说生于南京",
-      "birthplace_raw": "一说生于南京（今江苏省南京市）。",
-      "birthplace_modern": "江苏省南京市",
+      "birthplace": "说法不一",
+      "birthplace_raw": "说法不一",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -359,8 +359,8 @@
       "birthplace": "福建闽侯",
       "birthplace_raw": "福建闽侯（今福建省福州市闽侯县）",
       "birthplace_modern": "福建省福州市闽侯县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 26.1507,
+      "birth_lng": 119.1311,
       "file": "",
       "seed": 175804590970519,
       "relations": []
@@ -372,10 +372,10 @@
       "dynasty": "当代",
       "quote": "",
       "birthplace": "山东省青岛市",
-      "birthplace_raw": "山东省青岛市（存疑）",
-      "birthplace_modern": "存疑",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace_raw": "山东省青岛市",
+      "birthplace_modern": "",
+      "birth_lat": 36.066938,
+      "birth_lng": 120.382665,
       "file": "",
       "seed": 152830737160700,
       "relations": []
@@ -386,11 +386,11 @@
       "death_year": 1966,
       "dynasty": "中国近现代",
       "quote": "“先为人，次为艺术家，再为音乐家，终为钢琴家”",
-      "birthplace": "江苏南汇周浦镇",
-      "birthplace_raw": "江苏南汇周浦镇（今上海市浦东新区）（出生日期存疑）",
-      "birthplace_modern": "上海市浦东新区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "",
+      "birthplace_raw": "（一说3月）",
+      "birthplace_modern": "一说3月",
+      "birth_lat": 24.616296,
+      "birth_lng": 110.522802,
       "file": "",
       "seed": 234649945837429,
       "relations": []
@@ -401,9 +401,9 @@
       "death_year": 831,
       "dynasty": "唐代（中唐）",
       "quote": "",
-      "birthplace": "另有说法为京兆长安或河南府）",
-      "birthplace_raw": "另有说法为京兆长安或河南府）",
-      "birthplace_modern": "",
+      "birthplace": "约唐代宗大历十四年",
+      "birthplace_raw": "约唐代宗大历十四年（779年）",
+      "birthplace_modern": "779年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -431,8 +431,8 @@
       "death_year": null,
       "dynasty": "清末（约19世纪末，鲁迅小说《社戏》背景）",
       "quote": "",
-      "birthplace": "未明确",
-      "birthplace_raw": "未明确",
+      "birthplace": "文学虚构",
+      "birthplace_raw": "文学虚构",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -446,8 +446,8 @@
       "death_year": 1300,
       "dynasty": "元代",
       "quote": "“我是个蒸不烂、煮不熟、捶不匾、炒不爆、响珰珰一粒铜豌豆”",
-      "birthplace": "另有解州即今山西运城一说）",
-      "birthplace_raw": "另有解州即今山西运城一说）",
+      "birthplace": "-约1240年",
+      "birthplace_raw": "-约1240年",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -476,9 +476,9 @@
       "death_year": 1912,
       "dynasty": "清末民初",
       "quote": "",
-      "birthplace": "广东省恩平县牛江镇杏圃村",
-      "birthplace_raw": "广东省恩平县牛江镇杏圃村",
-      "birthplace_modern": "",
+      "birthplace": "",
+      "birthplace_raw": "（清光绪九年农历腊月十五）",
+      "birthplace_modern": "清光绪九年农历腊月十五",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -494,8 +494,8 @@
       "birthplace": "涿州",
       "birthplace_raw": "涿州（今河北省涿州市）",
       "birthplace_modern": "河北省涿州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.4853,
+      "birth_lng": 115.999,
       "file": "",
       "seed": 177295123975534,
       "relations": []
@@ -509,21 +509,21 @@
       "birthplace": "古称福州",
       "birthplace_raw": "古称福州（今福建省福州市）",
       "birthplace_modern": "福建省福州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 26.0745,
+      "birth_lng": 119.2965,
       "file": "",
       "seed": 191342345626361,
       "relations": []
     },
     {
       "person": "凯撒",
-      "birth_year": 100,
-      "death_year": 44,
+      "birth_year": -100,
+      "death_year": -44,
       "dynasty": "罗马共和国末期",
       "quote": "“高卢全境分为三部分”",
-      "birthplace": "罗马",
-      "birthplace_raw": "罗马（今意大利罗马）（具体日期存疑）",
-      "birthplace_modern": "意大利罗马",
+      "birthplace": "或13日",
+      "birthplace_raw": "或13日",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -539,21 +539,21 @@
       "birthplace": "亚斯纳亚-博利尔纳",
       "birthplace_raw": "亚斯纳亚-博利尔纳（今俄罗斯图拉州）",
       "birthplace_modern": "俄罗斯图拉州",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 54.0753,
+      "birth_lng": 36.5619,
       "file": "",
       "seed": 41071778622333,
       "relations": []
     },
     {
       "person": "列子",
-      "birth_year": 450,
-      "death_year": 375,
+      "birth_year": -450,
+      "death_year": -375,
       "dynasty": "战国时期（约公元前450年—约公元前375年）",
       "quote": "“子列子居郑圃，四十年人无识者。”",
-      "birthplace": "郑国圃田",
-      "birthplace_raw": "郑国圃田（今河南省郑州市）",
-      "birthplace_modern": "河南省郑州市",
+      "birthplace": "约公元前450年",
+      "birthplace_raw": "约公元前450年",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -568,9 +568,9 @@
       "death_year": 1924,
       "dynasty": "19世纪末至20世纪初（帝国主义与无产阶级革命时代）",
       "quote": "“工人阶级解放斗争协会”",
-      "birthplace": "辛比尔斯克",
-      "birthplace_raw": "辛比尔斯克（今俄罗斯乌里扬诺夫斯克州乌里扬诺夫斯克）",
-      "birthplace_modern": "俄罗斯乌里扬诺夫斯克州乌里扬诺夫斯克",
+      "birthplace": "（公历",
+      "birthplace_raw": "（公历",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -601,8 +601,8 @@
       "birthplace": "湖南省宁乡县花明楼炭子冲",
       "birthplace_raw": "湖南省宁乡县花明楼炭子冲",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.034178,
+      "birth_lng": 112.642973,
       "file": "",
       "seed": 178080495252360,
       "relations": []
@@ -629,10 +629,10 @@
       "dynasty": "魏晋时期（约公元3世纪）",
       "quote": "“徽幼习九章，长再详览。观阴阳之割裂，总算术之根源，探赜之暇，遂悟其意。”",
       "birthplace": "古称青州淄乡",
-      "birthplace_raw": "古称青州淄乡（今山东省滨州市邹平市）一带（存疑）",
+      "birthplace_raw": "古称青州淄乡（今山东省滨州市邹平市）一带",
       "birthplace_modern": "山东省滨州市邹平市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 36.8626,
+      "birth_lng": 117.7425,
       "file": "",
       "seed": 155273689897492,
       "relations": []
@@ -643,8 +643,8 @@
       "death_year": null,
       "dynasty": "当代",
       "quote": "“**技术诗意**”",
-      "birthplace": "成长于山西阳泉）",
-      "birthplace_raw": "成长于山西阳泉）",
+      "birthplace": "北京（祖籍河南信阳",
+      "birthplace_raw": "北京（祖籍河南信阳",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -676,8 +676,8 @@
       "birthplace": "嘉兴",
       "birthplace_raw": "嘉兴（今浙江省嘉兴市）",
       "birthplace_modern": "浙江省嘉兴市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.7539,
+      "birth_lng": 120.7585,
       "file": "",
       "seed": 97682519616480,
       "relations": []
@@ -699,13 +699,13 @@
     },
     {
       "person": "刘邦",
-      "birth_year": 256,
-      "death_year": 195,
+      "birth_year": -256,
+      "death_year": -195,
       "dynasty": "秦末汉初",
       "quote": "“赤帝子斩白帝子”",
-      "birthplace": "沛县丰邑中阳里",
-      "birthplace_raw": "沛县丰邑中阳里（今江苏省徐州市丰县）",
-      "birthplace_modern": "江苏省徐州市丰县",
+      "birthplace": "或 公元前247年",
+      "birthplace_raw": "或 公元前247年（说法不一）",
+      "birthplace_modern": "说法不一",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -751,8 +751,8 @@
       "birthplace": "阿拉卡塔卡",
       "birthplace_raw": "阿拉卡塔卡（今哥伦比亚马格达莱纳省阿拉卡塔卡市）",
       "birthplace_modern": "哥伦比亚马格达莱纳省阿拉卡塔卡市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 10.9917,
+      "birth_lng": -74.1847,
       "file": "",
       "seed": 117954738393911,
       "relations": []
@@ -763,8 +763,8 @@
       "death_year": 1945,
       "dynasty": "19世纪末至20世纪上半叶（维多利亚时代晚期、爱德华时代、一战及战间期）",
       "quote": "",
-      "birthplace": "出生于英国曼彻斯特",
-      "birthplace_raw": "出生于英国曼彻斯特",
+      "birthplace": "英国曼彻斯特",
+      "birthplace_raw": "英国曼彻斯特",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -781,8 +781,8 @@
       "birthplace": "山西省交城县",
       "birthplace_raw": "山西省交城县",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.55169,
+      "birth_lng": 112.155857,
       "file": "",
       "seed": 22490584097720,
       "relations": []
@@ -796,8 +796,8 @@
       "birthplace": "威斯特摩兰县",
       "birthplace_raw": "威斯特摩兰县（今美国弗吉尼亚州威斯特摩兰县）",
       "birthplace_modern": "美国弗吉尼亚州威斯特摩兰县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 38.1167,
+      "birth_lng": -76.8,
       "file": "",
       "seed": 231357837934287,
       "relations": []
@@ -811,8 +811,8 @@
       "birthplace": "江苏常州府金坛县",
       "birthplace_raw": "江苏常州府金坛县（今江苏省常州市金坛区）",
       "birthplace_modern": "江苏省常州市金坛区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.7232,
+      "birth_lng": 119.5978,
       "file": "",
       "seed": 244107599747020,
       "relations": []
@@ -826,8 +826,8 @@
       "birthplace": "吉林省辽源市",
       "birthplace_raw": "吉林省辽源市（时为西安县）",
       "birthplace_modern": "时为西安县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 42.888,
+      "birth_lng": 125.1437,
       "file": "",
       "seed": 138769272477076,
       "relations": []
@@ -856,8 +856,8 @@
       "birthplace": "布拉格",
       "birthplace_raw": "布拉格（今捷克布拉格）",
       "birthplace_modern": "捷克布拉格",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 50.0755,
+      "birth_lng": 14.4378,
       "file": "",
       "seed": 244331186956420,
       "relations": []
@@ -865,12 +865,12 @@
     {
       "person": "卫文公",
       "birth_year": null,
-      "death_year": 635,
+      "death_year": -635,
       "dynasty": "春秋时期",
       "quote": "",
-      "birthplace": "生于卫国",
-      "birthplace_raw": "生于卫国（具体地点与年份不详）",
-      "birthplace_modern": "具体地点与年份不详",
+      "birthplace": "卫国",
+      "birthplace_raw": "卫国",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -883,9 +883,9 @@
       "death_year": null,
       "dynasty": "清末民初（文学作品设定）",
       "quote": "",
-      "birthplace": "应出生于晚清时期；出生地为“平桥村”",
-      "birthplace_raw": "应出生于晚清时期；出生地为“平桥村”（文学地名）",
-      "birthplace_modern": "文学地名",
+      "birthplace": "无法确定",
+      "birthplace_raw": "无法确定",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -943,9 +943,9 @@
       "death_year": 1988,
       "dynasty": "近现代",
       "quote": "“**为人生而艺术**”",
-      "birthplace": "苏州",
-      "birthplace_raw": "苏州（今江苏省苏州市）",
-      "birthplace_modern": "江苏省苏州市",
+      "birthplace": "",
+      "birthplace_raw": "（说法不一）",
+      "birthplace_modern": "说法不一",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -961,8 +961,8 @@
       "birthplace": "浙江永嘉",
       "birthplace_raw": "浙江永嘉（今浙江省温州市）",
       "birthplace_modern": "浙江省温州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.0006,
+      "birth_lng": 120.6721,
       "file": "",
       "seed": 22787361474905,
       "relations": []
@@ -976,8 +976,8 @@
       "birthplace": "兖州陈留郡",
       "birthplace_raw": "兖州陈留郡（今河南省开封市祥符区一带）",
       "birthplace_modern": "河南省开封市祥符区一带",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.757546,
+      "birth_lng": 114.441406,
       "file": "",
       "seed": 145019973114035,
       "relations": []
@@ -991,23 +991,23 @@
       "birthplace": "陕州夏县",
       "birthplace_raw": "陕州夏县（今山西省运城市夏县）",
       "birthplace_modern": "山西省运城市夏县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.1385,
+      "birth_lng": 111.2204,
       "file": "",
       "seed": 43863601648801,
       "relations": []
     },
     {
       "person": "司马迁",
-      "birth_year": 145,
-      "death_year": 87,
+      "birth_year": -145,
+      "death_year": -87,
       "dynasty": "西汉",
       "quote": "“史家之绝唱，无韵之离骚”",
       "birthplace": "夏阳",
       "birthplace_raw": "夏阳（今陕西省韩城市）",
       "birthplace_modern": "陕西省韩城市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.4775,
+      "birth_lng": 110.4425,
       "file": "",
       "seed": 11108813110075,
       "relations": []
@@ -1048,9 +1048,9 @@
       "death_year": 1652,
       "dynasty": "明末清初",
       "quote": "",
-      "birthplace": "具体年份与地点不详）",
-      "birthplace_raw": "具体年份与地点不详）",
-      "birthplace_modern": "",
+      "birthplace": "吴县",
+      "birthplace_raw": "吴县（今江苏苏州）？",
+      "birthplace_modern": "江苏苏州",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1066,8 +1066,8 @@
       "birthplace": "古称全椒县",
       "birthplace_raw": "古称全椒县（今安徽省滁州市全椒县）",
       "birthplace_modern": "安徽省滁州市全椒县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.0936,
+      "birth_lng": 118.2725,
       "file": "",
       "seed": 35594181464324,
       "relations": []
@@ -1093,9 +1093,9 @@
       "death_year": 758,
       "dynasty": "唐代",
       "quote": "",
-      "birthplace": "或为阳翟",
-      "birthplace_raw": "或为阳翟（今河南禹州）或东京阳翟（今河南禹州）",
-      "birthplace_modern": "河南禹州",
+      "birthplace": "前后",
+      "birthplace_raw": "前后",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1113,8 +1113,8 @@
       "birthplace": "淮安府山阳县",
       "birthplace_raw": "淮安府山阳县（今江苏省淮安市）",
       "birthplace_modern": "江苏省淮安市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 33.5976,
+      "birth_lng": 119.0213,
       "file": "",
       "seed": 1695582359001,
       "relations": []
@@ -1125,11 +1125,11 @@
       "death_year": 1073,
       "dynasty": "北宋",
       "quote": "“理学开山鼻祖”",
-      "birthplace": "此处取通行说法）",
-      "birthplace_raw": "此处取通行说法）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "道州营道楼田堡",
+      "birthplace_raw": "道州营道楼田堡（今湖南省道县）（出生年份有1017年与1020年等说法",
+      "birthplace_modern": "湖南省道县",
+      "birth_lat": 25.528,
+      "birth_lng": 111.598,
       "file": "",
       "seed": 8179845022882,
       "relations": []
@@ -1143,8 +1143,8 @@
       "birthplace": "上海",
       "birthplace_raw": "上海",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.230525,
+      "birth_lng": 121.473667,
       "file": "",
       "seed": 17029243540875,
       "relations": []
@@ -1156,7 +1156,7 @@
       "dynasty": "15世纪末至16世纪初（地理大发现时代）",
       "quote": "“他们（土著）游到我们的小船上，给我们带来了鹦鹉、棉线团、标枪和许多其他东西...他们愿意用一切来交换。”",
       "birthplace": "古称热那亚共和国",
-      "birthplace_raw": "古称热那亚共和国（今意大利利古里亚大区热那亚市）（具体日期存疑）",
+      "birthplace_raw": "古称热那亚共和国（今意大利利古里亚大区热那亚市）",
       "birthplace_modern": "意大利利古里亚大区热那亚市",
       "birth_lat": null,
       "birth_lng": null,
@@ -1171,10 +1171,10 @@
       "dynasty": "文艺复兴时期（15-16世纪）",
       "quote": "“在所有天体中，太阳是宇宙的中心……”",
       "birthplace": "托伦",
-      "birthplace_raw": "托伦（今波兰托伦）（日期存疑）",
+      "birthplace_raw": "托伦（今波兰托伦）",
       "birthplace_modern": "波兰托伦",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 53.0137,
+      "birth_lng": 18.5984,
       "file": "",
       "seed": 156459697046221,
       "relations": []
@@ -1200,9 +1200,9 @@
       "death_year": 1464,
       "dynasty": "元末明初（约14世纪末至15世纪中叶）",
       "quote": "",
-      "birthplace": "后藏昂仁地区",
-      "birthplace_raw": "后藏昂仁地区（今西藏自治区日喀则市昂仁县）",
-      "birthplace_modern": "西藏自治区日喀则市昂仁县",
+      "birthplace": "另有1361年、1383年等说法）",
+      "birthplace_raw": "另有1361年、1383年等说法）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1215,9 +1215,9 @@
       "death_year": 888,
       "dynasty": "唐朝（晚唐）",
       "quote": "",
-      "birthplace": "长安大明宫",
-      "birthplace_raw": "长安大明宫",
-      "birthplace_modern": "",
+      "birthplace": "咸通三年五月八日",
+      "birthplace_raw": "咸通三年五月八日（公元862年6月8日）",
+      "birthplace_modern": "公元862年6月8日",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1230,9 +1230,9 @@
       "death_year": 649,
       "dynasty": "唐朝",
       "quote": "李世民是唐高祖李渊次子，生于隋末乱世",
-      "birthplace": "武功别馆",
-      "birthplace_raw": "武功别馆（今陕西省咸阳市武功县）",
-      "birthplace_modern": "陕西省咸阳市武功县",
+      "birthplace": "",
+      "birthplace_raw": "（隋开皇十八年）",
+      "birthplace_modern": "隋开皇十八年",
       "birth_lat": 34.291111,
       "birth_lng": 108.1775,
       "file": "唐太宗.html",
@@ -1278,8 +1278,8 @@
       "birthplace": "长安",
       "birthplace_raw": "长安（今陕西西安）",
       "birthplace_modern": "陕西西安",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 22.28866,
+      "birth_lng": 112.602321,
       "file": "",
       "seed": 97832755292771,
       "relations": []
@@ -1308,8 +1308,8 @@
       "birthplace": "伦敦",
       "birthplace_raw": "伦敦（今英国伦敦）",
       "birthplace_modern": "英国伦敦",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 51.5074,
+      "birth_lng": -0.1278,
       "file": "",
       "seed": 232797123126598,
       "relations": []
@@ -1320,8 +1320,8 @@
       "death_year": 1913,
       "dynasty": "美国南北战争前后（19世纪）",
       "quote": "",
-      "birthplace": "确切日期不详）",
-      "birthplace_raw": "确切日期不详）",
+      "birthplace": "或1822年",
+      "birthplace_raw": "或1822年",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -1331,13 +1331,13 @@
     },
     {
       "person": "墨子",
-      "birth_year": 468,
-      "death_year": 376,
+      "birth_year": -468,
+      "death_year": -376,
       "dynasty": "战国初期（约公元前468年-公元前376年）",
       "quote": "“公输盘为楚造云梯之械，成，将以攻宋。子墨子闻之，起于鲁，行十日十夜而至于郢。”",
-      "birthplace": "一说鲁阳",
-      "birthplace_raw": "一说鲁阳（今河南鲁山）存疑",
-      "birthplace_modern": "河南鲁山",
+      "birthplace": "说法不一",
+      "birthplace_raw": "说法不一",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1355,8 +1355,8 @@
       "birthplace": "松江府华亭县",
       "birthplace_raw": "松江府华亭县（今上海市松江区）",
       "birthplace_modern": "上海市松江区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.0327,
+      "birth_lng": 121.2285,
       "file": "",
       "seed": 233273038494300,
       "relations": []
@@ -1382,9 +1382,9 @@
       "death_year": 1995,
       "dynasty": "现当代",
       "quote": "“黑夜，静寂得像死一般的黑夜！但是，黎明的到来，毕竟是无法抗拒的。”",
-      "birthplace": "浙江杭州",
-      "birthplace_raw": "浙江杭州（今浙江省杭州市）",
-      "birthplace_modern": "浙江省杭州市",
+      "birthplace": "一说31日）",
+      "birthplace_raw": "一说31日）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1412,8 +1412,8 @@
       "death_year": 719,
       "dynasty": "唐朝（武则天至唐玄宗时期）",
       "quote": "",
-      "birthplace": "一说在朝阳附近）",
-      "birthplace_raw": "一说在朝阳附近）",
+      "birthplace": "；营州（今辽宁朝阳",
+      "birthplace_raw": "；营州（今辽宁朝阳",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -1427,8 +1427,8 @@
       "death_year": null,
       "dynasty": "神话传说时期（上古）",
       "quote": "",
-      "birthplace": "具体年份与地点存疑",
-      "birthplace_raw": "具体年份与地点存疑",
+      "birthplace": "神话传说",
+      "birthplace_raw": "神话传说",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -1450,8 +1450,8 @@
       "birthplace": "塔甘罗格",
       "birthplace_raw": "塔甘罗格（今俄罗斯罗斯托夫州塔甘罗格市）",
       "birthplace_modern": "俄罗斯罗斯托夫州塔甘罗格市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 47.21,
+      "birth_lng": 38.92,
       "file": "",
       "seed": 123397574442336,
       "relations": []
@@ -1507,9 +1507,9 @@
       "death_year": null,
       "dynasty": "上古传说时代",
       "quote": "",
-      "birthplace": "具体年份与地点不详",
-      "birthplace_raw": "具体年份与地点不详（一说生于华胥之渚）",
-      "birthplace_modern": "一说生于华胥之渚",
+      "birthplace": "传说中",
+      "birthplace_raw": "传说中",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1537,9 +1537,9 @@
       "death_year": 1815,
       "dynasty": "清代（雍正、乾隆、嘉庆年间）",
       "quote": "“义理、考据、辞章”",
-      "birthplace": "桐城",
-      "birthplace_raw": "桐城（今安徽安庆桐城市）",
-      "birthplace_modern": "安徽安庆桐城市",
+      "birthplace": "雍正九年",
+      "birthplace_raw": "雍正九年（公元1731年）",
+      "birthplace_modern": "公元1731年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1552,11 +1552,11 @@
       "death_year": 1221,
       "dynasty": "南宋",
       "quote": "“空城晓角，吹入垂杨陌。马上单衣寒恻恻。”",
-      "birthplace": "另有生于汉川等说）",
-      "birthplace_raw": "另有生于汉川等说）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "古称饶州鄱阳",
+      "birthplace_raw": "古称饶州鄱阳（今江西省上饶市鄱阳县）（说法不一",
+      "birthplace_modern": "江西省上饶市鄱阳县",
+      "birth_lat": 29.0057,
+      "birth_lng": 116.7033,
       "file": "",
       "seed": 3103424899596,
       "relations": []
@@ -1567,8 +1567,8 @@
       "death_year": 1912,
       "dynasty": "19世纪末至20世纪初（美国“镀金时代”与“进步时代”）",
       "quote": "",
-      "birthplace": "Indiana）",
-      "birthplace_raw": "Indiana）",
+      "birthplace": "美国印第安纳州米尔维尔（Millville",
+      "birthplace_raw": "美国印第安纳州米尔维尔（Millville",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -1600,8 +1600,8 @@
       "birthplace": "普鲁士王国柏林",
       "birthplace_raw": "普鲁士王国柏林",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.057921,
+      "birth_lng": 103.171528,
       "file": "",
       "seed": 128830268151484,
       "relations": []
@@ -1612,8 +1612,8 @@
       "death_year": null,
       "dynasty": "上古神话时代",
       "quote": "",
-      "birthplace": "无确切纪年与地点",
-      "birthplace_raw": "无确切纪年与地点",
+      "birthplace": "神话传说",
+      "birthplace_raw": "神话传说",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -1638,13 +1638,13 @@
     },
     {
       "person": "孔子",
-      "birth_year": 551,
-      "death_year": 479,
+      "birth_year": -551,
+      "death_year": -479,
       "dynasty": "春秋末期",
       "quote": "“吾十有五而志于学”",
-      "birthplace": "鲁国陬邑",
-      "birthplace_raw": "鲁国陬邑（今山东省曲阜市）",
-      "birthplace_modern": "山东省曲阜市",
+      "birthplace": "另有公元前552年之说）",
+      "birthplace_raw": "另有公元前552年之说）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -1662,8 +1662,8 @@
       "birthplace": "山东省聊城市",
       "birthplace_raw": "山东省聊城市",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 36.4567,
+      "birth_lng": 115.9853,
       "file": "",
       "seed": 37869911099769,
       "relations": []
@@ -1692,8 +1692,8 @@
       "birthplace": "广东省广州府香山县",
       "birthplace_raw": "广东省广州府香山县（今广东省中山市）",
       "birthplace_modern": "广东省中山市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 22.429,
+      "birth_lng": 113.527,
       "file": "",
       "seed": 274343146721052,
       "relations": []
@@ -1722,23 +1722,23 @@
       "birthplace": "安平县",
       "birthplace_raw": "安平县（今河北省衡水市安平县）",
       "birthplace_modern": "河北省衡水市安平县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 38.2347,
+      "birth_lng": 115.5186,
       "file": "",
       "seed": 103691972776022,
       "relations": []
     },
     {
       "person": "孟子",
-      "birth_year": 372,
-      "death_year": 289,
+      "birth_year": -372,
+      "death_year": -289,
       "dynasty": "战国时期",
       "quote": "“王何必曰利？亦有仁义而已矣。”",
-      "birthplace": "另有前385年等说法）",
-      "birthplace_raw": "另有前385年等说法）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "邹国",
+      "birthplace_raw": "邹国（今山东省济宁市邹城市）",
+      "birthplace_modern": "山东省济宁市邹城市",
+      "birth_lat": 35.4053,
+      "birth_lng": 116.9737,
       "file": "",
       "seed": 43089782119628,
       "relations": [
@@ -1767,10 +1767,10 @@
       "dynasty": "19世纪",
       "quote": "“世界儿童文学的太阳”",
       "birthplace": "欧登塞",
-      "birthplace_raw": "欧登塞（今丹麦欧登塞）（出生日期存疑）",
+      "birthplace_raw": "欧登塞（今丹麦欧登塞）",
       "birthplace_modern": "丹麦欧登塞",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 55.3959,
+      "birth_lng": 10.3883,
       "file": "",
       "seed": 122808807802446,
       "relations": []
@@ -1799,8 +1799,8 @@
       "birthplace": "江西奉新",
       "birthplace_raw": "江西奉新（今江西省宜春市奉新县）",
       "birthplace_modern": "江西省宜春市奉新县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.6862,
+      "birth_lng": 115.1889,
       "file": "",
       "seed": 66024348817755,
       "relations": []
@@ -1814,8 +1814,8 @@
       "birthplace": "古称金华潜溪",
       "birthplace_raw": "古称金华潜溪（今浙江省金华市）",
       "birthplace_modern": "浙江省金华市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.1,
+      "birth_lng": 119.65,
       "file": "",
       "seed": 249899627933704,
       "relations": []
@@ -1829,8 +1829,8 @@
       "birthplace": "北京",
       "birthplace_raw": "北京",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.904179,
+      "birth_lng": 116.407387,
       "file": "",
       "seed": 117142575860810,
       "relations": []
@@ -2002,30 +2002,30 @@
     },
     {
       "person": "屈原",
-      "birth_year": 340,
-      "death_year": 278,
+      "birth_year": -340,
+      "death_year": -278,
       "dynasty": "战国时期（楚国）",
       "quote": "“惜往日之曾信兮，受命诏以昭时。”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "丹阳",
+      "birthplace_raw": "丹阳（今湖北省宜昌市秭归县）",
+      "birthplace_modern": "湖北省宜昌市秭归县",
+      "birth_lat": 30.826,
+      "birth_lng": 110.981,
       "file": "",
       "seed": 216537935653348,
       "relations": []
     },
     {
       "person": "屋大维",
-      "birth_year": 63,
+      "birth_year": -63,
       "death_year": 14,
       "dynasty": "罗马共和国末期至罗马帝国初期",
       "quote": "“一座砖城的罗马，我接手；一座大理石城的罗马，我留下”",
       "birthplace": "罗马",
-      "birthplace_raw": "罗马（今意大利罗马市）（具体出生地存疑）",
+      "birthplace_raw": "罗马（今意大利罗马市）",
       "birthplace_modern": "意大利罗马市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 41.9028,
+      "birth_lng": 12.4964,
       "file": "",
       "seed": 25853446158540,
       "relations": []
@@ -2039,8 +2039,8 @@
       "birthplace": "浙江宁波",
       "birthplace_raw": "浙江宁波（今浙江省宁波市）",
       "birthplace_modern": "浙江省宁波市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.8683,
+      "birth_lng": 121.544,
       "file": "",
       "seed": 105752419058778,
       "relations": []
@@ -2066,11 +2066,11 @@
       "death_year": 1142,
       "dynasty": "北宋末年至南宋初年",
       "quote": "“撼山易，撼岳家军难”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "河北西路相州汤阴县",
+      "birthplace_raw": "河北西路相州汤阴县（今河南省安阳市汤阴县）",
+      "birthplace_modern": "河南省安阳市汤阴县",
+      "birth_lat": 35.92,
+      "birth_lng": 114.35,
       "file": "",
       "seed": 68232400389779,
       "relations": []
@@ -2081,8 +2081,8 @@
       "death_year": 908,
       "dynasty": "晚唐时期（新罗人）",
       "quote": "",
-      "birthplace": "公元857年；新罗",
-      "birthplace_raw": "公元857年；新罗（今韩国庆尚北道庆州市）",
+      "birthplace": "；新罗",
+      "birthplace_raw": "；新罗（今韩国庆尚北道庆州市）",
       "birthplace_modern": "韩国庆尚北道庆州市",
       "birth_lat": null,
       "birth_lng": null,
@@ -2096,9 +2096,9 @@
       "death_year": 706,
       "dynasty": "唐朝",
       "quote": "",
-      "birthplace": "齐州全节",
-      "birthplace_raw": "齐州全节（今山东济南章丘）人",
-      "birthplace_modern": "山东济南章丘",
+      "birthplace": "约唐高宗永徽四年",
+      "birthplace_raw": "约唐高宗永徽四年（653年）",
+      "birthplace_modern": "653年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -2114,8 +2114,8 @@
       "birthplace": "大阪府大阪市",
       "birthplace_raw": "大阪府大阪市（今日本大阪府大阪市）",
       "birthplace_modern": "日本大阪府大阪市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.6937,
+      "birth_lng": 135.5023,
       "file": "",
       "seed": 70978520609619,
       "relations": []
@@ -2157,10 +2157,10 @@
       "dynasty": "古罗马时期（埃及行省）",
       "quote": "希帕蒂娅生活在罗马帝国晚期，当时埃及的亚历山大城仍是地中海世界的学术中心，但基督教与异教传统之间的冲突日益激烈",
       "birthplace": "亚历山大里亚",
-      "birthplace_raw": "亚历山大里亚（今埃及亚历山大省亚历山大市）（出生年份存疑）",
+      "birthplace_raw": "亚历山大里亚（今埃及亚历山大省亚历山大市）",
       "birthplace_modern": "埃及亚历山大省亚历山大市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.2001,
+      "birth_lng": 29.9187,
       "file": "",
       "seed": 142652401454493,
       "relations": []
@@ -2174,8 +2174,8 @@
       "birthplace": "布劳瑙",
       "birthplace_raw": "布劳瑙（今奥地利上奥地利州布劳瑙）",
       "birthplace_modern": "奥地利上奥地利州布劳瑙",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 48.2556,
+      "birth_lng": 13.0411,
       "file": "",
       "seed": 228320590019120,
       "relations": []
@@ -2189,20 +2189,20 @@
       "birthplace": "克莱蒙费朗",
       "birthplace_raw": "克莱蒙费朗（今法国克莱蒙费朗市）",
       "birthplace_modern": "法国克莱蒙费朗市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 45.7772,
+      "birth_lng": 3.087,
       "file": "",
       "seed": 226573143550939,
       "relations": []
     },
     {
       "person": "庄子",
-      "birth_year": 369,
-      "death_year": 286,
+      "birth_year": -369,
+      "death_year": -286,
       "dynasty": "战国中期",
       "quote": "“宁生而曳尾涂中”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
+      "birthplace": "古称蒙邑",
+      "birthplace_raw": "古称蒙邑",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -2221,8 +2221,8 @@
       "birthplace": "南海县",
       "birthplace_raw": "南海县（今广东省佛山市南海区）",
       "birthplace_modern": "广东省佛山市南海区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 23.0315,
+      "birth_lng": 113.1425,
       "file": "",
       "seed": 99951154700053,
       "relations": []
@@ -2233,9 +2233,9 @@
       "death_year": 1722,
       "dynasty": "清朝",
       "quote": "“金山发脉，暖溜分萦…一游一豫，罔非稼穑之休戚。”",
-      "birthplace": "北京故宫景仁宫",
-      "birthplace_raw": "北京故宫景仁宫（存疑）",
-      "birthplace_modern": "存疑",
+      "birthplace": "顺治十一年三月十八日",
+      "birthplace_raw": "顺治十一年三月十八日（公元1654年5月4日）",
+      "birthplace_modern": "公元1654年5月4日",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -2281,8 +2281,8 @@
       "birthplace": "河北省香河县",
       "birthplace_raw": "河北省香河县（今属天津市蓟州区）一个农民家庭",
       "birthplace_modern": "属天津市蓟州区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 40.046544,
+      "birth_lng": 117.408432,
       "file": "",
       "seed": 94814703833232,
       "relations": []
@@ -2293,9 +2293,9 @@
       "death_year": 1928,
       "dynasty": "清末民国",
       "quote": "",
-      "birthplace": "奉天省海城县",
-      "birthplace_raw": "奉天省海城县（今辽宁省鞍山市）",
-      "birthplace_modern": "辽宁省鞍山市",
+      "birthplace": "",
+      "birthplace_raw": "（清光绪元年）",
+      "birthplace_modern": "清光绪元年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -2311,8 +2311,8 @@
       "birthplace": "河北省深县",
       "birthplace_raw": "河北省深县（今深州市）",
       "birthplace_modern": "深州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 38.001535,
+      "birth_lng": 115.559576,
       "file": "",
       "seed": 219610025858253,
       "relations": []
@@ -2323,11 +2323,11 @@
       "death_year": 1170,
       "dynasty": "南宋",
       "quote": "“孤光自照，肝胆皆冰雪”",
-      "birthplace": "生于明州）",
-      "birthplace_raw": "生于明州）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "古称明州鄞县",
+      "birthplace_raw": "古称明州鄞县（今浙江省宁波市）（一说为历阳乌江人",
+      "birthplace_modern": "浙江省宁波市",
+      "birth_lat": 29.8683,
+      "birth_lng": 121.544,
       "file": "",
       "seed": 125264145928564,
       "relations": []
@@ -2341,8 +2341,8 @@
       "birthplace": "奉天省海城县",
       "birthplace_raw": "奉天省海城县（今辽宁省鞍山市台安县）",
       "birthplace_modern": "辽宁省鞍山市台安县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 41.3869,
+      "birth_lng": 122.4297,
       "file": "",
       "seed": 116584037553564,
       "relations": []
@@ -2354,8 +2354,8 @@
       "dynasty": "不详（存疑）",
       "quote": "",
       "birthplace": "不详",
-      "birthplace_raw": "不详（存疑）",
-      "birthplace_modern": "存疑",
+      "birthplace_raw": "不详",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -2371,8 +2371,8 @@
       "birthplace": "古称山阴",
       "birthplace_raw": "古称山阴（今浙江省绍兴市）",
       "birthplace_modern": "浙江省绍兴市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.0024,
+      "birth_lng": 120.585,
       "file": "",
       "seed": 39322337656686,
       "relations": []
@@ -2446,8 +2446,8 @@
       "birthplace": "黑龙江牡丹江",
       "birthplace_raw": "黑龙江牡丹江（今黑龙江省牡丹江市）",
       "birthplace_modern": "黑龙江省牡丹江市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 44.5833,
+      "birth_lng": 129.5856,
       "file": "",
       "seed": 106590160132521,
       "relations": []
@@ -2461,8 +2461,8 @@
       "birthplace": "四川省顺庆府南充县",
       "birthplace_raw": "四川省顺庆府南充县（今四川省南充市西充县莲池镇）",
       "birthplace_modern": "四川省南充市西充县莲池镇",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.926321,
+      "birth_lng": 105.862584,
       "file": "",
       "seed": 201440872434768,
       "relations": []
@@ -2476,8 +2476,8 @@
       "birthplace": "四川省达县罗江口镇张家沟",
       "birthplace_raw": "四川省达县罗江口镇张家沟",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.962161,
+      "birth_lng": 107.510688,
       "file": "",
       "seed": 50911826985932,
       "relations": []
@@ -2503,9 +2503,9 @@
       "death_year": 1588,
       "dynasty": "明朝中后期（嘉靖、隆庆、万历年间）",
       "quote": "",
-      "birthplace": "浙江宁波府鄞县",
-      "birthplace_raw": "浙江宁波府鄞县（今浙江省宁波市鄞州区）",
-      "birthplace_modern": "浙江省宁波市鄞州区",
+      "birthplace": "约明世宗嘉靖十年",
+      "birthplace_raw": "约明世宗嘉靖十年（1531年）",
+      "birthplace_modern": "1531年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -2521,8 +2521,8 @@
       "birthplace": "河北省廊坊市固安县",
       "birthplace_raw": "河北省廊坊市固安县（今河北省廊坊市固安县）",
       "birthplace_modern": "河北省廊坊市固安县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.4383,
+      "birth_lng": 116.2987,
       "file": "",
       "seed": 52798588084610,
       "relations": []
@@ -2533,8 +2533,8 @@
       "death_year": null,
       "dynasty": "唐代",
       "quote": "",
-      "birthplace": "存疑",
-      "birthplace_raw": "存疑",
+      "birthplace": "不详",
+      "birthplace_raw": "不详",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -2563,11 +2563,11 @@
       "death_year": 139,
       "dynasty": "东汉",
       "quote": "“水所以载舟，亦所以覆舟。”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "南阳郡西鄂县",
+      "birthplace_raw": "南阳郡西鄂县（今河南省南阳市）（一说公元78年",
+      "birthplace_modern": "河南省南阳市",
+      "birth_lat": 32.999,
+      "birth_lng": 112.529,
       "file": "",
       "seed": 141246695632245,
       "relations": []
@@ -2578,8 +2578,8 @@
       "death_year": 221,
       "dynasty": "东汉末年至三国时期",
       "quote": "- 陈寿《三国志》：\"飞雄壮威猛，亚于关羽，然羽善待士卒而骄于士大夫，飞爱敬君子而不恤小人。\"",
-      "birthplace": "今河北省涿州市）",
-      "birthplace_raw": "今河北省涿州市）",
+      "birthplace": "公元？年—约公元167年（涿郡涿县",
+      "birthplace_raw": "公元？年—约公元167年（涿郡涿县",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -2589,13 +2589,13 @@
     },
     {
       "person": "张骞",
-      "birth_year": 164,
-      "death_year": 114,
+      "birth_year": -164,
+      "death_year": -114,
       "dynasty": "西汉",
       "quote": "“第一个睁开眼睛看世界的中国人”",
-      "birthplace": "生年不详）",
-      "birthplace_raw": "生年不详）",
-      "birthplace_modern": "",
+      "birthplace": "汉中郡城固县",
+      "birthplace_raw": "汉中郡城固县（今陕西城固县）",
+      "birthplace_modern": "陕西城固县",
       "birth_lat": 31.7713699,
       "birth_lng": 117.2095833,
       "file": "张骞.html",
@@ -2611,8 +2611,8 @@
       "birthplace": "南直隶苏州府昆山县",
       "birthplace_raw": "南直隶苏州府昆山县（今江苏省苏州市昆山市）",
       "birthplace_modern": "江苏省苏州市昆山市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.39,
+      "birth_lng": 121.11,
       "file": "",
       "seed": 170828601128717,
       "relations": []
@@ -2626,8 +2626,8 @@
       "birthplace": "古称",
       "birthplace_raw": "古称（今湖南省湘潭市）彭家围子",
       "birthplace_modern": "湖南省湘潭市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 27.7167,
+      "birth_lng": 112.9167,
       "file": "",
       "seed": 163031973560698,
       "relations": []
@@ -2653,9 +2653,9 @@
       "death_year": 1633,
       "dynasty": "明朝",
       "quote": "“此书为用至广，在此时尤所急需。”",
-      "birthplace": "松江府上海县",
-      "birthplace_raw": "松江府上海县（今上海市）人（具体出生日期存疑）",
-      "birthplace_modern": "上海市",
+      "birthplace": "明嘉靖四十一年（1562年",
+      "birthplace_raw": "明嘉靖四十一年（1562年",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -2668,11 +2668,11 @@
       "death_year": 1931,
       "dynasty": "中国现代（清末民初至民国）",
       "quote": "“轻轻的我走了，正如我轻轻的来”",
-      "birthplace": "另有1896年等说法）",
-      "birthplace_raw": "另有1896年等说法）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "硖石镇",
+      "birthplace_raw": "硖石镇（今浙江省嘉兴市海宁市）",
+      "birthplace_modern": "浙江省嘉兴市海宁市",
+      "birth_lat": 30.5325,
+      "birth_lng": 120.6853,
       "file": "",
       "seed": 189388471168877,
       "relations": []
@@ -2686,8 +2686,8 @@
       "birthplace": "江苏省宜兴县屺亭桥镇",
       "birthplace_raw": "江苏省宜兴县屺亭桥镇",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.434924,
+      "birth_lng": 119.863904,
       "file": "",
       "seed": 116444112831625,
       "relations": []
@@ -2713,11 +2713,11 @@
       "death_year": 1895,
       "dynasty": "19世纪",
       "quote": "“全世界无产者，联合起来！”",
-      "birthplace": "另有11月25日说法）",
-      "birthplace_raw": "另有11月25日说法）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "巴门",
+      "birthplace_raw": "巴门（今德国伍珀塔尔市）",
+      "birthplace_modern": "德国伍珀塔尔市",
+      "birth_lat": 51.2703,
+      "birth_lng": 7.1676,
       "file": "",
       "seed": 236567045484291,
       "relations": []
@@ -2746,8 +2746,8 @@
       "birthplace": "定远",
       "birthplace_raw": "定远（今安徽定远）（一说山东济宁）",
       "birthplace_modern": "安徽定远",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.5292,
+      "birth_lng": 117.6853,
       "file": "",
       "seed": 216565021196802,
       "relations": []
@@ -2761,8 +2761,8 @@
       "birthplace": "浙江杭县",
       "birthplace_raw": "浙江杭县（今浙江省杭州市）",
       "birthplace_modern": "浙江省杭州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.2741,
+      "birth_lng": 120.1551,
       "file": "",
       "seed": 193438993463238,
       "relations": []
@@ -2791,8 +2791,8 @@
       "birthplace": "古称热那亚王国阿雅克肖",
       "birthplace_raw": "古称热那亚王国阿雅克肖（今法国科西嘉岛阿雅克肖）",
       "birthplace_modern": "法国科西嘉岛阿雅克肖",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 41.9264,
+      "birth_lng": 8.7378,
       "file": "",
       "seed": 2000339783912,
       "relations": []
@@ -2806,8 +2806,8 @@
       "birthplace": "吉州庐陵",
       "birthplace_raw": "吉州庐陵（今江西省吉安市）",
       "birthplace_modern": "江西省吉安市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 27.1134,
+      "birth_lng": 114.9929,
       "file": "",
       "seed": 6778055957297,
       "relations": []
@@ -2818,8 +2818,8 @@
       "death_year": 680,
       "dynasty": "唐朝（吐蕃时期）",
       "quote": "",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
+      "birthplace": "出生年份与出生地不详",
+      "birthplace_raw": "出生年份与出生地不详",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -2834,10 +2834,10 @@
       "dynasty": "中世纪（欧洲）",
       "quote": "“斐波那契数列”",
       "birthplace": "比萨",
-      "birthplace_raw": "比萨（今意大利托斯卡纳大区比萨省）（具体年份存疑）",
+      "birthplace_raw": "比萨（今意大利托斯卡纳大区比萨省）",
       "birthplace_modern": "意大利托斯卡纳大区比萨省",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 43.7228,
+      "birth_lng": 10.4017,
       "file": "",
       "seed": 180798247039281,
       "relations": []
@@ -2851,8 +2851,8 @@
       "birthplace": "出生地",
       "birthplace_raw": "出生地（今格鲁吉亚哥里市）",
       "birthplace_modern": "格鲁吉亚哥里市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 41.9853,
+      "birth_lng": 44.1097,
       "file": "",
       "seed": 269719319720050,
       "relations": []
@@ -2863,8 +2863,8 @@
       "death_year": 2023,
       "dynasty": "当代",
       "quote": "",
-      "birthplace": "另有1956年出生之说）",
-      "birthplace_raw": "另有1956年出生之说）",
+      "birthplace": "福建省厦门市（说法不一",
+      "birthplace_raw": "福建省厦门市（说法不一",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -2893,11 +2893,11 @@
       "death_year": 1370,
       "dynasty": "元末明初",
       "quote": "“**官逼民反**”",
-      "birthplace": "另有兴化白驹场等说）",
-      "birthplace_raw": "另有兴化白驹场等说）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "古称平江路",
+      "birthplace_raw": "古称平江路（今江苏省苏州市）（说法不一",
+      "birthplace_modern": "江苏省苏州市",
+      "birth_lat": 31.299,
+      "birth_lng": 120.5853,
       "file": "",
       "seed": 259446765797750,
       "relations": []
@@ -2911,8 +2911,8 @@
       "birthplace": "湖南桃源",
       "birthplace_raw": "湖南桃源（今湖南省常德市桃源县）",
       "birthplace_modern": "湖南省常德市桃源县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.9047,
+      "birth_lng": 111.4889,
       "file": "",
       "seed": 30910400513837,
       "relations": []
@@ -2956,8 +2956,8 @@
       "birthplace": "莫斯科",
       "birthplace_raw": "莫斯科（今俄罗斯莫斯科）",
       "birthplace_modern": "俄罗斯莫斯科",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 55.7558,
+      "birth_lng": 37.6173,
       "file": "",
       "seed": 201691017607821,
       "relations": []
@@ -2986,8 +2986,8 @@
       "birthplace": "辽宁省昌图县",
       "birthplace_raw": "辽宁省昌图县",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 42.779333,
+      "birth_lng": 124.086628,
       "file": "",
       "seed": 275609975571354,
       "relations": []
@@ -3001,9 +3001,9 @@
       "birthplace": "沛国谯县",
       "birthplace_raw": "沛国谯县（今安徽省亳州市）（说法不一）",
       "birthplace_modern": "安徽省亳州市",
-      "birth_lat": null,
-      "birth_lng": null,
-      "file": "",
+      "birth_lat": 33.8693,
+      "birth_lng": 115.7793,
+      "file": "曹操.html",
       "seed": 20752925760962,
       "relations": []
     },
@@ -3013,9 +3013,9 @@
       "death_year": 1559,
       "dynasty": "明朝（嘉靖年间）",
       "quote": "",
-      "birthplace": "应天府句容县",
-      "birthplace_raw": "应天府句容县（今江苏省镇江市句容市）",
-      "birthplace_modern": "江苏省镇江市句容市",
+      "birthplace": "明弘治十四年",
+      "birthplace_raw": "明弘治十四年（1501年）",
+      "birthplace_modern": "1501年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3028,9 +3028,9 @@
       "death_year": 1763,
       "dynasty": "清代",
       "quote": "“举家食粥酒常赊”",
-      "birthplace": "江宁织造府",
-      "birthplace_raw": "江宁织造府（今江苏省南京市）（生年存疑）",
-      "birthplace_modern": "江苏省南京市",
+      "birthplace": "",
+      "birthplace_raw": "（康熙五十四年）",
+      "birthplace_modern": "康熙五十四年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3061,8 +3061,8 @@
       "birthplace": "姆维佐村",
       "birthplace_raw": "姆维佐村（今南非东开普省）",
       "birthplace_modern": "南非东开普省",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": -31.7833,
+      "birth_lng": 28.6167,
       "file": "",
       "seed": 155153179922439,
       "relations": []
@@ -3076,23 +3076,23 @@
       "birthplace": "湖南湘乡荷叶塘白杨坪",
       "birthplace_raw": "湖南湘乡荷叶塘白杨坪（今湖南省娄底市双峰县荷叶镇）",
       "birthplace_modern": "湖南省娄底市双峰县荷叶镇",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 27.387,
+      "birth_lng": 112.321,
       "file": "",
       "seed": 264856158063543,
       "relations": []
     },
     {
       "person": "曾子",
-      "birth_year": 505,
-      "death_year": 435,
+      "birth_year": -505,
+      "death_year": -435,
       "dynasty": "春秋末期",
       "quote": "“吾日三省吾身”",
       "birthplace": "鲁国南武城",
       "birthplace_raw": "鲁国南武城（今山东省济宁市嘉祥县）（一说为山东省临沂市平邑县）",
       "birthplace_modern": "山东省济宁市嘉祥县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.41,
+      "birth_lng": 116.34,
       "file": "",
       "seed": 189748003671143,
       "relations": [
@@ -3121,10 +3121,10 @@
       "dynasty": "元代",
       "quote": "“中世纪世界最伟大的数学家”",
       "birthplace": "古称燕山",
-      "birthplace_raw": "古称燕山（今北京市）（存疑）",
+      "birthplace_raw": "古称燕山（今北京市）",
       "birthplace_modern": "北京市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.9042,
+      "birth_lng": 116.4074,
       "file": "",
       "seed": 40647106267062,
       "relations": []
@@ -3165,9 +3165,9 @@
       "death_year": 912,
       "dynasty": "唐末五代",
       "quote": "",
-      "birthplace": "宋州砀山",
-      "birthplace_raw": "宋州砀山（今安徽省砀山县）",
-      "birthplace_modern": "安徽省砀山县",
+      "birthplace": "唐大中六年",
+      "birthplace_raw": "唐大中六年（852年）",
+      "birthplace_modern": "852年",
       "birth_lat": 34.4418972,
       "birth_lng": 116.4717068,
       "file": "朱温.html",
@@ -3183,8 +3183,8 @@
       "birthplace": "尤溪县",
       "birthplace_raw": "尤溪县（今福建省三明市尤溪县）",
       "birthplace_modern": "福建省三明市尤溪县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 26.17,
+      "birth_lng": 118.187,
       "file": "",
       "seed": 82542285167071,
       "relations": []
@@ -3195,9 +3195,9 @@
       "death_year": 1948,
       "dynasty": "中国近现代（清末至民国）",
       "quote": "“我家跟扬州的关系，大概够得上古人说的‘生于斯，死于斯，歌哭于斯’了。”",
-      "birthplace": "幼年随家定居江苏扬州",
-      "birthplace_raw": "幼年随家定居江苏扬州（今江苏省扬州市）。",
-      "birthplace_modern": "江苏省扬州市",
+      "birthplace": "说法不一",
+      "birthplace_raw": "说法不一",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3210,9 +3210,9 @@
       "death_year": 649,
       "dynasty": "唐朝",
       "quote": "",
-      "birthplace": "武功别馆",
-      "birthplace_raw": "武功别馆（今陕西省咸阳市武功县）",
-      "birthplace_modern": "陕西省咸阳市武功县",
+      "birthplace": "",
+      "birthplace_raw": "（隋开皇十八年）",
+      "birthplace_modern": "隋开皇十八年",
       "birth_lat": 34.291111,
       "birth_lng": 108.1775,
       "file": "李世民.html",
@@ -3228,8 +3228,8 @@
       "birthplace": "江苏武进",
       "birthplace_raw": "江苏武进（今常州市武进区）",
       "birthplace_modern": "常州市武进区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.701252,
+      "birth_lng": 119.942441,
       "file": "",
       "seed": 172775024659557,
       "relations": []
@@ -3241,10 +3241,10 @@
       "dynasty": "唐代",
       "quote": "“唐代四大女诗人”",
       "birthplace": "古称吴兴",
-      "birthplace_raw": "古称吴兴（今浙江省湖州市）（存疑）",
+      "birthplace_raw": "古称吴兴（今浙江省湖州市）",
       "birthplace_modern": "浙江省湖州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.8925,
+      "birth_lng": 120.0873,
       "file": "",
       "seed": 80106904383525,
       "relations": []
@@ -3270,9 +3270,9 @@
       "death_year": 858,
       "dynasty": "晚唐",
       "quote": "“高田长檞枥，下田长荆榛。农具弃道旁，饥牛死空墩。”",
-      "birthplace": "古称郑州荥阳",
-      "birthplace_raw": "古称郑州荥阳（今河南省郑州市荥阳市）（说法不一）",
-      "birthplace_modern": "河南省郑州市荥阳市",
+      "birthplace": "或813年",
+      "birthplace_raw": "或813年",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3288,8 +3288,8 @@
       "birthplace": "古称湖北省黄冈县",
       "birthplace_raw": "古称湖北省黄冈县（今湖北省黄冈市）回龙山镇（具体村落说法不一）",
       "birthplace_modern": "湖北省黄冈市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.4537,
+      "birth_lng": 114.8723,
       "file": "",
       "seed": 127793043010697,
       "relations": []
@@ -3303,8 +3303,8 @@
       "birthplace": "直隶乐亭县大黑坨村",
       "birthplace_raw": "直隶乐亭县大黑坨村（今河北省唐山市乐亭县）",
       "birthplace_modern": "河北省唐山市乐亭县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.4286,
+      "birth_lng": 118.9056,
       "file": "",
       "seed": 86425462356992,
       "relations": []
@@ -3318,23 +3318,23 @@
       "birthplace": "犍为武阳",
       "birthplace_raw": "犍为武阳（今四川彭山区）",
       "birthplace_modern": "四川彭山区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.19,
+      "birth_lng": 103.87,
       "file": "李密.html",
       "seed": 115010572852334,
       "relations": []
     },
     {
       "person": "李斯",
-      "birth_year": 280,
-      "death_year": 208,
+      "birth_year": -280,
+      "death_year": -208,
       "dynasty": "战国末期至秦朝",
       "quote": "“人之贤不肖譬如鼠矣，在所自处耳”",
       "birthplace": "楚国上蔡",
-      "birthplace_raw": "楚国上蔡（今河南省驻马店市上蔡县）（生年存疑）",
+      "birthplace_raw": "楚国上蔡（今河南省驻马店市上蔡县）",
       "birthplace_modern": "河南省驻马店市上蔡县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 33.2634,
+      "birth_lng": 114.2643,
       "file": "",
       "seed": 131286925592428,
       "relations": []
@@ -3345,9 +3345,9 @@
       "death_year": 1593,
       "dynasty": "明代",
       "quote": "“脑为元神之府”",
-      "birthplace": "蕲州",
-      "birthplace_raw": "蕲州（今湖北省黄冈市蕲春县）",
-      "birthplace_modern": "湖北省黄冈市蕲春县",
+      "birthplace": "另有1515年说）",
+      "birthplace_raw": "另有1515年说）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3393,8 +3393,8 @@
       "birthplace": "齐州章丘",
       "birthplace_raw": "齐州章丘（今山东省济南市章丘区）（一说生于济南）",
       "birthplace_modern": "山东省济南市章丘区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 36.6812,
+      "birth_lng": 117.526,
       "file": "",
       "seed": 272188482509019,
       "relations": []
@@ -3420,9 +3420,9 @@
       "death_year": 762,
       "dynasty": "唐朝",
       "quote": "“五岳寻仙不辞远，一生好入名山游”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
+      "birthplace": "碎叶城",
+      "birthplace_raw": "碎叶城（今吉尔吉斯斯坦托克马克市）（一说生于蜀中",
+      "birthplace_modern": "吉尔吉斯斯坦托克马克市",
       "birth_lat": 29.4559106,
       "birth_lng": 121.3927289,
       "file": "李白__pure__20260424_114547.html",
@@ -3453,8 +3453,8 @@
       "birthplace": "福昌县",
       "birthplace_raw": "福昌县（今河南宜阳）昌谷",
       "birthplace_modern": "河南宜阳",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.515,
+      "birth_lng": 112.178,
       "file": "",
       "seed": 262411776685144,
       "relations": []
@@ -3468,8 +3468,8 @@
       "birthplace": "庐州府合肥县",
       "birthplace_raw": "庐州府合肥县（今安徽省合肥市）",
       "birthplace_modern": "安徽省合肥市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.8206,
+      "birth_lng": 117.2272,
       "file": "",
       "seed": 76342746017913,
       "relations": []
@@ -3483,8 +3483,8 @@
       "birthplace": "陕西省米脂县桃花峁村",
       "birthplace_raw": "陕西省米脂县桃花峁村",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.755134,
+      "birth_lng": 110.183984,
       "file": "",
       "seed": 172213184305922,
       "relations": []
@@ -3498,8 +3498,8 @@
       "birthplace": "京兆万年",
       "birthplace_raw": "京兆万年（今陕西省西安市）",
       "birthplace_modern": "陕西省西安市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.26316,
+      "birth_lng": 108.94802,
       "file": "",
       "seed": 82342336323643,
       "relations": []
@@ -3525,9 +3525,9 @@
       "death_year": 1206,
       "dynasty": "南宋",
       "quote": "",
-      "birthplace": "吉州吉水",
-      "birthplace_raw": "吉州吉水（今江西省吉安市吉水县）",
-      "birthplace_modern": "江西省吉安市吉水县",
+      "birthplace": "宋高宗建炎元年",
+      "birthplace_raw": "宋高宗建炎元年（1127年）",
+      "birthplace_modern": "1127年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3603,8 +3603,8 @@
       "birthplace": "安徽合肥",
       "birthplace_raw": "安徽合肥（今安徽省合肥市）",
       "birthplace_modern": "安徽省合肥市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.8206,
+      "birth_lng": 117.2272,
       "file": "",
       "seed": 254453144296002,
       "relations": []
@@ -3648,8 +3648,8 @@
       "birthplace": "陕西省蒲城县",
       "birthplace_raw": "陕西省蒲城县（今陕西省渭南市蒲城县）",
       "birthplace_modern": "陕西省渭南市蒲城县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.9551,
+      "birth_lng": 109.5865,
       "file": "",
       "seed": 18845279976183,
       "relations": []
@@ -3676,10 +3676,10 @@
       "dynasty": "南宋",
       "quote": "“夫习算者，以乘法为主，乘除者，算法之纪纲。”",
       "birthplace": "古钱塘",
-      "birthplace_raw": "古钱塘（今浙江杭州）（生卒年份存疑）",
+      "birthplace_raw": "古钱塘（今浙江杭州）",
       "birthplace_modern": "浙江杭州",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.2741,
+      "birth_lng": 120.1551,
       "file": "",
       "seed": 187853784697157,
       "relations": []
@@ -3693,8 +3693,8 @@
       "birthplace": "河南省确山县李湾村",
       "birthplace_raw": "河南省确山县李湾村",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.82134,
+      "birth_lng": 114.016818,
       "file": "",
       "seed": 245529361872540,
       "relations": []
@@ -3705,9 +3705,9 @@
       "death_year": 650,
       "dynasty": "吐蕃王朝（7世纪前期）",
       "quote": "",
-      "birthplace": "出生地为亚隆札对园",
-      "birthplace_raw": "出生地为亚隆札对园（今西藏山南琼结县）",
-      "birthplace_modern": "西藏山南琼结县",
+      "birthplace": "另有569年等说法）",
+      "birthplace_raw": "另有569年等说法）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3723,8 +3723,8 @@
       "birthplace": "侯官",
       "birthplace_raw": "侯官（今福建省福州市）",
       "birthplace_modern": "福建省福州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 26.0745,
+      "birth_lng": 119.2965,
       "file": "",
       "seed": 56235764234220,
       "relations": []
@@ -3738,8 +3738,8 @@
       "birthplace": "福建闽侯",
       "birthplace_raw": "福建闽侯（今福建省福州市）",
       "birthplace_modern": "福建省福州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 26.0745,
+      "birth_lng": 119.2965,
       "file": "",
       "seed": 6903741453249,
       "relations": []
@@ -3765,11 +3765,11 @@
       "death_year": 1955,
       "dynasty": "清末至中华民国",
       "quote": "“你是爱，是暖，是希望，你是人间的四月天！”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "闽县",
+      "birthplace_raw": "闽县（今福建省福州市）（出生地另有杭州一说",
+      "birthplace_modern": "福建省福州市",
+      "birth_lat": 26.0745,
+      "birth_lng": 119.2965,
       "file": "",
       "seed": 111545373487576,
       "relations": []
@@ -3783,8 +3783,8 @@
       "birthplace": "台湾省高雄县旗山镇",
       "birthplace_raw": "台湾省高雄县旗山镇（今台湾高雄市旗山区）",
       "birthplace_modern": "台湾高雄市旗山区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 22.8897,
+      "birth_lng": 120.4819,
       "file": "",
       "seed": 127597405866670,
       "relations": []
@@ -3813,21 +3813,21 @@
       "birthplace": "闽县",
       "birthplace_raw": "闽县（今福建省福州市）",
       "birthplace_modern": "福建省福州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 26.0825,
+      "birth_lng": 119.299,
       "file": "",
       "seed": 38312338352491,
       "relations": []
     },
     {
       "person": "柏拉图",
-      "birth_year": 428,
-      "death_year": 348,
+      "birth_year": -428,
+      "death_year": -348,
       "dynasty": "古希腊古典时代（约公元前5世纪-前4世纪）",
       "quote": "“全部西方哲学传统都是对柏拉图的一系列注脚。”",
-      "birthplace": "雅典",
-      "birthplace_raw": "雅典（今希腊雅典）或埃伊纳岛（今希腊埃伊纳岛）（说法不一）",
-      "birthplace_modern": "希腊雅典",
+      "birthplace": "约公元前428/427年",
+      "birthplace_raw": "约公元前428/427年",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3840,9 +3840,9 @@
       "death_year": 814,
       "dynasty": "中世纪早期（8-9世纪）",
       "quote": "“**罗马人的皇帝**”",
-      "birthplace": "可能出生于今比利时列日附近或德国亚琛地区",
-      "birthplace_raw": "可能出生于今比利时列日附近或德国亚琛地区（存疑）",
-      "birthplace_modern": "存疑",
+      "birthplace": "说法不一",
+      "birthplace_raw": "说法不一",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3855,9 +3855,9 @@
       "death_year": 1933,
       "dynasty": "清末民初",
       "quote": "",
-      "birthplace": "山东胶州",
-      "birthplace_raw": "山东胶州（今山东省青岛市胶州市）",
-      "birthplace_modern": "山东省青岛市胶州市",
+      "birthplace": "道光三十年",
+      "birthplace_raw": "道光三十年（1850年）",
+      "birthplace_modern": "1850年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3885,9 +3885,9 @@
       "death_year": 865,
       "dynasty": "唐朝",
       "quote": "",
-      "birthplace": "京兆华原",
-      "birthplace_raw": "京兆华原（今陕西铜川市耀州区）",
-      "birthplace_modern": "陕西铜川市耀州区",
+      "birthplace": "唐代宗大历十三年",
+      "birthplace_raw": "唐代宗大历十三年（778年）",
+      "birthplace_modern": "778年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3903,8 +3903,8 @@
       "birthplace": "长安",
       "birthplace_raw": "长安（今陕西西安）",
       "birthplace_modern": "陕西西安",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.26,
+      "birth_lng": 108.94,
       "file": "",
       "seed": 90906357254468,
       "relations": []
@@ -3916,10 +3916,10 @@
       "dynasty": "北宋",
       "quote": "“凡有井水饮处，即能歌柳词”",
       "birthplace": "崇安",
-      "birthplace_raw": "崇安（今福建省南平武夷山市）（存疑）",
+      "birthplace_raw": "崇安（今福建省南平武夷山市）",
       "birthplace_modern": "福建省南平武夷山市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 27.76,
+      "birth_lng": 118.03,
       "file": "",
       "seed": 30153043829333,
       "relations": []
@@ -3933,8 +3933,8 @@
       "birthplace": "后定居于通州运河滩",
       "birthplace_raw": "后定居于通州运河滩（今北京市通州区东南部）",
       "birthplace_modern": "北京市通州区东南部",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.065972,
+      "birth_lng": 121.073742,
       "file": "",
       "seed": 11540218098862,
       "relations": []
@@ -3960,11 +3960,11 @@
       "death_year": 1929,
       "dynasty": "清末至民国",
       "quote": "“法者，天下之公器也；变者，天下之公理也。”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "",
+      "birthplace_raw": "（清同治十二年）",
+      "birthplace_modern": "清同治十二年",
+      "birth_lat": 31.118976,
+      "birth_lng": 108.02976,
       "file": "",
       "seed": 275982564786343,
       "relations": []
@@ -3975,9 +3975,9 @@
       "death_year": 1972,
       "dynasty": "中国近现代（清末至中华人民共和国）",
       "quote": "“观音阁及山门最大之特征，而在形制上最重要之点，则为其与敦煌壁画中所见唐代建筑之相似也。”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
+      "birthplace": "日本东京",
+      "birthplace_raw": "日本东京（今日本东京都）",
+      "birthplace_modern": "日本东京都",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -3993,8 +3993,8 @@
       "birthplace": "山西霍州",
       "birthplace_raw": "山西霍州（今山西省临汾市霍州市）",
       "birthplace_modern": "山西省临汾市霍州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 36.57,
+      "birth_lng": 111.72,
       "file": "",
       "seed": 85661732098042,
       "relations": []
@@ -4016,8 +4016,8 @@
     },
     {
       "person": "欧几里得",
-      "birth_year": 325,
-      "death_year": 265,
+      "birth_year": -325,
+      "death_year": -265,
       "dynasty": "古希腊时期（托勒密王国）",
       "quote": "“两点之间直线最短。”",
       "birthplace": "存疑",
@@ -4038,8 +4038,8 @@
       "birthplace": "巴塞尔",
       "birthplace_raw": "巴塞尔（今瑞士巴塞尔）",
       "birthplace_modern": "瑞士巴塞尔",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 47.5596,
+      "birth_lng": 7.5886,
       "file": "",
       "seed": 68378568074274,
       "relations": []
@@ -4050,11 +4050,11 @@
       "death_year": 1072,
       "dynasty": "北宋",
       "quote": "“祭而丰，不如养之薄也。”",
-      "birthplace": "今江西省吉安市）",
-      "birthplace_raw": "今江西省吉安市）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "绵州",
+      "birthplace_raw": "绵州（今四川省绵阳市）（一说生于其父任职地",
+      "birthplace_modern": "四川省绵阳市",
+      "birth_lat": 31.4675,
+      "birth_lng": 104.6796,
       "file": "",
       "seed": 230038828599489,
       "relations": []
@@ -4068,8 +4068,8 @@
       "birthplace": "美因河畔法兰克福",
       "birthplace_raw": "美因河畔法兰克福（今德国法兰克福）",
       "birthplace_modern": "德国法兰克福",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 50.1109,
+      "birth_lng": 8.6821,
       "file": "",
       "seed": 254386237608178,
       "relations": []
@@ -4080,9 +4080,9 @@
       "death_year": 705,
       "dynasty": "唐朝（唐太宗、高宗时期）、武周",
       "quote": "",
-      "birthplace": "另有长安、洛阳等说）",
-      "birthplace_raw": "另有长安、洛阳等说）",
-      "birthplace_modern": "",
+      "birthplace": "武德七年",
+      "birthplace_raw": "武德七年（公元624年）",
+      "birthplace_modern": "公元624年",
       "birth_lat": 32.2685578,
       "birth_lng": 105.8395358,
       "file": "武则天.html",
@@ -4106,15 +4106,15 @@
     },
     {
       "person": "毕达哥拉斯",
-      "birth_year": 570,
-      "death_year": 495,
+      "birth_year": -570,
+      "death_year": -495,
       "dynasty": "古希腊时期（公元前6世纪）",
       "quote": "“毕达哥拉斯定理”",
       "birthplace": "古称萨摩斯岛",
       "birthplace_raw": "古称萨摩斯岛（今希腊萨摩斯州）",
       "birthplace_modern": "希腊萨摩斯州",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.76,
+      "birth_lng": 26.97,
       "file": "",
       "seed": 184493335460632,
       "relations": []
@@ -4141,7 +4141,7 @@
       "dynasty": "中国近现代",
       "quote": "“问苍茫大地，谁主沉浮？”",
       "birthplace": "湖南省湘潭县韶山冲",
-      "birthplace_raw": "湖南省湘潭县韶山冲（今湖南省湘潭市韶山市）（具体日期存疑）",
+      "birthplace_raw": "湖南省湘潭县韶山冲（今湖南省湘潭市韶山市）",
       "birthplace_modern": "湖南省湘潭市韶山市",
       "birth_lat": null,
       "birth_lng": null,
@@ -4155,9 +4155,9 @@
       "death_year": 1941,
       "dynasty": "20世纪上半叶（经历两次世界大战）",
       "quote": "",
-      "birthplace": "奥匈帝国加利西亚地区克拉科夫",
-      "birthplace_raw": "奥匈帝国加利西亚地区克拉科夫（今属波兰）",
-      "birthplace_modern": "属波兰",
+      "birthplace": "",
+      "birthplace_raw": "（一说1900年）",
+      "birthplace_modern": "一说1900年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4166,15 +4166,15 @@
     },
     {
       "person": "汉武帝",
-      "birth_year": 156,
-      "death_year": 87,
+      "birth_year": -156,
+      "death_year": -87,
       "dynasty": "西汉",
       "quote": "“罢黜百家，独尊儒术”",
       "birthplace": "长安",
       "birthplace_raw": "长安（今陕西省西安市）",
       "birthplace_modern": "陕西省西安市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.26,
+      "birth_lng": 108.94,
       "file": "",
       "seed": 270787093054036,
       "relations": []
@@ -4188,8 +4188,8 @@
       "birthplace": "四川省自贡市大山铺镇江家湾",
       "birthplace_raw": "四川省自贡市大山铺镇江家湾",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.387518,
+      "birth_lng": 104.821571,
       "file": "",
       "seed": 130155514183701,
       "relations": []
@@ -4216,10 +4216,10 @@
       "dynasty": "明代",
       "quote": "“陛下经营天下二十年于兹矣。”",
       "birthplace": "古称抚州府临川县",
-      "birthplace_raw": "古称抚州府临川县（今江西省抚州市临川区）...（出生具体日期存疑）",
+      "birthplace_raw": "古称抚州府临川县（今江西省抚州市临川区）...",
       "birthplace_modern": "江西省抚州市临川区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 27.935,
+      "birth_lng": 116.3583,
       "file": "",
       "seed": 131667544295546,
       "relations": []
@@ -4233,8 +4233,8 @@
       "birthplace": "高邮",
       "birthplace_raw": "高邮（今江苏省扬州市高邮市）",
       "birthplace_modern": "江苏省扬州市高邮市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.78,
+      "birth_lng": 119.45,
       "file": "",
       "seed": 269418067785005,
       "relations": []
@@ -4245,9 +4245,9 @@
       "death_year": 1988,
       "dynasty": "中国近现代（清末至中华人民共和国）",
       "quote": "“这个人也许永远不回来了，也许‘明天’回来！”",
-      "birthplace": "湘西镇筸",
-      "birthplace_raw": "湘西镇筸（今湖南省湘西土家族苗族自治州凤凰县）",
-      "birthplace_modern": "湖南省湘西土家族苗族自治州凤凰县",
+      "birthplace": "（一说为1899年",
+      "birthplace_raw": "（一说为1899年",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4260,9 +4260,9 @@
       "death_year": 1095,
       "dynasty": "北宋",
       "quote": "“中国整部科学史中最卓越的人物”",
-      "birthplace": "古称杭州钱塘",
-      "birthplace_raw": "古称杭州钱塘（今浙江省杭州市）（存疑）",
-      "birthplace_modern": "浙江省杭州市",
+      "birthplace": "",
+      "birthplace_raw": "（一说1033年）",
+      "birthplace_modern": "一说1033年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4286,12 +4286,12 @@
     },
     {
       "person": "泰勒斯",
-      "birth_year": 624,
-      "death_year": 546,
+      "birth_year": -624,
+      "death_year": -546,
       "dynasty": "古希腊（古风时期）",
       "quote": "“西方哲学之父”",
       "birthplace": "古称米利都",
-      "birthplace_raw": "古称米利都（今土耳其艾登省巴拉特村附近）（存疑）",
+      "birthplace_raw": "古称米利都（今土耳其艾登省巴拉特村附近）",
       "birthplace_modern": "土耳其艾登省巴拉特村附近",
       "birth_lat": null,
       "birth_lng": null,
@@ -4308,8 +4308,8 @@
       "birthplace": "加尔各答",
       "birthplace_raw": "加尔各答（今印度西孟加拉邦加尔各答市）",
       "birthplace_modern": "印度西孟加拉邦加尔各答市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 22.5726,
+      "birth_lng": 88.3639,
       "file": "",
       "seed": 196111213257833,
       "relations": []
@@ -4320,11 +4320,11 @@
       "death_year": 1864,
       "dynasty": "清朝（晚清）",
       "quote": "“有田同耕，有饭同食”",
-      "birthplace": "此处取一说）",
-      "birthplace_raw": "此处取一说）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "广东花县",
+      "birthplace_raw": "广东花县（今广东省广州市花都区）（出生日期有不同说法",
+      "birthplace_modern": "广东省广州市花都区",
+      "birth_lat": 23.4036,
+      "birth_lng": 113.2197,
       "file": "",
       "seed": 272196800923721,
       "relations": []
@@ -4335,8 +4335,8 @@
       "death_year": 1920,
       "dynasty": "19世纪至20世纪初",
       "quote": "",
-      "birthplace": "USA)",
-      "birthplace_raw": "USA)",
+      "birthplace": "美国纽约州斯塔基 (Starkey",
+      "birthplace_raw": "美国纽约州斯塔基 (Starkey",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -4353,8 +4353,8 @@
       "birthplace": "奥克帕克",
       "birthplace_raw": "奥克帕克（今美国伊利诺伊州奥克帕克）",
       "birthplace_modern": "美国伊利诺伊州奥克帕克",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 41.8851,
+      "birth_lng": -87.7845,
       "file": "",
       "seed": 138555456566986,
       "relations": []
@@ -4368,8 +4368,8 @@
       "birthplace": "一说为1946年出生于广东紫金）",
       "birthplace_raw": "一说为1946年出生于广东紫金）",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 23.635597,
+      "birth_lng": 115.183814,
       "file": "",
       "seed": 44835633184174,
       "relations": []
@@ -4383,8 +4383,8 @@
       "birthplace": "推断为郑国",
       "birthplace_raw": "推断为郑国（今河南省新郑市一带）",
       "birthplace_modern": "河南省新郑市一带",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.3956,
+      "birth_lng": 113.7416,
       "file": "",
       "seed": 55805674144719,
       "relations": []
@@ -4398,8 +4398,8 @@
       "birthplace": "山东省博山县",
       "birthplace_raw": "山东省博山县（今山东省淄博市博山区）",
       "birthplace_modern": "山东省淄博市博山区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 36.4947,
+      "birth_lng": 117.8617,
       "file": "",
       "seed": 249399467024915,
       "relations": []
@@ -4443,8 +4443,8 @@
       "birthplace": "英格兰林肯郡伍尔索普庄园",
       "birthplace_raw": "英格兰林肯郡伍尔索普庄园（今英国林肯郡格兰瑟姆附近）",
       "birthplace_modern": "英国林肯郡格兰瑟姆附近",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 52.91,
+      "birth_lng": -0.64,
       "file": "",
       "seed": 240455950287780,
       "relations": []
@@ -4458,8 +4458,8 @@
       "birthplace": "古称",
       "birthplace_raw": "古称（今英国英格兰汉普郡朴茨茅斯市）",
       "birthplace_modern": "英国英格兰汉普郡朴茨茅斯市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 50.8198,
+      "birth_lng": -1.088,
       "file": "",
       "seed": 226192290428016,
       "relations": []
@@ -4470,8 +4470,8 @@
       "death_year": null,
       "dynasty": "传说多发生于唐、宋、明、清等时期，无确切朝代",
       "quote": "",
-      "birthplace": "无确切纪年；常被描述为诞生于山林幽谷或古墓荒祠",
-      "birthplace_raw": "无确切纪年；常被描述为诞生于山林幽谷或古墓荒祠",
+      "birthplace": "传说人物",
+      "birthplace_raw": "传说人物",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -4482,12 +4482,12 @@
     {
       "person": "狐偃",
       "birth_year": null,
-      "death_year": 629,
+      "death_year": -629,
       "dynasty": "春秋时期",
       "quote": "",
       "birthplace": "晋国",
-      "birthplace_raw": "晋国（具体地点存疑）",
-      "birthplace_modern": "具体地点存疑",
+      "birthplace_raw": "晋国",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4500,9 +4500,9 @@
       "death_year": 664,
       "dynasty": "唐代",
       "quote": "“亲践者一百一十国，传闻者二十八国”",
-      "birthplace": "洛州缑氏",
-      "birthplace_raw": "洛州缑氏（今河南省洛阳市偃师市）",
-      "birthplace_modern": "河南省洛阳市偃师市",
+      "birthplace": "",
+      "birthplace_raw": "（说法不一）",
+      "birthplace_modern": "说法不一",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4515,9 +4515,9 @@
       "death_year": 878,
       "dynasty": "唐末",
       "quote": "",
-      "birthplace": "私盐贩出身",
-      "birthplace_raw": "私盐贩出身",
-      "birthplace_modern": "",
+      "birthplace": "濮州",
+      "birthplace_raw": "濮州（今山东鄄城北旧城）人",
+      "birthplace_modern": "山东鄄城北旧城",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4546,10 +4546,10 @@
       "dynasty": "唐代（初唐）",
       "quote": "“海内存知己，天涯若比邻”",
       "birthplace": "古称绛州龙门",
-      "birthplace_raw": "古称绛州龙门（今山西省运城市河津市）（存疑）",
+      "birthplace_raw": "古称绛州龙门（今山西省运城市河津市）",
       "birthplace_modern": "山西省运城市河津市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.59,
+      "birth_lng": 110.71,
       "file": "",
       "seed": 92322761692088,
       "relations": []
@@ -4560,11 +4560,11 @@
       "death_year": 1614,
       "dynasty": "明朝（嘉靖、万历年间）",
       "quote": "",
-      "birthplace": "南直隶太仓州",
-      "birthplace_raw": "南直隶太仓州（今江苏省太仓市）",
-      "birthplace_modern": "江苏省太仓市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "",
+      "birthplace_raw": "（嘉靖十三年）",
+      "birthplace_modern": "嘉靖十三年",
+      "birth_lat": 29.978558,
+      "birth_lng": 102.216577,
       "file": "",
       "seed": 277385222609904,
       "relations": []
@@ -4593,8 +4593,8 @@
       "birthplace": "古称临江军清江县",
       "birthplace_raw": "古称临江军清江县（今江西省樟树市）",
       "birthplace_modern": "江西省樟树市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.0567,
+      "birth_lng": 115.5465,
       "file": "",
       "seed": 219397523909815,
       "relations": []
@@ -4605,11 +4605,11 @@
       "death_year": 918,
       "dynasty": "五代十国",
       "quote": "",
-      "birthplace": "许州舞阳",
-      "birthplace_raw": "许州舞阳（今河南舞阳西北）",
-      "birthplace_modern": "河南舞阳西北",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "（说法不一",
+      "birthplace_raw": "（说法不一",
+      "birthplace_modern": "",
+      "birth_lat": 32.437431,
+      "birth_lng": 117.301832,
       "file": "",
       "seed": 153514769735102,
       "relations": []
@@ -4620,9 +4620,9 @@
       "death_year": 1374,
       "dynasty": "元末明初",
       "quote": "",
-      "birthplace": "浙江义乌",
-      "birthplace_raw": "浙江义乌",
-      "birthplace_modern": "",
+      "birthplace": "元至治三年",
+      "birthplace_raw": "元至治三年（1323年）",
+      "birthplace_modern": "1323年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4680,8 +4680,8 @@
       "death_year": 1992,
       "dynasty": "当代中国（“文化大革命”时期）",
       "quote": "",
-      "birthplace": "吉林省长春市",
-      "birthplace_raw": "吉林省长春市",
+      "birthplace": "另有1934年说）",
+      "birthplace_raw": "另有1934年说）",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -4695,8 +4695,8 @@
       "death_year": null,
       "dynasty": "唐代",
       "quote": "",
-      "birthplace": "出生地存疑",
-      "birthplace_raw": "出生地存疑",
+      "birthplace": "生年不详",
+      "birthplace_raw": "生年不详",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -4713,8 +4713,8 @@
       "birthplace": "蒲州",
       "birthplace_raw": "蒲州（今山西省运城市）（一说太原祁县）",
       "birthplace_modern": "山西省运城市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.03,
+      "birth_lng": 111.0,
       "file": "",
       "seed": 84345889517534,
       "relations": []
@@ -4725,9 +4725,9 @@
       "death_year": 361,
       "dynasty": "东晋",
       "quote": "“天下第一行书”",
-      "birthplace": "琅琊临沂",
-      "birthplace_raw": "琅琊临沂（今山东省临沂市）",
-      "birthplace_modern": "山东省临沂市",
+      "birthplace": "另有321年等说）",
+      "birthplace_raw": "另有321年等说）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4743,8 +4743,8 @@
       "birthplace": "北平",
       "birthplace_raw": "北平（今北京市）",
       "birthplace_modern": "北京市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.9042,
+      "birth_lng": 116.4074,
       "file": "",
       "seed": 226842813145206,
       "relations": []
@@ -4755,9 +4755,9 @@
       "death_year": 1970,
       "dynasty": "中华人民共和国",
       "quote": "“宁肯少活二十年，拼命也要拿下大油田”",
-      "birthplace": "此处采信其纪念馆资料）",
-      "birthplace_raw": "此处采信其纪念馆资料）",
-      "birthplace_modern": "",
+      "birthplace": "甘肃玉门",
+      "birthplace_raw": "甘肃玉门（今甘肃省酒泉市玉门市）（出生日期有1923年、1929年等不同说法",
+      "birthplace_modern": "甘肃省酒泉市玉门市",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4770,9 +4770,9 @@
       "death_year": 1529,
       "dynasty": "明代",
       "quote": "“天门何崔嵬，下见青云浮。”",
-      "birthplace": "浙江余姚",
-      "birthplace_raw": "浙江余姚（今浙江省宁波市余姚市）",
-      "birthplace_modern": "浙江省宁波市余姚市",
+      "birthplace": "明成化八年",
+      "birthplace_raw": "明成化八年（1472年）",
+      "birthplace_modern": "1472年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4785,9 +4785,9 @@
       "death_year": 785,
       "dynasty": "唐代（盛唐至中唐过渡时期）",
       "quote": "",
-      "birthplace": "京兆长安",
-      "birthplace_raw": "京兆长安（今陕西西安）",
-      "birthplace_modern": "陕西西安",
+      "birthplace": "唐玄宗开元十八年",
+      "birthplace_raw": "唐玄宗开元十八年（公元730年）",
+      "birthplace_modern": "公元730年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -4818,8 +4818,8 @@
       "birthplace": "扶风安陵",
       "birthplace_raw": "扶风安陵（今陕西省咸阳市）",
       "birthplace_modern": "陕西省咸阳市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.3296,
+      "birth_lng": 108.7086,
       "file": "",
       "seed": 140768615199099,
       "relations": []
@@ -4833,8 +4833,8 @@
       "birthplace": "青海省循化县文都乡麻日村",
       "birthplace_raw": "青海省循化县文都乡麻日村",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.780248,
+      "birth_lng": 102.393264,
       "file": "",
       "seed": 226143865562222,
       "relations": []
@@ -4846,10 +4846,10 @@
       "dynasty": "东汉",
       "quote": "“大丈夫无它志略，犹当效傅介子、张骞立功异域，以取封侯，安能久事笔研间乎？”",
       "birthplace": "扶风平陵",
-      "birthplace_raw": "扶风平陵（今陕西省咸阳市）（存疑）",
+      "birthplace_raw": "扶风平陵（今陕西省咸阳市）",
       "birthplace_modern": "陕西省咸阳市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.3296,
+      "birth_lng": 108.7089,
       "file": "",
       "seed": 278509604753528,
       "relations": []
@@ -4860,11 +4860,11 @@
       "death_year": 1819,
       "dynasty": "18世纪英国工业革命时期",
       "quote": "“博尔顿-瓦特公司”",
-      "birthplace": "苏格兰格里诺克",
-      "birthplace_raw": "苏格兰格里诺克（今英国苏格兰格里诺克）",
-      "birthplace_modern": "英国苏格兰格里诺克",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "",
+      "birthplace_raw": "（另有说法为1月30日）",
+      "birthplace_modern": "另有说法为1月30日",
+      "birth_lat": 32.437431,
+      "birth_lng": 117.301832,
       "file": "",
       "seed": 184443922523836,
       "relations": []
@@ -4878,8 +4878,8 @@
       "birthplace": "卡提阿瓦半岛博尔本德尔",
       "birthplace_raw": "卡提阿瓦半岛博尔本德尔（今印度古吉拉特邦博尔本德尔）",
       "birthplace_modern": "印度古吉拉特邦博尔本德尔",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 21.8413,
+      "birth_lng": 69.6593,
       "file": "",
       "seed": 14611839535008,
       "relations": []
@@ -4921,10 +4921,10 @@
       "dynasty": "唐代",
       "quote": "“文章合为时而著，歌诗合为事而作”",
       "birthplace": "郑州新郑",
-      "birthplace_raw": "郑州新郑（今河南省郑州市新郑市）（出生月份存疑）",
+      "birthplace_raw": "郑州新郑（今河南省郑州市新郑市）",
       "birthplace_modern": "河南省郑州市新郑市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.396,
+      "birth_lng": 113.741,
       "file": "",
       "seed": 135480706296608,
       "relations": []
@@ -4938,8 +4938,8 @@
       "birthplace": "加拿大安大略省格雷文赫斯特",
       "birthplace_raw": "加拿大安大略省格雷文赫斯特",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 44.9167,
+      "birth_lng": -79.3833,
       "file": "",
       "seed": 203672556689655,
       "relations": []
@@ -4995,8 +4995,8 @@
       "death_year": 2023,
       "dynasty": "当代",
       "quote": "",
-      "birthplace": "出生于河南省洛阳市",
-      "birthplace_raw": "出生于河南省洛阳市",
+      "birthplace": "河南省洛阳市",
+      "birthplace_raw": "河南省洛阳市",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -5010,9 +5010,9 @@
       "death_year": 500,
       "dynasty": "南北朝（南朝宋、齐）",
       "quote": "祖冲之，字文远，生活于南朝宋齐之际",
-      "birthplace": "一说建康",
-      "birthplace_raw": "一说建康（今江苏省南京市）",
-      "birthplace_modern": "江苏省南京市",
+      "birthplace": "说法不一",
+      "birthplace_raw": "说法不一",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -5028,8 +5028,8 @@
       "birthplace": "可能生于古称建康",
       "birthplace_raw": "可能生于古称建康（今江苏省南京市）或范阳遒县（今河北省保定市涞水县）",
       "birthplace_modern": "江苏省南京市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.0603,
+      "birth_lng": 118.7969,
       "file": "",
       "seed": 267593214557540,
       "relations": [
@@ -5043,10 +5043,10 @@
       "dynasty": "南宋",
       "quote": "“窃尝设为问答以拟于用。”",
       "birthplace": "古称普州安岳",
-      "birthplace_raw": "古称普州安岳（今四川省资阳市安岳县）（存疑）",
+      "birthplace_raw": "古称普州安岳（今四川省资阳市安岳县）",
       "birthplace_modern": "四川省资阳市安岳县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.0963,
+      "birth_lng": 105.3348,
       "file": "",
       "seed": 84694614007166,
       "relations": []
@@ -5068,15 +5068,15 @@
     },
     {
       "person": "秦始皇",
-      "birth_year": 259,
-      "death_year": 210,
+      "birth_year": -259,
+      "death_year": -210,
       "dynasty": "战国末期至秦朝",
       "quote": "“书同文、车同轨、行同伦”",
       "birthplace": "赵国邯郸",
       "birthplace_raw": "赵国邯郸（今河北省邯郸市）",
       "birthplace_modern": "河北省邯郸市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 36.6094,
+      "birth_lng": 114.4826,
       "file": "",
       "seed": 215798617177015,
       "relations": []
@@ -5087,11 +5087,11 @@
       "death_year": 1858,
       "dynasty": "印度殖民时期（19世纪）",
       "quote": "",
-      "birthplace": "出生地：瓦拉纳西",
-      "birthplace_raw": "出生地：瓦拉纳西（贝拿勒斯）",
-      "birthplace_modern": "贝拿勒斯",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "另有1828年说法）",
+      "birthplace_raw": "另有1828年说法）",
+      "birthplace_modern": "",
+      "birth_lat": 32.437431,
+      "birth_lng": 117.301832,
       "file": "",
       "seed": 134507785230840,
       "relations": []
@@ -5105,8 +5105,8 @@
       "birthplace": "辽宁省昌图县",
       "birthplace_raw": "辽宁省昌图县",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 42.779333,
+      "birth_lng": 124.086628,
       "file": "",
       "seed": 253664038407484,
       "relations": []
@@ -5120,8 +5120,8 @@
       "birthplace": "古称上虞县",
       "birthplace_raw": "古称上虞县（今浙江省绍兴市上虞区）",
       "birthplace_modern": "浙江省绍兴市上虞区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.0167,
+      "birth_lng": 120.8833,
       "file": "",
       "seed": 66637781025340,
       "relations": []
@@ -5132,8 +5132,8 @@
       "death_year": 1650,
       "dynasty": "17世纪（欧洲近代早期）",
       "quote": "“近代哲学之父”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
+      "birthplace": "法兰西王国图赖讷省拉艾",
+      "birthplace_raw": "法兰西王国图赖讷省拉艾",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -5162,9 +5162,9 @@
       "death_year": 1931,
       "dynasty": "近代（19世纪末至20世纪初）",
       "quote": "“爱除自身外无施与，除自身外无接受。”",
-      "birthplace": "贝什里",
-      "birthplace_raw": "贝什里（今黎巴嫩北部省贝什里）",
-      "birthplace_modern": "黎巴嫩北部省贝什里",
+      "birthplace": "",
+      "birthplace_raw": "（说法不一）",
+      "birthplace_modern": "说法不一",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -5180,8 +5180,8 @@
       "birthplace": "直隶献县",
       "birthplace_raw": "直隶献县（今河北省沧州市献县）",
       "birthplace_modern": "河北省沧州市献县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 38.189,
+      "birth_lng": 116.12,
       "file": "",
       "seed": 197124443455778,
       "relations": []
@@ -5195,8 +5195,8 @@
       "birthplace": "古称",
       "birthplace_raw": "古称（今北京市）",
       "birthplace_modern": "北京市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.9042,
+      "birth_lng": 116.4074,
       "file": "",
       "seed": 187177839397033,
       "relations": []
@@ -5225,8 +5225,8 @@
       "birthplace": "纽约州海德公园",
       "birthplace_raw": "纽约州海德公园（今美国纽约州海德公园）",
       "birthplace_modern": "美国纽约州海德公园",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 41.7945,
+      "birth_lng": -73.9321,
       "file": "",
       "seed": 217349783985820,
       "relations": []
@@ -5237,9 +5237,9 @@
       "death_year": 1952,
       "dynasty": "中华人民共和国成立初期，抗美援朝战争时期",
       "quote": "",
-      "birthplace": "湖南省新化县",
-      "birthplace_raw": "湖南省新化县（今属娄底市）松山乡桐子村",
-      "birthplace_modern": "属娄底市",
+      "birthplace": "（一说1949年",
+      "birthplace_raw": "（一说1949年",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -5252,9 +5252,9 @@
       "death_year": 910,
       "dynasty": "晚唐至五代（吴越国）",
       "quote": "",
-      "birthplace": "杭州新城",
-      "birthplace_raw": "杭州新城（今浙江省杭州市富阳区新登镇）",
-      "birthplace_modern": "浙江省杭州市富阳区新登镇",
+      "birthplace": "唐文宗大和七年",
+      "birthplace_raw": "唐文宗大和七年（公元833年）",
+      "birthplace_modern": "公元833年",
       "birth_lat": 29.9727517,
       "birth_lng": 119.7287913,
       "file": "罗隐.html",
@@ -5263,15 +5263,15 @@
     },
     {
       "person": "老子",
-      "birth_year": 571,
-      "death_year": 471,
+      "birth_year": -571,
+      "death_year": -471,
       "dynasty": "春秋末期",
       "quote": "“治大国，若烹小鲜。”",
       "birthplace": "楚国苦县厉乡曲仁里",
-      "birthplace_raw": "楚国苦县厉乡曲仁里（今河南省周口市鹿邑县）（存疑）",
+      "birthplace_raw": "楚国苦县厉乡曲仁里（今河南省周口市鹿邑县）",
       "birthplace_modern": "河南省周口市鹿邑县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 33.8617,
+      "birth_lng": 115.4844,
       "file": "",
       "seed": 205729868223180,
       "relations": [
@@ -5284,9 +5284,9 @@
       "death_year": 1398,
       "dynasty": "元末明初",
       "quote": "",
-      "birthplace": "濠州钟离",
-      "birthplace_raw": "濠州钟离（今安徽凤阳）",
-      "birthplace_modern": "安徽凤阳",
+      "birthplace": "元文宗天历元年九月十八日",
+      "birthplace_raw": "元文宗天历元年九月十八日（1328年10月21日）",
+      "birthplace_modern": "1328年10月21日",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -5302,8 +5302,8 @@
       "birthplace": "京师",
       "birthplace_raw": "京师（今北京市）",
       "birthplace_modern": "北京市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.928,
+      "birth_lng": 116.375,
       "file": "",
       "seed": 185325839685965,
       "relations": []
@@ -5332,8 +5332,8 @@
       "birthplace": "四川省江津县",
       "birthplace_raw": "四川省江津县（今重庆市江津区）吴滩镇",
       "birthplace_modern": "重庆市江津区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.319984,
+      "birth_lng": 106.264435,
       "file": "",
       "seed": 143682450881896,
       "relations": []
@@ -5347,8 +5347,8 @@
       "birthplace": "智利帕拉尔",
       "birthplace_raw": "智利帕拉尔",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": -36.1414,
+      "birth_lng": -71.8222,
       "file": "",
       "seed": 113311683153730,
       "relations": []
@@ -5362,8 +5362,8 @@
       "birthplace": "江西余干县",
       "birthplace_raw": "江西余干县（今江西省上饶市余干县）",
       "birthplace_modern": "江西省上饶市余干县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.70283,
+      "birth_lng": 116.695787,
       "file": "",
       "seed": 218959460937540,
       "relations": []
@@ -5377,8 +5377,8 @@
       "birthplace": "山东诸城",
       "birthplace_raw": "山东诸城（今山东省潍坊市诸城市）",
       "birthplace_modern": "山东省潍坊市诸城市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.9966,
+      "birth_lng": 119.4099,
       "file": "",
       "seed": 240220641278050,
       "relations": []
@@ -5390,10 +5390,10 @@
       "dynasty": "当代",
       "quote": "“破旧的老水车”",
       "birthplace": "福建泉州",
-      "birthplace_raw": "福建泉州（具体日期存疑）",
-      "birthplace_modern": "具体日期存疑",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace_raw": "福建泉州",
+      "birthplace_modern": "",
+      "birth_lat": 24.8741,
+      "birth_lng": 118.6758,
       "file": "",
       "seed": 15718927211864,
       "relations": []
@@ -5404,11 +5404,11 @@
       "death_year": 1996,
       "dynasty": "中国现当代",
       "quote": "“中国左翼美术家联盟”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "古称浙江金华",
+      "birthplace_raw": "古称浙江金华（今浙江省金华市）（具体出生地有“畈田蒋村”一说",
+      "birthplace_modern": "浙江省金华市",
+      "birth_lat": 29.0791,
+      "birth_lng": 119.6474,
       "file": "",
       "seed": 196799807876588,
       "relations": []
@@ -5420,8 +5420,8 @@
       "dynasty": "当代中国",
       "quote": "",
       "birthplace": "辽宁沈阳",
-      "birthplace_raw": "辽宁沈阳（具体月份存疑）",
-      "birthplace_modern": "具体月份存疑",
+      "birthplace_raw": "辽宁沈阳",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -5445,15 +5445,15 @@
     },
     {
       "person": "苏格拉底",
-      "birth_year": 469,
-      "death_year": 399,
+      "birth_year": -469,
+      "death_year": -399,
       "dynasty": "古希腊（古典时代）",
       "quote": "“苏格拉底式对话”",
       "birthplace": "雅典",
-      "birthplace_raw": "雅典（今希腊雅典）（具体日期存疑）",
+      "birthplace_raw": "雅典（今希腊雅典）",
       "birthplace_modern": "希腊雅典",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.9838,
+      "birth_lng": 23.7275,
       "file": "",
       "seed": 192240675153392,
       "relations": []
@@ -5467,23 +5467,23 @@
       "birthplace": "浙江省温州府平阳县",
       "birthplace_raw": "浙江省温州府平阳县（今浙江省温州市平阳县）",
       "birthplace_modern": "浙江省温州市平阳县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 27.6618,
+      "birth_lng": 120.5656,
       "file": "",
       "seed": 141773737915740,
       "relations": []
     },
     {
       "person": "苏武",
-      "birth_year": 140,
-      "death_year": 60,
+      "birth_year": -140,
+      "death_year": -60,
       "dynasty": "西汉",
       "quote": "“武字子卿，少以父任，兄弟并为郎。”",
-      "birthplace": "存疑",
-      "birthplace_raw": "存疑",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "古称杜陵",
+      "birthplace_raw": "古称杜陵（今陕西省西安市）附近",
+      "birthplace_modern": "陕西省西安市",
+      "birth_lat": 34.26,
+      "birth_lng": 108.94,
       "file": "",
       "seed": 23055540400455,
       "relations": []
@@ -5494,9 +5494,9 @@
       "death_year": 1066,
       "dynasty": "北宋",
       "quote": "“六国破灭，非兵不利，战不善，弊在赂秦。”",
-      "birthplace": "眉州眉山",
-      "birthplace_raw": "眉州眉山（今四川省眉山市）",
-      "birthplace_modern": "四川省眉山市",
+      "birthplace": "",
+      "birthplace_raw": "（说法不一）",
+      "birthplace_modern": "说法不一",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -5509,11 +5509,11 @@
       "death_year": 1048,
       "dynasty": "北宋",
       "quote": "",
-      "birthplace": "祖籍梓州铜山",
-      "birthplace_raw": "祖籍梓州铜山（今四川中江）",
-      "birthplace_modern": "四川中江",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "开封",
+      "birthplace_raw": "开封（今河南开封）",
+      "birthplace_modern": "河南开封",
+      "birth_lat": 34.604167,
+      "birth_lng": 114.497222,
       "file": "",
       "seed": 207024312068121,
       "relations": []
@@ -5524,11 +5524,11 @@
       "death_year": 1101,
       "dynasty": "北宋",
       "quote": "“日啖荔枝三百颗，不辞长作岭南人”",
-      "birthplace": "眉州眉山",
-      "birthplace_raw": "眉州眉山（今四川省眉山市）",
-      "birthplace_modern": "四川省眉山市",
-      "birth_lat": 29.9866838,
-      "birth_lng": 103.7790009,
+      "birthplace": "宋仁宗景祐三年十二月十九日（1037年1月8日",
+      "birthplace_raw": "宋仁宗景祐三年十二月十九日（1037年1月8日",
+      "birthplace_modern": "",
+      "birth_lat": 30.079061,
+      "birth_lng": 103.8458201,
       "file": "苏轼__pure__20260424_110302.html",
       "seed": 210624475883170,
       "relations": []
@@ -5539,9 +5539,9 @@
       "death_year": 1112,
       "dynasty": "北宋",
       "quote": "",
-      "birthplace": "眉州眉山",
-      "birthplace_raw": "眉州眉山（今四川省眉山市）",
-      "birthplace_modern": "四川省眉山市",
+      "birthplace": "宋仁宗宝元二年二月二十日",
+      "birthplace_raw": "宋仁宗宝元二年二月二十日（1039年3月18日）",
+      "birthplace_modern": "1039年3月18日",
       "birth_lat": 30.079061,
       "birth_lng": 103.8458201,
       "file": "苏辙.html",
@@ -5569,11 +5569,11 @@
       "death_year": 1052,
       "dynasty": "北宋",
       "quote": "“先天下之忧而忧，后天下之乐而乐”",
-      "birthplace": "今河北省石家庄市正定县）",
-      "birthplace_raw": "今河北省石家庄市正定县）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "淄州长山县",
+      "birthplace_raw": "淄州长山县（今山东省滨州市邹平市）（一说生于真定府",
+      "birthplace_modern": "山东省滨州市邹平市",
+      "birth_lat": 36.8626,
+      "birth_lng": 117.7399,
       "file": "",
       "seed": 41990236033606,
       "relations": []
@@ -5587,8 +5587,8 @@
       "birthplace": "浙江省桐乡县乌镇",
       "birthplace_raw": "浙江省桐乡县乌镇（今浙江省嘉兴市桐乡市乌镇）",
       "birthplace_modern": "浙江省嘉兴市桐乡市乌镇",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.7467,
+      "birth_lng": 120.4853,
       "file": "",
       "seed": 160606984306565,
       "relations": []
@@ -5617,23 +5617,23 @@
       "birthplace": "上海",
       "birthplace_raw": "上海（祖籍浙江杭州）",
       "birthplace_modern": "祖籍浙江杭州",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.2304,
+      "birth_lng": 121.4737,
       "file": "",
       "seed": 192135486266796,
       "relations": []
     },
     {
       "person": "荀子",
-      "birth_year": 313,
-      "death_year": 238,
+      "birth_year": -313,
+      "death_year": -238,
       "dynasty": "战国末期",
       "quote": "“天行有常，制天命而用之”",
-      "birthplace": "具体地点存疑）",
-      "birthplace_raw": "具体地点存疑）",
+      "birthplace": "赵国",
+      "birthplace_raw": "赵国",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.87,
+      "birth_lng": 112.55,
       "file": "",
       "seed": 22379900641838,
       "relations": [
@@ -5649,8 +5649,8 @@
       "birthplace": "法国诺曼底地区费康附近的米洛美尼尔城堡",
       "birthplace_raw": "法国诺曼底地区费康附近的米洛美尼尔城堡（今法国滨海塞纳省）",
       "birthplace_modern": "法国滨海塞纳省",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 49.7583,
+      "birth_lng": 0.3714,
       "file": "",
       "seed": 270142453421887,
       "relations": []
@@ -5676,8 +5676,8 @@
       "death_year": 2016,
       "dynasty": "美国现代",
       "quote": "",
-      "birthplace": "存疑）；美国宾夕法尼亚州",
-      "birthplace_raw": "存疑）；美国宾夕法尼亚州",
+      "birthplace": "（另有说法为1932年",
+      "birthplace_raw": "（另有说法为1932年",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -5694,8 +5694,8 @@
       "birthplace": "莱比锡",
       "birthplace_raw": "莱比锡（今德国萨克森州莱比锡市）",
       "birthplace_modern": "德国萨克森州莱比锡市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 51.3397,
+      "birth_lng": 12.3731,
       "file": "",
       "seed": 254512652440133,
       "relations": []
@@ -5721,9 +5721,9 @@
       "death_year": 1942,
       "dynasty": "中国现代（中华民国时期）",
       "quote": "“在乡村，人和动物一起忙着生，忙着死。”",
-      "birthplace": "黑龙江省呼兰县",
-      "birthplace_raw": "黑龙江省呼兰县（今黑龙江省哈尔滨市呼兰区）",
-      "birthplace_modern": "黑龙江省哈尔滨市呼兰区",
+      "birthplace": "（一说为1911年农历端午节",
+      "birthplace_raw": "（一说为1911年农历端午节",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -5747,15 +5747,15 @@
     },
     {
       "person": "董仲舒",
-      "birth_year": 179,
-      "death_year": 104,
+      "birth_year": -179,
+      "death_year": -104,
       "dynasty": "西汉",
       "quote": "“罢黜百家，独尊儒术”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
+      "birthplace": "广川（今河北省衡水市景县",
+      "birthplace_raw": "广川（今河北省衡水市景县",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.693,
+      "birth_lng": 116.27,
       "file": "",
       "seed": 139830701552302,
       "relations": []
@@ -5769,8 +5769,8 @@
       "birthplace": "直隶省怀来县南山堡村",
       "birthplace_raw": "直隶省怀来县南山堡村（今河北省张家口市怀来县存瑞镇南山堡村）",
       "birthplace_modern": "河北省张家口市怀来县存瑞镇南山堡村",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 40.4,
+      "birth_lng": 115.73,
       "file": "",
       "seed": 101878862930608,
       "relations": []
@@ -5799,8 +5799,8 @@
       "birthplace": "浙江奉化溪口",
       "birthplace_raw": "浙江奉化溪口（今浙江省宁波市奉化区溪口镇）（出生时辰有说法不一）",
       "birthplace_modern": "浙江省宁波市奉化区溪口镇",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.6881,
+      "birth_lng": 121.2714,
       "file": "",
       "seed": 269732898007288,
       "relations": []
@@ -5811,11 +5811,11 @@
       "death_year": 1715,
       "dynasty": "清代",
       "quote": "“世界短篇小说之王”",
-      "birthplace": "古称般阳",
-      "birthplace_raw": "古称般阳（今山东省淄博市淄川区）蒲家庄（出生具体日期说法不一）",
-      "birthplace_modern": "山东省淄博市淄川区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "明崇祯十三年",
+      "birthplace_raw": "明崇祯十三年（公元1640年）",
+      "birthplace_modern": "公元1640年",
+      "birth_lat": 31.189386,
+      "birth_lng": 117.062029,
       "file": "",
       "seed": 72338508206524,
       "relations": []
@@ -5829,8 +5829,8 @@
       "birthplace": "桂阳郡",
       "birthplace_raw": "桂阳郡（今湖南省郴州市）",
       "birthplace_modern": "湖南省郴州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 25.7706,
+      "birth_lng": 113.0148,
       "file": "",
       "seed": 166671964471156,
       "relations": []
@@ -5844,8 +5844,8 @@
       "birthplace": "绍兴府山阴县",
       "birthplace_raw": "绍兴府山阴县（今浙江省绍兴市）（说法不一）",
       "birthplace_modern": "浙江省绍兴市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.0,
+      "birth_lng": 120.58,
       "file": "",
       "seed": 212527377538438,
       "relations": []
@@ -5886,11 +5886,11 @@
       "death_year": 1916,
       "dynasty": "清末民初",
       "quote": "“驻扎朝鲜总理交涉通商事宜”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "陈州府项城县",
+      "birthplace_raw": "陈州府项城县（今河南省周口市项城市）袁寨（一说出生于其父袁保中在项城县城的寓所",
+      "birthplace_modern": "河南省周口市项城市",
+      "birth_lat": 33.4436,
+      "birth_lng": 114.8756,
       "file": "",
       "seed": 242318833213674,
       "relations": []
@@ -5904,8 +5904,8 @@
       "birthplace": "北平",
       "birthplace_raw": "北平（今北京市）",
       "birthplace_modern": "北京市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.9042,
+      "birth_lng": 116.4074,
       "file": "",
       "seed": 154600172076231,
       "relations": []
@@ -5931,11 +5931,11 @@
       "death_year": 1919,
       "dynasty": "清末民初",
       "quote": "“中国铁路之父”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "广东广州府南海县",
+      "birthplace_raw": "广东广州府南海县（今广东省广州市荔湾区）",
+      "birthplace_modern": "广东省广州市荔湾区",
+      "birth_lat": 23.1291,
+      "birth_lng": 113.2443,
       "file": "",
       "seed": 160936753641847,
       "relations": []
@@ -5976,9 +5976,9 @@
       "death_year": 234,
       "dynasty": "东汉末年至三国时期",
       "quote": "“鞠躬尽瘁，死而后已”",
-      "birthplace": "琅琊郡阳都县",
-      "birthplace_raw": "琅琊郡阳都县（今山东省临沂市沂南县）",
-      "birthplace_modern": "山东省临沂市沂南县",
+      "birthplace": "另有184年说）",
+      "birthplace_raw": "另有184年说）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6009,8 +6009,8 @@
       "birthplace": "古称浏阳县",
       "birthplace_raw": "古称浏阳县（今湖南省长沙市浏阳市）",
       "birthplace_modern": "湖南省长沙市浏阳市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.163,
+      "birth_lng": 113.633,
       "file": "",
       "seed": 46098952962906,
       "relations": []
@@ -6024,8 +6024,8 @@
       "birthplace": "温州",
       "birthplace_raw": "温州（今浙江省温州市）",
       "birthplace_modern": "浙江省温州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.0006,
+      "birth_lng": 120.6729,
       "file": "",
       "seed": 273612693443405,
       "relations": []
@@ -6036,9 +6036,9 @@
       "death_year": 1827,
       "dynasty": "古典主义时期向浪漫主义时期过渡",
       "quote": "",
-      "birthplace": "神圣罗马帝国科隆选侯国波恩",
-      "birthplace_raw": "神圣罗马帝国科隆选侯国波恩（今德国波恩）",
-      "birthplace_modern": "德国波恩",
+      "birthplace": "（受洗日",
+      "birthplace_raw": "（受洗日",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6051,11 +6051,11 @@
       "death_year": 2005,
       "dynasty": "近现代",
       "quote": "“中华民族多元一体格局”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "江苏吴江",
+      "birthplace_raw": "江苏吴江（今江苏省苏州市吴江区）",
+      "birthplace_modern": "江苏省苏州市吴江区",
+      "birth_lat": 31.159,
+      "birth_lng": 120.645,
       "file": "",
       "seed": 253154851778975,
       "relations": []
@@ -6069,8 +6069,8 @@
       "birthplace": "博蒙-德洛马涅",
       "birthplace_raw": "博蒙-德洛马涅（今法国上加龙省博蒙-德洛马涅）",
       "birthplace_modern": "法国上加龙省博蒙-德洛马涅",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 43.4667,
+      "birth_lng": 1.2333,
       "file": "",
       "seed": 268590987941989,
       "relations": []
@@ -6084,8 +6084,8 @@
       "birthplace": "山东省峄县",
       "birthplace_raw": "山东省峄县（今山东省枣庄市峄城区）",
       "birthplace_modern": "山东省枣庄市峄城区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.772931,
+      "birth_lng": 117.590738,
       "file": "",
       "seed": 126789312234892,
       "relations": []
@@ -6096,9 +6096,9 @@
       "death_year": 11,
       "dynasty": "北宋",
       "quote": "“开方作法本源图”",
-      "birthplace": "古楚州",
-      "birthplace_raw": "古楚州（今江苏省淮安市）（存疑）",
-      "birthplace_modern": "江苏省淮安市",
+      "birthplace": "约公元11世纪初",
+      "birthplace_raw": "约公元11世纪初",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6112,10 +6112,10 @@
       "dynasty": "北魏（约公元6世纪）",
       "quote": "“顺天时，量地利，则用力少而成功多”",
       "birthplace": "古称",
-      "birthplace_raw": "古称（今山东省寿光市）？（存疑）",
+      "birthplace_raw": "古称（今山东省寿光市）？",
       "birthplace_modern": "山东省寿光市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 36.88,
+      "birth_lng": 118.74,
       "file": "",
       "seed": 176966690251393,
       "relations": []
@@ -6137,15 +6137,15 @@
     },
     {
       "person": "贾谊",
-      "birth_year": 200,
-      "death_year": 168,
+      "birth_year": -200,
+      "death_year": -168,
       "dynasty": "西汉",
       "quote": "“众建诸侯而少其力”",
       "birthplace": "洛阳",
-      "birthplace_raw": "洛阳（今河南洛阳）（存疑）",
+      "birthplace_raw": "洛阳（今河南洛阳）",
       "birthplace_modern": "河南洛阳",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.6197,
+      "birth_lng": 112.454,
       "file": "",
       "seed": 232571918392623,
       "relations": []
@@ -6186,9 +6186,9 @@
       "death_year": 1220,
       "dynasty": "南宋",
       "quote": "",
-      "birthplace": "永嘉",
-      "birthplace_raw": "永嘉（今浙江温州）",
-      "birthplace_modern": "浙江温州",
+      "birthplace": "约宋孝宗乾道六年",
+      "birthplace_raw": "约宋孝宗乾道六年（1170年）",
+      "birthplace_modern": "1170年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6219,8 +6219,8 @@
       "birthplace": "山西省沁水县尉迟村",
       "birthplace_raw": "山西省沁水县尉迟村（今山西省晋城市沁水县）",
       "birthplace_modern": "山西省晋城市沁水县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 35.72,
+      "birth_lng": 112.42,
       "file": "",
       "seed": 57826784809057,
       "relations": []
@@ -6231,8 +6231,8 @@
       "death_year": 3,
       "dynasty": "三国时期（吴国）",
       "quote": "“勾股各自乘，并之为弦实，开方除之，即弦也。”",
-      "birthplace": "具体年份与地点存疑",
-      "birthplace_raw": "具体年份与地点存疑",
+      "birthplace": "约公元3世纪",
+      "birthplace_raw": "约公元3世纪",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -6246,9 +6246,9 @@
       "death_year": 1814,
       "dynasty": "清代（乾隆、嘉庆年间）",
       "quote": "",
-      "birthplace": "江苏阳湖",
-      "birthplace_raw": "江苏阳湖（今江苏省常州市）",
-      "birthplace_modern": "江苏省常州市",
+      "birthplace": "清雍正五年",
+      "birthplace_raw": "清雍正五年（1727年）十月二十二日",
+      "birthplace_modern": "1727年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6261,9 +6261,9 @@
       "death_year": 1207,
       "dynasty": "南宋",
       "quote": "“壮岁旌旗拥万夫，锦襜突骑渡江初。”",
-      "birthplace": "古称济南府",
-      "birthplace_raw": "古称济南府（今山东省济南市）",
-      "birthplace_modern": "山东省济南市",
+      "birthplace": "另有1162年说）",
+      "birthplace_raw": "另有1162年说）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6279,8 +6279,8 @@
       "birthplace": "佛罗伦萨共和国芬奇镇",
       "birthplace_raw": "佛罗伦萨共和国芬奇镇（今意大利托斯卡纳大区芬奇镇）",
       "birthplace_modern": "意大利托斯卡纳大区芬奇镇",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 43.7833,
+      "birth_lng": 10.9236,
       "file": "",
       "seed": 216767378267473,
       "relations": []
@@ -6294,8 +6294,8 @@
       "birthplace": "英格兰什鲁斯伯里",
       "birthplace_raw": "英格兰什鲁斯伯里（今英国什罗普郡什鲁斯伯里）",
       "birthplace_modern": "英国什罗普郡什鲁斯伯里",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 52.7083,
+      "birth_lng": -2.7547,
       "file": "",
       "seed": 235674547431463,
       "relations": []
@@ -6309,8 +6309,8 @@
       "birthplace": "浙江省绍兴府会稽县",
       "birthplace_raw": "浙江省绍兴府会稽县",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.94038,
+      "birth_lng": 120.632156,
       "file": "",
       "seed": 109962045902393,
       "relations": []
@@ -6324,8 +6324,8 @@
       "birthplace": "四川省广安州",
       "birthplace_raw": "四川省广安州（今四川省广安市广安区）",
       "birthplace_modern": "四川省广安市广安区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.4559,
+      "birth_lng": 106.6333,
       "file": "",
       "seed": 116230795416683,
       "relations": []
@@ -6396,11 +6396,11 @@
       "death_year": 1433,
       "dynasty": "明朝",
       "quote": "“观夫海洋，洪涛接天，巨浪如山…而我之云帆高张，昼夜星驰。”",
-      "birthplace": "另有说法为云南玉溪）",
-      "birthplace_raw": "另有说法为云南玉溪）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "古称昆阳",
+      "birthplace_raw": "古称昆阳（今云南省昆明市晋宁区）",
+      "birthplace_modern": "云南省昆明市晋宁区",
+      "birth_lat": 24.6698,
+      "birth_lng": 102.5956,
       "file": "",
       "seed": 276729017513348,
       "relations": []
@@ -6412,8 +6412,8 @@
       "dynasty": "不详（存疑）",
       "quote": "",
       "birthplace": "不详",
-      "birthplace_raw": "不详（存疑）",
-      "birthplace_modern": "存疑",
+      "birthplace_raw": "不详",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6426,11 +6426,11 @@
       "death_year": 1662,
       "dynasty": "明末清初",
       "quote": "“**开辟荆榛逐荷夷**”",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "日本肥前国平户",
+      "birthplace_raw": "日本肥前国平户（今日本长崎县平户市）（一说生于福建南安",
+      "birthplace_modern": "日本长崎县平户市",
+      "birth_lat": 33.3667,
+      "birth_lng": 129.55,
       "file": "",
       "seed": 170238805054408,
       "relations": []
@@ -6441,9 +6441,9 @@
       "death_year": 1765,
       "dynasty": "清代（康熙、雍正、乾隆年间）",
       "quote": "",
-      "birthplace": "江苏兴化",
-      "birthplace_raw": "江苏兴化",
-      "birthplace_modern": "",
+      "birthplace": "康熙三十二年",
+      "birthplace_raw": "康熙三十二年（1693年）",
+      "birthplace_modern": "1693年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6457,8 +6457,8 @@
       "dynasty": "未知（存疑）",
       "quote": "",
       "birthplace": "未知",
-      "birthplace_raw": "未知（存疑）",
-      "birthplace_modern": "存疑",
+      "birthplace_raw": "未知",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6474,8 +6474,8 @@
       "birthplace": "华州郑县",
       "birthplace_raw": "华州郑县（今陕西渭南华州区）",
       "birthplace_modern": "陕西渭南华州区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.497019,
+      "birth_lng": 109.775765,
       "file": "",
       "seed": 83251265539185,
       "relations": []
@@ -6489,8 +6489,8 @@
       "birthplace": "邢州邢台县",
       "birthplace_raw": "邢州邢台县（今河北省邢台市）",
       "birthplace_modern": "河北省邢台市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.07,
+      "birth_lng": 114.5,
       "file": "",
       "seed": 32999652616588,
       "relations": []
@@ -6504,8 +6504,8 @@
       "birthplace": "四川省嘉定府乐山县",
       "birthplace_raw": "四川省嘉定府乐山县（今四川省乐山市）",
       "birthplace_modern": "四川省乐山市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.58,
+      "birth_lng": 103.76,
       "file": "",
       "seed": 235017671870564,
       "relations": []
@@ -6519,21 +6519,21 @@
       "birthplace": "法国尼姆",
       "birthplace_raw": "法国尼姆（今法国奥克西塔尼大区加尔省省会尼姆）",
       "birthplace_modern": "法国奥克西塔尼大区加尔省省会尼姆",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 43.8367,
+      "birth_lng": 4.3601,
       "file": "",
       "seed": 203279582008737,
       "relations": []
     },
     {
       "person": "释迦牟尼",
-      "birth_year": 563,
-      "death_year": 483,
+      "birth_year": -563,
+      "death_year": -483,
       "dynasty": "古印度列国时代（约公元前6世纪至前5世纪）",
       "quote": "",
-      "birthplace": "古印度迦毗罗卫国蓝毗尼园",
-      "birthplace_raw": "古印度迦毗罗卫国蓝毗尼园（今尼泊尔南部提罗拉科特附近）",
-      "birthplace_modern": "尼泊尔南部提罗拉科特附近",
+      "birthplace": "",
+      "birthplace_raw": "（一说前565年）",
+      "birthplace_modern": "一说前565年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6542,13 +6542,13 @@
     },
     {
       "person": "重耳",
-      "birth_year": 697,
-      "death_year": 628,
+      "birth_year": -697,
+      "death_year": -628,
       "dynasty": "春秋时期",
       "quote": "",
-      "birthplace": "曲沃",
-      "birthplace_raw": "曲沃（今山西闻喜县）",
-      "birthplace_modern": "山西闻喜县",
+      "birthplace": "另有前671年等说法）",
+      "birthplace_raw": "另有前671年等说法）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6562,10 +6562,10 @@
       "dynasty": "唐代",
       "quote": "鉴真，俗姓淳于，唐代扬州人",
       "birthplace": "古称扬州",
-      "birthplace_raw": "古称扬州（今江苏省扬州市）（具体日期存疑）",
+      "birthplace_raw": "古称扬州（今江苏省扬州市）",
       "birthplace_modern": "江苏省扬州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.3942,
+      "birth_lng": 119.413,
       "file": "",
       "seed": 269460978416949,
       "relations": []
@@ -6579,8 +6579,8 @@
       "birthplace": "今湖北省黄冈市",
       "birthplace_raw": "今湖北省黄冈市",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.4535,
+      "birth_lng": 114.8723,
       "file": "",
       "seed": 42794223173571,
       "relations": []
@@ -6594,8 +6594,8 @@
       "birthplace": "浙江杭州",
       "birthplace_raw": "浙江杭州（今浙江省杭州市）",
       "birthplace_modern": "浙江省杭州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.2741,
+      "birth_lng": 120.1551,
       "file": "",
       "seed": 109261853928913,
       "relations": []
@@ -6639,8 +6639,8 @@
       "birthplace": "北京",
       "birthplace_raw": "北京（祖籍河北赵县）",
       "birthplace_modern": "祖籍河北赵县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.7563,
+      "birth_lng": 114.7753,
       "file": "",
       "seed": 113825884961163,
       "relations": []
@@ -6652,8 +6652,8 @@
       "dynasty": "存疑（公开史料不足，无法确定具体时代）",
       "quote": "",
       "birthplace": "存疑",
-      "birthplace_raw": "存疑（出生年份与出生地均不详）",
-      "birthplace_modern": "出生年份与出生地均不详",
+      "birthplace_raw": "存疑",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6669,8 +6669,8 @@
       "birthplace": "湖北省黄州府蕲水县",
       "birthplace_raw": "湖北省黄州府蕲水县（今湖北省黄冈市浠水县）",
       "birthplace_modern": "湖北省黄冈市浠水县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.4518,
+      "birth_lng": 115.2622,
       "file": "",
       "seed": 136613485566676,
       "relations": []
@@ -6684,8 +6684,8 @@
       "birthplace": "湖北浠水",
       "birthplace_raw": "湖北浠水",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.452212,
+      "birth_lng": 115.265155,
       "file": "",
       "seed": 81973853802846,
       "relations": []
@@ -6711,11 +6711,11 @@
       "death_year": 673,
       "dynasty": "唐代",
       "quote": "",
-      "birthplace": "存疑）",
-      "birthplace_raw": "存疑）",
+      "birthplace": "出生地说法不一",
+      "birthplace_raw": "出生地说法不一",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.437431,
+      "birth_lng": 117.301832,
       "file": "",
       "seed": 215310184625454,
       "relations": []
@@ -6726,9 +6726,9 @@
       "death_year": 770,
       "dynasty": "日本奈良时代、中国唐朝",
       "quote": "",
-      "birthplace": "日本本州中部",
-      "birthplace_raw": "日本本州中部（今奈良县一带）",
-      "birthplace_modern": "奈良县一带",
+      "birthplace": "",
+      "birthplace_raw": "（日本文武天皇2年）",
+      "birthplace_modern": "日本文武天皇2年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6742,8 +6742,8 @@
       "dynasty": "不详（存疑，可能为近现代民间人物或虚构代称）",
       "quote": "",
       "birthplace": "年份与出生地均不详",
-      "birthplace_raw": "年份与出生地均不详（存疑）",
-      "birthplace_modern": "存疑",
+      "birthplace_raw": "年份与出生地均不详",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6756,9 +6756,9 @@
       "death_year": 1763,
       "dynasty": "清代（康熙末年至乾隆中期）",
       "quote": "",
-      "birthplace": "生于南京",
-      "birthplace_raw": "生于南京（江宁织造府）",
-      "birthplace_modern": "江宁织造府",
+      "birthplace": "",
+      "birthplace_raw": "（一说1724年）",
+      "birthplace_modern": "一说1724年",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6771,11 +6771,11 @@
       "death_year": 850,
       "dynasty": "阿拔斯王朝（伊斯兰黄金时代）",
       "quote": "“阿尔·花拉子模”",
-      "birthplace": "具体地点存疑）",
-      "birthplace_raw": "具体地点存疑）",
+      "birthplace": "花拉子模地区",
+      "birthplace_raw": "花拉子模地区",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 41.5536,
+      "birth_lng": 60.6347,
       "file": "",
       "seed": 81004993406535,
       "relations": [
@@ -6819,8 +6819,8 @@
       "death_year": 1992,
       "dynasty": "20世纪",
       "quote": "",
-      "birthplace": "但其本人及官方记录多采用1920年）",
-      "birthplace_raw": "但其本人及官方记录多采用1920年）",
+      "birthplace": "俄罗斯苏维埃联邦社会主义共和国斯摩棱斯克州彼得罗维奇（一说出生于1919年",
+      "birthplace_raw": "俄罗斯苏维埃联邦社会主义共和国斯摩棱斯克州彼得罗维奇（一说出生于1919年",
       "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
@@ -6867,8 +6867,8 @@
       "birthplace": "江苏省无锡县",
       "birthplace_raw": "江苏省无锡县",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 32.061377,
+      "birth_lng": 118.763563,
       "file": "",
       "seed": 205076607457647,
       "relations": []
@@ -6879,9 +6879,9 @@
       "death_year": 1210,
       "dynasty": "南宋",
       "quote": "“小楼一夜听春雨，深巷明朝卖杏花。”",
-      "birthplace": "祖籍越州山阴",
-      "birthplace_raw": "祖籍越州山阴（今浙江省绍兴市）",
-      "birthplace_modern": "浙江省绍兴市",
+      "birthplace": "说法不一",
+      "birthplace_raw": "说法不一",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -6894,11 +6894,11 @@
       "death_year": 804,
       "dynasty": "唐代",
       "quote": "",
-      "birthplace": "复州竟陵",
-      "birthplace_raw": "复州竟陵（今湖北天门）",
-      "birthplace_modern": "湖北天门",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "",
+      "birthplace_raw": "（开元二十一年）",
+      "birthplace_modern": "开元二十一年",
+      "birth_lat": 47.847194,
+      "birth_lng": 128.804418,
       "file": "",
       "seed": 52495977269263,
       "relations": []
@@ -6912,8 +6912,8 @@
       "birthplace": "福建省惠安县",
       "birthplace_raw": "福建省惠安县",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 25.012449,
+      "birth_lng": 118.781037,
       "file": "",
       "seed": 206507894529463,
       "relations": []
@@ -7019,8 +7019,8 @@
       "birthplace": "安徽省安庆府怀宁县",
       "birthplace_raw": "安徽省安庆府怀宁县（今安徽省安庆市）",
       "birthplace_modern": "安徽省安庆市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.531828,
+      "birth_lng": 117.115349,
       "file": "",
       "seed": 1844981345168,
       "relations": []
@@ -7049,8 +7049,8 @@
       "birthplace": "福建闽县",
       "birthplace_raw": "福建闽县（今福建省福州市仓山区）",
       "birthplace_modern": "福建省福州市仓山区",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 26.0745,
+      "birth_lng": 119.2965,
       "file": "",
       "seed": 8350163937089,
       "relations": []
@@ -7076,11 +7076,11 @@
       "death_year": 2004,
       "dynasty": "现代（中华民国、中华人民共和国）",
       "quote": "“微分几何之父”",
-      "birthplace": "出生于浙江嘉兴秀水县",
-      "birthplace_raw": "出生于浙江嘉兴秀水县（今浙江省嘉兴市）",
+      "birthplace": "浙江嘉兴秀水县",
+      "birthplace_raw": "浙江嘉兴秀水县（今浙江省嘉兴市）",
       "birthplace_modern": "浙江省嘉兴市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.7529,
+      "birth_lng": 120.7585,
       "file": "",
       "seed": 96236739786706,
       "relations": []
@@ -7094,8 +7094,8 @@
       "birthplace": "广陵东阳",
       "birthplace_raw": "广陵东阳（今江苏盱眙县东或金湖县西）",
       "birthplace_modern": "江苏盱眙县东或金湖县西",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 33.011905,
+      "birth_lng": 118.544545,
       "file": "",
       "seed": 194454801966079,
       "relations": []
@@ -7106,11 +7106,11 @@
       "death_year": 427,
       "dynasty": "东晋末至南朝宋初",
       "quote": "“古今隐逸诗人之宗”",
-      "birthplace": "柴桑",
-      "birthplace_raw": "柴桑（今江西省九江市）",
-      "birthplace_modern": "江西省九江市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "（说法不一",
+      "birthplace_raw": "（说法不一",
+      "birthplace_modern": "",
+      "birth_lat": 32.437431,
+      "birth_lng": 117.301832,
       "file": "",
       "seed": 143754584140957,
       "relations": []
@@ -7136,9 +7136,9 @@
       "death_year": 618,
       "dynasty": "隋朝",
       "quote": "",
-      "birthplace": "一说弘农华阴",
-      "birthplace_raw": "一说弘农华阴（今陕西华阴）",
-      "birthplace_modern": "陕西华阴",
+      "birthplace": "一说长安",
+      "birthplace_raw": "一说长安（今陕西西安）",
+      "birthplace_modern": "陕西西安",
       "birth_lat": 34.261004,
       "birth_lng": 108.9423363,
       "file": "隋炀帝.html",
@@ -7152,10 +7152,10 @@
       "dynasty": "19世纪法国（波旁复辟、七月王朝、第二共和国、第二帝国、第三共和国初期）",
       "quote": "“《欧那尼》之战”",
       "birthplace": "古称贝桑松",
-      "birthplace_raw": "古称贝桑松（今法国勃艮第-弗朗什-孔泰大区杜省贝桑松）（出生具体地址存疑）",
+      "birthplace_raw": "古称贝桑松（今法国勃艮第-弗朗什-孔泰大区杜省贝桑松）",
       "birthplace_modern": "法国勃艮第-弗朗什-孔泰大区杜省贝桑松",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 47.2378,
+      "birth_lng": 6.0241,
       "file": "",
       "seed": 267086846566144,
       "relations": []
@@ -7169,8 +7169,8 @@
       "birthplace": "英格兰萨塞克斯郡霍舍姆附近的菲尔德庄园",
       "birthplace_raw": "英格兰萨塞克斯郡霍舍姆附近的菲尔德庄园（今英国西萨塞克斯郡）",
       "birthplace_modern": "英国西萨塞克斯郡",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 51.0578,
+      "birth_lng": -0.3264,
       "file": "",
       "seed": 104369351140403,
       "relations": []
@@ -7199,8 +7199,8 @@
       "birthplace": "湖南省望城县安庆乡",
       "birthplace_raw": "湖南省望城县安庆乡（今湖南省长沙市望城区雷锋街道）",
       "birthplace_modern": "湖南省长沙市望城区雷锋街道",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.29,
+      "birth_lng": 112.81,
       "file": "",
       "seed": 71312043179334,
       "relations": []
@@ -7211,11 +7211,11 @@
       "death_year": 824,
       "dynasty": "唐代",
       "quote": "“**师者，所以传道受业解惑也**”",
-      "birthplace": "河阳",
-      "birthplace_raw": "河阳（今河南省焦作市孟州市）",
-      "birthplace_modern": "河南省焦作市孟州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "（说法不一",
+      "birthplace_raw": "（说法不一",
+      "birthplace_modern": "",
+      "birth_lat": 32.437431,
+      "birth_lng": 117.301832,
       "file": "",
       "seed": 215813099656322,
       "relations": []
@@ -7226,9 +7226,9 @@
       "death_year": null,
       "dynasty": "唐代（盛唐至中唐过渡期）",
       "quote": "",
-      "birthplace": "一说长安",
-      "birthplace_raw": "一说长安（今陕西西安）",
-      "birthplace_modern": "陕西西安",
+      "birthplace": "一说南阳",
+      "birthplace_raw": "一说南阳（今河南南阳）",
+      "birthplace_modern": "河南南阳",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -7237,15 +7237,15 @@
     },
     {
       "person": "韩非子",
-      "birth_year": 280,
-      "death_year": 233,
+      "birth_year": -280,
+      "death_year": -233,
       "dynasty": "战国末期",
       "quote": "“智术之士明察，听用，且烛重人之阴情”",
       "birthplace": "新郑",
-      "birthplace_raw": "新郑（今河南省新郑市）（存疑）",
+      "birthplace_raw": "新郑（今河南省新郑市）",
       "birthplace_modern": "河南省新郑市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.3956,
+      "birth_lng": 113.7416,
       "file": "",
       "seed": 135299657544013,
       "relations": [
@@ -7254,15 +7254,15 @@
     },
     {
       "person": "项羽",
-      "birth_year": 232,
-      "death_year": 202,
+      "birth_year": -232,
+      "death_year": -202,
       "dynasty": "秦末汉初",
       "quote": "“羽之神勇，千古无二”",
-      "birthplace": "另有安徽灵璧说）",
-      "birthplace_raw": "另有安徽灵璧说）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "下相县",
+      "birthplace_raw": "下相县（今江苏省宿迁市）",
+      "birthplace_modern": "江苏省宿迁市",
+      "birth_lat": 33.963,
+      "birth_lng": 118.2755,
       "file": "",
       "seed": 212971024871868,
       "relations": []
@@ -7273,9 +7273,9 @@
       "death_year": 1980,
       "dynasty": "清末至中华人民共和国",
       "quote": "“层累地造成的中国古史”",
-      "birthplace": "江苏苏州",
-      "birthplace_raw": "江苏苏州（今江苏省苏州市）",
-      "birthplace_modern": "江苏省苏州市",
+      "birthplace": "",
+      "birthplace_raw": "（农历三月廿三）",
+      "birthplace_modern": "农历三月廿三",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -7284,13 +7284,13 @@
     },
     {
       "person": "颜回",
-      "birth_year": 521,
-      "death_year": 481,
+      "birth_year": -521,
+      "death_year": -481,
       "dynasty": "春秋末期",
       "quote": "",
-      "birthplace": "鲁国",
-      "birthplace_raw": "鲁国（今山东曲阜）",
-      "birthplace_modern": "山东曲阜",
+      "birthplace": "另有公元前511年等说法）",
+      "birthplace_raw": "另有公元前511年等说法）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -7309,8 +7309,8 @@
       "birthplace": "京兆府万年县",
       "birthplace_raw": "京兆府万年县（今陕西省西安市）",
       "birthplace_modern": "陕西省西安市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 34.343207,
+      "birth_lng": 108.939645,
       "file": "",
       "seed": 13066811303388,
       "relations": []
@@ -7324,8 +7324,8 @@
       "birthplace": "艾斯莱本",
       "birthplace_raw": "艾斯莱本（今德国萨克森-安哈尔特州艾斯莱本）",
       "birthplace_modern": "德国萨克森-安哈尔特州艾斯莱本",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 51.5934,
+      "birth_lng": 11.5517,
       "file": "",
       "seed": 41535597970868,
       "relations": []
@@ -7339,8 +7339,8 @@
       "birthplace": "亚特兰大",
       "birthplace_raw": "亚特兰大（今美国佐治亚州亚特兰大）",
       "birthplace_modern": "美国佐治亚州亚特兰大",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 33.749,
+      "birth_lng": -84.388,
       "file": "",
       "seed": 169388819923080,
       "relations": []
@@ -7354,8 +7354,8 @@
       "birthplace": "特里尔",
       "birthplace_raw": "特里尔（今德国莱茵兰-普法尔茨州特里尔市）",
       "birthplace_modern": "德国莱茵兰-普法尔茨州特里尔市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 49.75,
+      "birth_lng": 6.64,
       "file": "",
       "seed": 37246876114703,
       "relations": []
@@ -7412,12 +7412,27 @@
       "dynasty": "元代",
       "quote": "“枯藤老树昏鸦，小桥流水人家，古道西风瘦马。夕阳西下，断肠人在天涯。”",
       "birthplace": "古称大都",
-      "birthplace_raw": "古称大都（今北京市）（具体生年与区县存疑）",
+      "birthplace_raw": "古称大都（今北京市）",
       "birthplace_modern": "北京市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 39.9042,
+      "birth_lng": 116.4074,
       "file": "",
       "seed": 80415511047346,
+      "relations": []
+    },
+    {
+      "person": "马超",
+      "birth_year": 176,
+      "death_year": 222,
+      "dynasty": "东汉末年至三国时期",
+      "quote": "",
+      "birthplace": "扶风茂陵",
+      "birthplace_raw": "扶风茂陵（今陕西省兴平市）",
+      "birthplace_modern": "陕西省兴平市",
+      "birth_lat": 34.2993736,
+      "birth_lng": 108.4830556,
+      "file": "马超.html",
+      "seed": 163307170173115,
       "relations": []
     },
     {
@@ -7471,9 +7486,9 @@
       "death_year": 1936,
       "dynasty": "俄罗斯帝国末期至苏联初期",
       "quote": "“无产阶级艺术最杰出的代表”",
-      "birthplace": "此处取常见说法）",
-      "birthplace_raw": "此处取常见说法）",
-      "birthplace_modern": "",
+      "birthplace": "诺夫哥罗德省下诺夫哥罗德",
+      "birthplace_raw": "诺夫哥罗德省下诺夫哥罗德（今俄罗斯下诺夫哥罗德）（出生具体日期有3月16日、28日等说法",
+      "birthplace_modern": "俄罗斯下诺夫哥罗德",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -7516,11 +7531,11 @@
       "death_year": 765,
       "dynasty": "唐朝",
       "quote": "“**高岑**”",
-      "birthplace": "今河南商丘睢阳区）",
-      "birthplace_raw": "今河南商丘睢阳区）",
+      "birthplace": "今河北景县；一说为洛阳",
+      "birthplace_raw": "今河北景县；一说为洛阳",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 37.691,
+      "birth_lng": 116.268,
       "file": "",
       "seed": 175624581089314,
       "relations": []
@@ -7532,10 +7547,10 @@
       "dynasty": "明朝末年",
       "quote": "“嘻，技亦灵怪矣哉！”",
       "birthplace": "浙江嘉兴府嘉善县",
-      "birthplace_raw": "浙江嘉兴府嘉善县（今浙江省嘉兴市嘉善县）（生年存疑）",
+      "birthplace_raw": "浙江嘉兴府嘉善县（今浙江省嘉兴市嘉善县）",
       "birthplace_modern": "浙江省嘉兴市嘉善县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.8296,
+      "birth_lng": 120.9256,
       "file": "",
       "seed": 259955035213410,
       "relations": []
@@ -7561,11 +7576,11 @@
       "death_year": 643,
       "dynasty": "隋末唐初",
       "quote": "“兼听则明，偏信则闇”",
-      "birthplace": "今河北省巨鹿县）",
-      "birthplace_raw": "今河北省巨鹿县）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "巨鹿郡下曲阳",
+      "birthplace_raw": "巨鹿郡下曲阳（今河北省晋州市）（说法不一",
+      "birthplace_modern": "河北省晋州市",
+      "birth_lat": 38.0333,
+      "birth_lng": 115.0833,
       "file": "",
       "seed": 75575844512874,
       "relations": []
@@ -7576,11 +7591,11 @@
       "death_year": 1936,
       "dynasty": "清末民国",
       "quote": "“不必说碧绿的菜畦，光滑的石井栏，高大的皂荚树，紫红的桑椹……”",
-      "birthplace": "此处取通行说法）",
-      "birthplace_raw": "此处取通行说法）",
-      "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birthplace": "浙江绍兴府会稽县",
+      "birthplace_raw": "浙江绍兴府会稽县（今浙江省绍兴市）（出生日期有公历9月25日与农历八月初三两说",
+      "birthplace_modern": "浙江省绍兴市",
+      "birth_lat": 30.0,
+      "birth_lng": 120.58,
       "file": "",
       "seed": 156253955444581,
       "relations": []
@@ -7591,11 +7606,11 @@
       "death_year": 466,
       "dynasty": "南朝宋",
       "quote": "“吞声踯躅不敢言”",
-      "birthplace": "具体地点存疑）",
-      "birthplace_raw": "具体地点存疑）",
+      "birthplace": "古称上党",
+      "birthplace_raw": "古称上党",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.848902,
+      "birth_lng": 121.126999,
       "file": "",
       "seed": 90501506342241,
       "relations": []
@@ -7636,9 +7651,9 @@
       "death_year": 1521,
       "dynasty": "地理大发现时代（15世纪末-16世纪初）",
       "quote": "麦哲伦出生于葡萄牙，早年曾参与葡萄牙对东方的殖民探险",
-      "birthplace": "葡萄牙王国波尔图",
-      "birthplace_raw": "葡萄牙王国波尔图（今葡萄牙波尔图）",
-      "birthplace_modern": "葡萄牙波尔图",
+      "birthplace": "另有1505年等说法）",
+      "birthplace_raw": "另有1505年等说法）",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -7654,8 +7669,8 @@
       "birthplace": "长沙府善化县",
       "birthplace_raw": "长沙府善化县（今湖南省长沙市）",
       "birthplace_modern": "湖南省长沙市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 28.2282,
+      "birth_lng": 112.9388,
       "file": "",
       "seed": 17540782669862,
       "relations": []
@@ -7666,11 +7681,11 @@
       "death_year": 2017,
       "dynasty": "当代（20世纪末至21世纪初）",
       "quote": "“深部探测关键仪器装备”",
-      "birthplace": "另有说法为广西南宁地区）",
-      "birthplace_raw": "另有说法为广西南宁地区）",
+      "birthplace": "广西壮族自治区南宁市",
+      "birthplace_raw": "广西壮族自治区南宁市",
       "birthplace_modern": "",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 22.817,
+      "birth_lng": 108.3665,
       "file": "",
       "seed": 49537135919182,
       "relations": []
@@ -7699,8 +7714,8 @@
       "birthplace": "洪州分宁",
       "birthplace_raw": "洪州分宁（今江西省九江市修水县）（说法不一）",
       "birthplace_modern": "江西省九江市修水县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 29.0,
+      "birth_lng": 114.5,
       "file": "",
       "seed": 204247087188958,
       "relations": []
@@ -7714,8 +7729,8 @@
       "birthplace": "古称铜山县",
       "birthplace_raw": "古称铜山县（今四川省德阳市中江县）",
       "birthplace_modern": "四川省德阳市中江县",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 31.0333,
+      "birth_lng": 104.6833,
       "file": "",
       "seed": 215994516270545,
       "relations": []
@@ -7742,8 +7757,8 @@
       "dynasty": "不详（存疑）",
       "quote": "",
       "birthplace": "不详",
-      "birthplace_raw": "不详（存疑）",
-      "birthplace_modern": "存疑",
+      "birthplace_raw": "不详",
+      "birthplace_modern": "",
       "birth_lat": null,
       "birth_lng": null,
       "file": "",
@@ -7759,8 +7774,8 @@
       "birthplace": "仁和",
       "birthplace_raw": "仁和（今浙江省杭州市）（一说生于杭州东城马坡巷）",
       "birthplace_modern": "浙江省杭州市",
-      "birth_lat": null,
-      "birth_lng": null,
+      "birth_lat": 30.2741,
+      "birth_lng": 120.1551,
       "file": "",
       "seed": 40756896659896,
       "relations": []
@@ -8081,11 +8096,11 @@
     },
     {
       "a": 155,
-      "b": 513
+      "b": 514
     },
     {
       "a": 425,
-      "b": 513
+      "b": 514
     },
     {
       "a": 319,
@@ -8221,6 +8236,10 @@
     },
     {
       "a": 30,
+      "b": 492
+    },
+    {
+      "a": 30,
       "b": 396
     },
     {
@@ -8229,10 +8248,22 @@
     },
     {
       "a": 38,
+      "b": 492
+    },
+    {
+      "a": 38,
       "b": 396
     },
     {
       "a": 170,
+      "b": 492
+    },
+    {
+      "a": 170,
+      "b": 396
+    },
+    {
+      "a": 492,
       "b": 396
     },
     {
@@ -8353,7 +8384,7 @@
     },
     {
       "a": 51,
-      "b": 511
+      "b": 512
     },
     {
       "a": 291,
@@ -8373,7 +8404,7 @@
     },
     {
       "a": 291,
-      "b": 511
+      "b": 512
     },
     {
       "a": 291,
@@ -8393,7 +8424,7 @@
     },
     {
       "a": 315,
-      "b": 511
+      "b": 512
     },
     {
       "a": 315,
@@ -8413,7 +8444,7 @@
     },
     {
       "a": 421,
-      "b": 511
+      "b": 512
     },
     {
       "a": 421,
@@ -8433,7 +8464,7 @@
     },
     {
       "a": 7,
-      "b": 511
+      "b": 512
     },
     {
       "a": 7,
@@ -8453,7 +8484,7 @@
     },
     {
       "a": 347,
-      "b": 511
+      "b": 512
     },
     {
       "a": 347,
@@ -8476,23 +8507,23 @@
       "b": 22
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 100
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 320
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 164
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 477
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 22
     },
     {
@@ -8917,7 +8948,7 @@
     },
     {
       "a": 130,
-      "b": 495
+      "b": 496
     },
     {
       "a": 61,
@@ -9165,7 +9196,7 @@
     },
     {
       "a": 65,
-      "b": 510
+      "b": 511
     },
     {
       "a": 304,
@@ -9185,7 +9216,7 @@
     },
     {
       "a": 304,
-      "b": 510
+      "b": 511
     },
     {
       "a": 304,
@@ -9205,7 +9236,7 @@
     },
     {
       "a": 309,
-      "b": 510
+      "b": 511
     },
     {
       "a": 309,
@@ -9221,7 +9252,7 @@
     },
     {
       "a": 282,
-      "b": 510
+      "b": 511
     },
     {
       "a": 282,
@@ -9233,7 +9264,7 @@
     },
     {
       "a": 366,
-      "b": 510
+      "b": 511
     },
     {
       "a": 366,
@@ -9241,14 +9272,14 @@
     },
     {
       "a": 367,
-      "b": 510
+      "b": 511
     },
     {
       "a": 367,
       "b": 423
     },
     {
-      "a": 510,
+      "a": 511,
       "b": 423
     },
     {
@@ -9408,12 +9439,12 @@
       "b": 243
     },
     {
-      "a": 266,
-      "b": 272
+      "a": 272,
+      "b": 266
     },
     {
-      "a": 13,
-      "b": 361
+      "a": 361,
+      "b": 13
     },
     {
       "a": 445,
@@ -9421,7 +9452,7 @@
     },
     {
       "a": 445,
-      "b": 492
+      "b": 493
     },
     {
       "a": 445,
@@ -9441,7 +9472,7 @@
     },
     {
       "a": 298,
-      "b": 492
+      "b": 493
     },
     {
       "a": 298,
@@ -9464,27 +9495,27 @@
       "b": 457
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 72
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 435
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 232
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 214
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 457
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 478
     },
     {
@@ -9721,7 +9752,7 @@
     },
     {
       "a": 212,
-      "b": 498
+      "b": 499
     },
     {
       "a": 84,
@@ -9741,7 +9772,7 @@
     },
     {
       "a": 84,
-      "b": 498
+      "b": 499
     },
     {
       "a": 84,
@@ -9761,7 +9792,7 @@
     },
     {
       "a": 138,
-      "b": 498
+      "b": 499
     },
     {
       "a": 138,
@@ -9781,7 +9812,7 @@
     },
     {
       "a": 82,
-      "b": 498
+      "b": 499
     },
     {
       "a": 82,
@@ -9793,7 +9824,7 @@
     },
     {
       "a": 82,
-      "b": 493
+      "b": 494
     },
     {
       "a": 429,
@@ -9801,7 +9832,7 @@
     },
     {
       "a": 429,
-      "b": 498
+      "b": 499
     },
     {
       "a": 429,
@@ -9813,11 +9844,11 @@
     },
     {
       "a": 429,
-      "b": 493
+      "b": 494
     },
     {
       "a": 226,
-      "b": 498
+      "b": 499
     },
     {
       "a": 226,
@@ -9829,19 +9860,19 @@
     },
     {
       "a": 226,
-      "b": 493
+      "b": 494
     },
     {
-      "a": 498,
+      "a": 499,
       "b": 484
     },
     {
-      "a": 498,
+      "a": 499,
       "b": 257
     },
     {
-      "a": 498,
-      "b": 493
+      "a": 499,
+      "b": 494
     },
     {
       "a": 484,
@@ -9849,11 +9880,11 @@
     },
     {
       "a": 484,
-      "b": 493
+      "b": 494
     },
     {
       "a": 257,
-      "b": 493
+      "b": 494
     },
     {
       "a": 9,
@@ -9969,7 +10000,7 @@
     },
     {
       "a": 14,
-      "b": 505
+      "b": 506
     },
     {
       "a": 24,
@@ -10332,12 +10363,12 @@
       "b": 59
     },
     {
-      "a": 480,
-      "b": 373
+      "a": 373,
+      "b": 480
     },
     {
-      "a": 336,
-      "b": 220
+      "a": 220,
+      "b": 336
     },
     {
       "a": 416,
@@ -10492,7 +10523,7 @@
       "b": 118
     },
     {
-      "a": 499,
+      "a": 500,
       "b": 444
     },
     {
@@ -10513,39 +10544,39 @@
     },
     {
       "a": 434,
-      "b": 297
+      "b": 57
     },
     {
       "a": 434,
-      "b": 57
+      "b": 297
     },
     {
-      "a": 297,
-      "b": 57
+      "a": 57,
+      "b": 297
     },
     {
-      "a": 204,
+      "a": 349,
+      "b": 108
+    },
+    {
+      "a": 349,
       "b": 483
     },
     {
-      "a": 204,
-      "b": 108
-    },
-    {
-      "a": 204,
-      "b": 349
-    },
-    {
-      "a": 483,
-      "b": 108
-    },
-    {
-      "a": 483,
-      "b": 349
+      "a": 349,
+      "b": 204
     },
     {
       "a": 108,
-      "b": 349
+      "b": 483
+    },
+    {
+      "a": 108,
+      "b": 204
+    },
+    {
+      "a": 483,
+      "b": 204
     },
     {
       "a": 231,
@@ -10637,7 +10668,7 @@
     },
     {
       "a": 255,
-      "b": 507
+      "b": 508
     },
     {
       "a": 255,
@@ -10657,7 +10688,7 @@
     },
     {
       "a": 146,
-      "b": 507
+      "b": 508
     },
     {
       "a": 146,
@@ -10673,7 +10704,7 @@
     },
     {
       "a": 390,
-      "b": 507
+      "b": 508
     },
     {
       "a": 390,
@@ -10685,7 +10716,7 @@
     },
     {
       "a": 393,
-      "b": 507
+      "b": 508
     },
     {
       "a": 393,
@@ -10693,14 +10724,14 @@
     },
     {
       "a": 111,
-      "b": 507
+      "b": 508
     },
     {
       "a": 111,
       "b": 31
     },
     {
-      "a": 507,
+      "a": 508,
       "b": 31
     },
     {
@@ -10709,11 +10740,11 @@
     },
     {
       "a": 151,
-      "b": 502
+      "b": 503
     },
     {
       "a": 418,
-      "b": 502
+      "b": 503
     },
     {
       "a": 162,
@@ -10777,7 +10808,7 @@
     },
     {
       "a": 91,
-      "b": 500
+      "b": 501
     },
     {
       "a": 91,
@@ -10797,7 +10828,7 @@
     },
     {
       "a": 356,
-      "b": 500
+      "b": 501
     },
     {
       "a": 356,
@@ -10817,7 +10848,7 @@
     },
     {
       "a": 68,
-      "b": 500
+      "b": 501
     },
     {
       "a": 68,
@@ -10833,11 +10864,11 @@
     },
     {
       "a": 68,
-      "b": 512
+      "b": 513
     },
     {
       "a": 368,
-      "b": 500
+      "b": 501
     },
     {
       "a": 368,
@@ -10853,30 +10884,30 @@
     },
     {
       "a": 368,
-      "b": 512
+      "b": 513
     },
     {
       "a": 368,
       "b": 443
     },
     {
-      "a": 500,
+      "a": 501,
       "b": 392
     },
     {
-      "a": 500,
+      "a": 501,
       "b": 403
     },
     {
-      "a": 500,
+      "a": 501,
       "b": 329
     },
     {
-      "a": 500,
-      "b": 512
+      "a": 501,
+      "b": 513
     },
     {
-      "a": 500,
+      "a": 501,
       "b": 443
     },
     {
@@ -10889,7 +10920,7 @@
     },
     {
       "a": 392,
-      "b": 512
+      "b": 513
     },
     {
       "a": 392,
@@ -10901,7 +10932,7 @@
     },
     {
       "a": 403,
-      "b": 512
+      "b": 513
     },
     {
       "a": 403,
@@ -10909,23 +10940,23 @@
     },
     {
       "a": 329,
-      "b": 512
+      "b": 513
     },
     {
       "a": 329,
       "b": 443
     },
     {
-      "a": 512,
+      "a": 513,
       "b": 443
     },
     {
-      "a": 481,
-      "b": 46
+      "a": 46,
+      "b": 481
     },
     {
-      "a": 133,
-      "b": 34
+      "a": 34,
+      "b": 133
     },
     {
       "a": 188,
@@ -10936,64 +10967,64 @@
       "b": 323
     },
     {
-      "a": 363,
+      "a": 407,
+      "b": 381
+    },
+    {
+      "a": 407,
+      "b": 171
+    },
+    {
+      "a": 407,
+      "b": 276
+    },
+    {
+      "a": 407,
       "b": 66
     },
     {
-      "a": 363,
-      "b": 276
-    },
-    {
-      "a": 363,
-      "b": 171
-    },
-    {
-      "a": 363,
-      "b": 381
-    },
-    {
-      "a": 363,
-      "b": 407
-    },
-    {
-      "a": 66,
-      "b": 276
-    },
-    {
-      "a": 66,
-      "b": 171
-    },
-    {
-      "a": 66,
-      "b": 381
-    },
-    {
-      "a": 66,
-      "b": 407
-    },
-    {
-      "a": 276,
-      "b": 171
-    },
-    {
-      "a": 276,
-      "b": 381
-    },
-    {
-      "a": 276,
-      "b": 407
-    },
-    {
-      "a": 171,
-      "b": 381
-    },
-    {
-      "a": 171,
-      "b": 407
+      "a": 407,
+      "b": 363
     },
     {
       "a": 381,
-      "b": 407
+      "b": 171
+    },
+    {
+      "a": 381,
+      "b": 276
+    },
+    {
+      "a": 381,
+      "b": 66
+    },
+    {
+      "a": 381,
+      "b": 363
+    },
+    {
+      "a": 171,
+      "b": 276
+    },
+    {
+      "a": 171,
+      "b": 66
+    },
+    {
+      "a": 171,
+      "b": 363
+    },
+    {
+      "a": 276,
+      "b": 66
+    },
+    {
+      "a": 276,
+      "b": 363
+    },
+    {
+      "a": 66,
+      "b": 363
     },
     {
       "a": 208,
@@ -11189,7 +11220,7 @@
     },
     {
       "a": 117,
-      "b": 496
+      "b": 497
     },
     {
       "a": 117,
@@ -11209,7 +11240,7 @@
     },
     {
       "a": 73,
-      "b": 496
+      "b": 497
     },
     {
       "a": 73,
@@ -11229,7 +11260,7 @@
     },
     {
       "a": 353,
-      "b": 496
+      "b": 497
     },
     {
       "a": 353,
@@ -11245,7 +11276,7 @@
     },
     {
       "a": 409,
-      "b": 496
+      "b": 497
     },
     {
       "a": 409,
@@ -11260,15 +11291,15 @@
       "b": 237
     },
     {
-      "a": 496,
+      "a": 497,
       "b": 455
     },
     {
-      "a": 496,
+      "a": 497,
       "b": 236
     },
     {
-      "a": 496,
+      "a": 497,
       "b": 237
     },
     {
@@ -11309,7 +11340,7 @@
     },
     {
       "a": 225,
-      "b": 501
+      "b": 502
     },
     {
       "a": 10,
@@ -11336,15 +11367,15 @@
       "b": 9
     },
     {
-      "a": 12,
-      "b": 13
-    },
-    {
-      "a": 12,
-      "b": 11
+      "a": 13,
+      "b": 12
     },
     {
       "a": 13,
+      "b": 11
+    },
+    {
+      "a": 12,
       "b": 11
     },
     {
@@ -11388,16 +11419,8 @@
       "b": 37
     },
     {
-      "a": 38,
-      "b": 46
-    },
-    {
-      "a": 38,
-      "b": 44
-    },
-    {
-      "a": 38,
-      "b": 39
+      "a": 46,
+      "b": 38
     },
     {
       "a": 46,
@@ -11408,7 +11431,15 @@
       "b": 39
     },
     {
-      "a": 46,
+      "a": 38,
+      "b": 44
+    },
+    {
+      "a": 38,
+      "b": 39
+    },
+    {
+      "a": 38,
       "b": 40
     },
     {
@@ -11520,15 +11551,15 @@
       "b": 63
     },
     {
-      "a": 64,
-      "b": 66
-    },
-    {
-      "a": 64,
-      "b": 65
+      "a": 66,
+      "b": 64
     },
     {
       "a": 66,
+      "b": 65
+    },
+    {
+      "a": 64,
       "b": 65
     },
     {
@@ -11684,23 +11715,23 @@
       "b": 103
     },
     {
-      "a": 110,
-      "b": 108
+      "a": 108,
+      "b": 110
     },
     {
-      "a": 110,
+      "a": 108,
       "b": 109
     },
     {
-      "a": 110,
+      "a": 108,
       "b": 107
     },
     {
-      "a": 108,
+      "a": 110,
       "b": 109
     },
     {
-      "a": 108,
+      "a": 110,
       "b": 107
     },
     {
@@ -11840,20 +11871,28 @@
       "b": 148
     },
     {
+      "a": 171,
+      "b": 160
+    },
+    {
+      "a": 171,
+      "b": 169
+    },
+    {
+      "a": 171,
+      "b": 170
+    },
+    {
       "a": 160,
       "b": 169
     },
     {
       "a": 160,
-      "b": 171
+      "b": 170
     },
     {
       "a": 160,
-      "b": 170
-    },
-    {
-      "a": 169,
-      "b": 171
+      "b": 153
     },
     {
       "a": 169,
@@ -11864,15 +11903,7 @@
       "b": 153
     },
     {
-      "a": 171,
-      "b": 170
-    },
-    {
-      "a": 171,
-      "b": 153
-    },
-    {
-      "a": 171,
+      "a": 169,
       "b": 165
     },
     {
@@ -12212,16 +12243,8 @@
       "b": 207
     },
     {
-      "a": 219,
-      "b": 220
-    },
-    {
-      "a": 219,
-      "b": 225
-    },
-    {
-      "a": 219,
-      "b": 212
+      "a": 220,
+      "b": 219
     },
     {
       "a": 220,
@@ -12232,7 +12255,15 @@
       "b": 212
     },
     {
-      "a": 220,
+      "a": 219,
+      "b": 225
+    },
+    {
+      "a": 219,
+      "b": 212
+    },
+    {
+      "a": 219,
       "b": 226
     },
     {
@@ -12976,16 +13007,8 @@
       "b": 352
     },
     {
-      "a": 363,
-      "b": 361
-    },
-    {
-      "a": 363,
-      "b": 365
-    },
-    {
-      "a": 363,
-      "b": 364
+      "a": 361,
+      "b": 363
     },
     {
       "a": 361,
@@ -12996,7 +13019,15 @@
       "b": 364
     },
     {
-      "a": 361,
+      "a": 363,
+      "b": 365
+    },
+    {
+      "a": 363,
+      "b": 364
+    },
+    {
+      "a": 363,
       "b": 366
     },
     {
@@ -13116,23 +13147,23 @@
       "b": 401
     },
     {
-      "a": 404,
-      "b": 407
+      "a": 407,
+      "b": 404
     },
     {
-      "a": 404,
+      "a": 407,
       "b": 405
     },
     {
-      "a": 404,
+      "a": 407,
       "b": 406
     },
     {
-      "a": 407,
+      "a": 404,
       "b": 405
     },
     {
-      "a": 407,
+      "a": 404,
       "b": 406
     },
     {
@@ -13504,6 +13535,18 @@
       "b": 484
     },
     {
+      "a": 492,
+      "b": 491
+    },
+    {
+      "a": 492,
+      "b": 485
+    },
+    {
+      "a": 492,
+      "b": 488
+    },
+    {
       "a": 491,
       "b": 485
     },
@@ -13564,6 +13607,22 @@
       "b": 490
     },
     {
+      "a": 499,
+      "b": 498
+    },
+    {
+      "a": 499,
+      "b": 496
+    },
+    {
+      "a": 499,
+      "b": 497
+    },
+    {
+      "a": 498,
+      "b": 496
+    },
+    {
       "a": 498,
       "b": 497
     },
@@ -13572,72 +13631,40 @@
       "b": 495
     },
     {
-      "a": 498,
-      "b": 496
+      "a": 496,
+      "b": 497
+    },
+    {
+      "a": 496,
+      "b": 495
     },
     {
       "a": 497,
       "b": 495
     },
     {
-      "a": 497,
-      "b": 496
-    },
-    {
-      "a": 497,
-      "b": 494
-    },
-    {
-      "a": 495,
-      "b": 496
-    },
-    {
-      "a": 495,
-      "b": 494
-    },
-    {
-      "a": 496,
-      "b": 494
-    },
-    {
-      "a": 501,
-      "b": 499
-    },
-    {
-      "a": 501,
+      "a": 502,
       "b": 500
     },
     {
-      "a": 499,
-      "b": 500
+      "a": 502,
+      "b": 501
     },
     {
-      "a": 506,
-      "b": 504
+      "a": 500,
+      "b": 501
     },
     {
-      "a": 506,
+      "a": 507,
       "b": 505
     },
     {
-      "a": 504,
-      "b": 505
+      "a": 507,
+      "b": 506
     },
     {
-      "a": 509,
-      "b": 510
-    },
-    {
-      "a": 509,
-      "b": 507
-    },
-    {
-      "a": 509,
-      "b": 511
-    },
-    {
-      "a": 510,
-      "b": 507
+      "a": 505,
+      "b": 506
     },
     {
       "a": 510,
@@ -13648,20 +13675,36 @@
       "b": 508
     },
     {
-      "a": 507,
-      "b": 511
-    },
-    {
-      "a": 507,
-      "b": 508
+      "a": 510,
+      "b": 512
     },
     {
       "a": 511,
       "b": 508
     },
     {
+      "a": 511,
+      "b": 512
+    },
+    {
+      "a": 511,
+      "b": 509
+    },
+    {
+      "a": 508,
+      "b": 512
+    },
+    {
+      "a": 508,
+      "b": 509
+    },
+    {
       "a": 512,
-      "b": 513
+      "b": 509
+    },
+    {
+      "a": 513,
+      "b": 514
     }
   ],
   "kg_edges": [
@@ -13766,8 +13809,8 @@
       "b": 138
     },
     {
-      "a": 509,
-      "b": 511
+      "a": 510,
+      "b": 512
     },
     {
       "a": 299,
@@ -14090,12 +14133,12 @@
       "b": 37
     },
     {
-      "a": 504,
-      "b": 505
-    },
-    {
       "a": 505,
       "b": 506
+    },
+    {
+      "a": 506,
+      "b": 507
     },
     {
       "a": 22,
@@ -14182,12 +14225,12 @@
       "b": 443
     },
     {
-      "a": 494,
-      "b": 495
-    },
-    {
       "a": 495,
       "b": 496
+    },
+    {
+      "a": 496,
+      "b": 497
     },
     {
       "a": 292,
@@ -14198,8 +14241,8 @@
       "b": 383
     },
     {
-      "a": 512,
-      "b": 513
+      "a": 513,
+      "b": 514
     },
     {
       "a": 324,
@@ -14339,10 +14382,10 @@
     },
     {
       "a": 82,
-      "b": 492
+      "b": 493
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 457
     },
     {
@@ -14359,10 +14402,10 @@
     },
     {
       "a": 429,
-      "b": 509
+      "b": 510
     },
     {
-      "a": 509,
+      "a": 510,
       "b": 299
     },
     {
@@ -14483,10 +14526,10 @@
     },
     {
       "a": 73,
-      "b": 502
+      "b": 503
     },
     {
-      "a": 502,
+      "a": 503,
       "b": 55
     },
     {
@@ -14583,10 +14626,10 @@
     },
     {
       "a": 289,
-      "b": 502
+      "b": 503
     },
     {
-      "a": 502,
+      "a": 503,
       "b": 58
     },
     {
@@ -14711,10 +14754,10 @@
     },
     {
       "a": 0,
-      "b": 505
+      "b": 506
     },
     {
-      "a": 505,
+      "a": 506,
       "b": 48
     },
     {
@@ -14751,10 +14794,10 @@
     },
     {
       "a": 456,
-      "b": 514
+      "b": 515
     },
     {
-      "a": 514,
+      "a": 515,
       "b": 234
     },
     {
@@ -14867,18 +14910,18 @@
     },
     {
       "a": 135,
-      "b": 495
+      "b": 496
     },
     {
-      "a": 495,
+      "a": 496,
       "b": 208
     },
     {
       "a": 208,
-      "b": 502
+      "b": 503
     },
     {
-      "a": 502,
+      "a": 503,
       "b": 292
     },
     {
@@ -14895,10 +14938,10 @@
     },
     {
       "a": 237,
-      "b": 500
+      "b": 501
     },
     {
-      "a": 500,
+      "a": 501,
       "b": 383
     },
     {
@@ -14919,10 +14962,10 @@
     },
     {
       "a": 299,
-      "b": 509
+      "b": 510
     },
     {
-      "a": 509,
+      "a": 510,
       "b": 81
     },
     {
@@ -15003,10 +15046,10 @@
     },
     {
       "a": 245,
-      "b": 493
+      "b": 494
     },
     {
-      "a": 493,
+      "a": 494,
       "b": 93
     },
     {
@@ -15078,7 +15121,7 @@
       "b": 185
     },
     {
-      "a": 512,
+      "a": 513,
       "b": 22
     },
     {
@@ -15411,10 +15454,10 @@
     },
     {
       "a": 207,
-      "b": 494
+      "b": 495
     },
     {
-      "a": 494,
+      "a": 495,
       "b": 71
     },
     {
@@ -15487,10 +15530,10 @@
     },
     {
       "a": 424,
-      "b": 506
+      "b": 507
     },
     {
-      "a": 506,
+      "a": 507,
       "b": 489
     },
     {
@@ -15543,10 +15586,10 @@
     },
     {
       "a": 368,
-      "b": 502
+      "b": 503
     },
     {
-      "a": 502,
+      "a": 503,
       "b": 75
     },
     {
@@ -15651,10 +15694,10 @@
     },
     {
       "a": 277,
-      "b": 511
+      "b": 512
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 382
     },
     {
@@ -15663,10 +15706,10 @@
     },
     {
       "a": 422,
-      "b": 513
+      "b": 514
     },
     {
-      "a": 513,
+      "a": 514,
       "b": 40
     },
     {
@@ -15687,10 +15730,10 @@
     },
     {
       "a": 274,
-      "b": 512
+      "b": 513
     },
     {
-      "a": 512,
+      "a": 513,
       "b": 208
     },
     {
@@ -15711,10 +15754,10 @@
     },
     {
       "a": 162,
-      "b": 496
+      "b": 497
     },
     {
-      "a": 496,
+      "a": 497,
       "b": 353
     },
     {
@@ -15759,14 +15802,14 @@
     },
     {
       "a": 173,
-      "b": 504
+      "b": 505
     },
     {
-      "a": 504,
-      "b": 511
+      "a": 505,
+      "b": 512
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 421
     },
     {
@@ -15895,7 +15938,7 @@
     },
     {
       "a": 225,
-      "b": 502
+      "b": 503
     },
     {
       "a": 81,
@@ -15930,11 +15973,11 @@
       "b": 14
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 260
     },
     {
-      "a": 492,
+      "a": 493,
       "b": 2
     },
     {
@@ -15970,11 +16013,11 @@
       "b": 375
     },
     {
-      "a": 509,
+      "a": 510,
       "b": 418
     },
     {
-      "a": 509,
+      "a": 510,
       "b": 271
     },
     {
@@ -15983,7 +16026,7 @@
     },
     {
       "a": 299,
-      "b": 494
+      "b": 495
     },
     {
       "a": 80,
@@ -16087,7 +16130,7 @@
     },
     {
       "a": 137,
-      "b": 496
+      "b": 497
     },
     {
       "a": 298,
@@ -16226,11 +16269,11 @@
       "b": 444
     },
     {
-      "a": 502,
+      "a": 503,
       "b": 140
     },
     {
-      "a": 502,
+      "a": 503,
       "b": 400
     },
     {
@@ -16439,7 +16482,7 @@
     },
     {
       "a": 418,
-      "b": 492
+      "b": 493
     },
     {
       "a": 92,
@@ -16455,7 +16498,7 @@
     },
     {
       "a": 271,
-      "b": 513
+      "b": 514
     },
     {
       "a": 447,
@@ -16479,7 +16522,7 @@
     },
     {
       "a": 28,
-      "b": 492
+      "b": 493
     },
     {
       "a": 403,
@@ -16523,7 +16566,7 @@
     },
     {
       "a": 68,
-      "b": 500
+      "b": 501
     },
     {
       "a": 68,
@@ -16639,7 +16682,7 @@
     },
     {
       "a": 339,
-      "b": 494
+      "b": 495
     },
     {
       "a": 452,
@@ -16666,11 +16709,11 @@
       "b": 103
     },
     {
-      "a": 505,
+      "a": 506,
       "b": 240
     },
     {
-      "a": 505,
+      "a": 506,
       "b": 152
     },
     {
@@ -16691,7 +16734,7 @@
     },
     {
       "a": 392,
-      "b": 494
+      "b": 495
     },
     {
       "a": 392,
@@ -16738,11 +16781,11 @@
       "b": 72
     },
     {
-      "a": 514,
+      "a": 515,
       "b": 419
     },
     {
-      "a": 514,
+      "a": 515,
       "b": 121
     },
     {
@@ -16783,7 +16826,7 @@
     },
     {
       "a": 231,
-      "b": 506
+      "b": 507
     },
     {
       "a": 216,
@@ -16859,7 +16902,7 @@
     },
     {
       "a": 356,
-      "b": 506
+      "b": 507
     },
     {
       "a": 356,
@@ -16911,7 +16954,7 @@
     },
     {
       "a": 317,
-      "b": 500
+      "b": 501
     },
     {
       "a": 317,
@@ -16942,11 +16985,11 @@
       "b": 345
     },
     {
-      "a": 495,
+      "a": 496,
       "b": 289
     },
     {
-      "a": 495,
+      "a": 496,
       "b": 222
     },
     {
@@ -16990,11 +17033,11 @@
       "b": 223
     },
     {
-      "a": 500,
+      "a": 501,
       "b": 15
     },
     {
-      "a": 500,
+      "a": 501,
       "b": 318
     },
     {
@@ -17038,11 +17081,11 @@
       "b": 335
     },
     {
-      "a": 493,
+      "a": 494,
       "b": 403
     },
     {
-      "a": 493,
+      "a": 494,
       "b": 271
     },
     {
@@ -17054,11 +17097,11 @@
       "b": 84
     },
     {
-      "a": 512,
+      "a": 513,
       "b": 460
     },
     {
-      "a": 512,
+      "a": 513,
       "b": 458
     },
     {
@@ -17091,7 +17134,7 @@
     },
     {
       "a": 325,
-      "b": 504
+      "b": 505
     },
     {
       "a": 14,
@@ -17183,7 +17226,7 @@
     },
     {
       "a": 337,
-      "b": 492
+      "b": 493
     },
     {
       "a": 337,
@@ -17267,7 +17310,7 @@
     },
     {
       "a": 283,
-      "b": 505
+      "b": 506
     },
     {
       "a": 293,
@@ -17447,7 +17490,7 @@
     },
     {
       "a": 308,
-      "b": 506
+      "b": 507
     },
     {
       "a": 308,
@@ -17463,7 +17506,7 @@
     },
     {
       "a": 8,
-      "b": 496
+      "b": 497
     },
     {
       "a": 8,
@@ -17507,7 +17550,7 @@
     },
     {
       "a": 423,
-      "b": 505
+      "b": 506
     },
     {
       "a": 83,
@@ -17531,7 +17574,7 @@
     },
     {
       "a": 476,
-      "b": 511
+      "b": 512
     },
     {
       "a": 19,
@@ -17635,15 +17678,15 @@
     },
     {
       "a": 122,
-      "b": 502
+      "b": 503
     },
     {
       "a": 124,
-      "b": 511
+      "b": 512
     },
     {
       "a": 124,
-      "b": 513
+      "b": 514
     },
     {
       "a": 121,
@@ -17702,11 +17745,11 @@
       "b": 355
     },
     {
-      "a": 494,
+      "a": 495,
       "b": 201
     },
     {
-      "a": 494,
+      "a": 495,
       "b": 331
     },
     {
@@ -17723,7 +17766,7 @@
     },
     {
       "a": 335,
-      "b": 496
+      "b": 497
     },
     {
       "a": 302,
@@ -17811,7 +17854,7 @@
     },
     {
       "a": 177,
-      "b": 496
+      "b": 497
     },
     {
       "a": 350,
@@ -17830,11 +17873,11 @@
       "b": 348
     },
     {
-      "a": 506,
+      "a": 507,
       "b": 96
     },
     {
-      "a": 506,
+      "a": 507,
       "b": 420
     },
     {
@@ -17843,7 +17886,7 @@
     },
     {
       "a": 489,
-      "b": 513
+      "b": 514
     },
     {
       "a": 327,
@@ -18027,7 +18070,7 @@
     },
     {
       "a": 479,
-      "b": 494
+      "b": 495
     },
     {
       "a": 281,
@@ -18067,7 +18110,7 @@
     },
     {
       "a": 151,
-      "b": 493
+      "b": 494
     },
     {
       "a": 444,
@@ -18126,11 +18169,11 @@
       "b": 264
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 461
     },
     {
-      "a": 511,
+      "a": 512,
       "b": 379
     },
     {
@@ -18150,11 +18193,11 @@
       "b": 460
     },
     {
-      "a": 513,
+      "a": 514,
       "b": 291
     },
     {
-      "a": 513,
+      "a": 514,
       "b": 219
     },
     {
@@ -18230,11 +18273,11 @@
       "b": 425
     },
     {
-      "a": 496,
+      "a": 497,
       "b": 476
     },
     {
-      "a": 496,
+      "a": 497,
       "b": 111
     },
     {
@@ -18267,7 +18310,7 @@
     },
     {
       "a": 324,
-      "b": 512
+      "b": 513
     },
     {
       "a": 352,
@@ -18310,11 +18353,11 @@
       "b": 296
     },
     {
-      "a": 504,
+      "a": 505,
       "b": 127
     },
     {
-      "a": 504,
+      "a": 505,
       "b": 171
     },
     {

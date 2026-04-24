@@ -121,8 +121,6 @@ def render_profile_html(data: Dict[str, object]) -> str:
 <title>__TITLE__</title>
 <script src="/vendor/tailwindcss.js" onerror="this.onerror=null;this.src='https://cdn.tailwindcss.com';"></script>
 <script src="/amap-config.js"></script>
-<link rel="stylesheet" href="/vendor/leaflet.css" onerror="if(!this.dataset.f){this.dataset.f='1';this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='1'){this.dataset.f='2';this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';}else if(this.dataset.f==='2'){this.dataset.f='3';this.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';}" />
-<script src="/vendor/leaflet.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';}"></script>
 <script src="/vendor/react.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/react@18/umd/react.production.min.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';}"></script>
 <script src="/vendor/react-dom.production.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/react-dom@18/umd/react-dom.production.min.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js';}"></script>
 <script src="/vendor/babel.min.js" onerror="if(!this.dataset.f){this.dataset.f='1';this.src='https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js';}else if(this.dataset.f==='1'){this.dataset.f='2';this.src='https://unpkg.com/@babel/standalone@7.24.7/babel.min.js';}else if(this.dataset.f==='2'){this.dataset.f='3';this.src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js';}"></script>
@@ -225,13 +223,11 @@ body {
           const hasCreateRoot = !!(window.ReactDOM && typeof window.ReactDOM.createRoot === "function");
           const babelAuto = !!(window.Babel && typeof window.Babel.transformScriptTags === "function");
           const babelTags = document.querySelectorAll('script[type="text/babel"]').length;
-          parts.push(`Globals: React=${!!window.React} ReactDOM=${!!window.ReactDOM} createRoot=${hasCreateRoot} Babel=${!!window.Babel} babelAuto=${babelAuto} babelTags=${babelTags} Leaflet=${!!window.L} AMap=${!!window.AMap}`);
+          parts.push(`Globals: React=${!!window.React} ReactDOM=${!!window.ReactDOM} createRoot=${hasCreateRoot} Babel=${!!window.Babel} babelAuto=${babelAuto} babelTags=${babelTags} AMap=${!!window.AMap}`);
           parts.push(await head("/amap-config.js"));
           parts.push(await head("/vendor/react.production.min.js"));
           parts.push(await head("/vendor/react-dom.production.min.js"));
           parts.push(await head("/vendor/babel.min.js"));
-          parts.push(await head("/vendor/leaflet.js"));
-          parts.push(await head("/vendor/leaflet.css"));
           if (firstErr) diag(firstErr);
           append(parts.join("\\n"));
         }, 1800);
@@ -281,8 +277,13 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 };
 const extractYear = (text) => {
   if (!text) return null;
-  const match = String(text).match(/(\\d{3,4})\\s*年/);
-  return match ? parseInt(match[1], 10) : null;
+  const raw = String(text);
+  const match = raw.match(/(\\d{1,4})\\s*年/);
+  if (!match) return null;
+  const y = parseInt(match[1], 10);
+  if (!Number.isFinite(y)) return null;
+  if (raw.includes('公元前') || raw.trim().startsWith('前')) return -y;
+  return y;
 };
 
 const renderInline = (text) => {
@@ -602,11 +603,24 @@ const App = () => {
       return { doubtful: doubtful || out.length > 0, candidates: out };
     }
     if (!raw || !doubtful) return { doubtful: false, candidates: [] };
-    let s = raw.replace(/^[^存疑]*存疑[:：]?\\s*/g, '').replace(/存疑/g, '').trim();
-    s = s.replace(/(?:一说|或说|又说|另说)[:：]?\\s*/g, ';');
-    const parts = s.split(/[；;\\/、|]/).map((t) => String(t || '').trim()).filter(Boolean);
-    const seen = new Set();
     const out = [];
+    const seen = new Set();
+    const re = /(?:一说|或说|又说|另说)\s*(?:生于|生在|在)?\s*([^，。；;）)\n]+)\s*/g;
+    let m = null;
+    while ((m = re.exec(raw))) {
+      const t0 = String(m[1] || '').replace(/存疑/g, '').trim();
+      if (!t0 || seen.has(t0)) continue;
+      seen.add(t0);
+      out.push(t0);
+      if (out.length >= 6) break;
+    }
+    if (out.length) return { doubtful: true, candidates: out };
+
+    let s = raw.replace(/存疑/g, '').trim();
+    s = s.replace(/(?:一说|或说|又说|另说)[:：]?\s*/g, ';');
+    s = s.replace(/[（）()]/g, ';');
+    const parts = s.split(/[；;\/、|]/).map((t) => String(t || '').trim()).filter(Boolean);
+    const seen = new Set();
     for (const t of parts) {
       if (seen.has(t)) continue;
       seen.add(t);
@@ -691,93 +705,25 @@ const App = () => {
         sEl.onerror = () => reject(new Error('AMAP_LOAD_FAILED'));
         document.head.appendChild(sEl);
       });
-      const initLeaflet = () => {
-        // Leaflet version: keeps working when no AMap key is provided.
-        if (typeof L === 'undefined') return;
-        const map = L.map('map', { zoomControl: false }).setView([first.lat, first.lng], locations.length ? 4 : 4);
-        L.control.zoom({ position: 'topright' }).addTo(map);
-        __LEAFLET_TILES_PROFILE__
-        const overlays = [];
-        const resolveMarkerStyle = (type) => {
-          if (markerStyles[type]) return markerStyles[type];
-          if (markerStyles.normal) return markerStyles.normal;
-          return defaultMarkerStyles[type] || defaultMarkerStyles.normal;
-        };
-        const markerIcon = (type, active) => {
-          const iconUrl = resolveMarkerStyle(type).iconUrl || defaultMarkerStyles.normal.iconUrl;
-          const iconSize = active ? [30, 41] : [25, 34];
-          const iconAnchor = active ? [15, 41] : [12, 34];
-          return L.icon({
-            iconUrl,
-            iconSize,
-            iconAnchor,
-            popupAnchor: [0, -30]
-          });
-        };
-        const setActive = (activeIdx) => {
-          overlays.forEach((o) => {
-            const active = o.idx === activeIdx;
-            try {
-              o.circle.setRadius(active ? 12 : 10);
-              o.circle.setStyle({
-                color: active ? 'rgba(192,57,43,0.85)' : (o.color || defaultMarkerStyles.normal.color),
-                weight: active ? 3 : 2,
-                fillOpacity: active ? 0.45 : 0.35
-              });
-            } catch (_) {}
-            try {
-              o.marker.setIcon(markerIcon(o.type, active));
-            } catch (_) {}
-          });
-        };
-        const pathCoords = locations.map(l => [l.lat, l.lng]);
-        for (let i = 0; i < pathCoords.length - 1; i++) {
-          const opacity = 0.25 + (i / pathCoords.length) * 0.6;
-          L.polyline([pathCoords[i], pathCoords[i+1]], {
-            color: mapStyle.pathColor || '#1e40af',
-            weight: 3,
-            opacity: opacity
-          }).addTo(map);
-        }
-        locations.forEach((loc, idx) => {
-          const style = resolveMarkerStyle(loc.type || 'normal');
-          const circle = L.circleMarker([loc.lat, loc.lng], {
-            radius: idx === activeIndex ? 12 : 10,
-            color: idx === activeIndex ? 'rgba(192,57,43,0.85)' : (style.color || defaultMarkerStyles.normal.color),
-            fillColor: style.color || defaultMarkerStyles.normal.color,
-            fillOpacity: 0.35,
-            weight: 2
-          }).addTo(map);
-          const marker = L.marker([loc.lat, loc.lng], { icon: markerIcon(loc.type || 'normal', idx === activeIndex) }).addTo(map);
-          overlays.push({ idx, type: loc.type || 'normal', color: style.color || defaultMarkerStyles.normal.color, circle, marker });
-          marker.on('click', () => {
-            setSelectedLoc(loc);
-            setActiveIndex(idx);
-            map.setView([loc.lat, loc.lng], 7);
-          });
-          const ageText = getAgeText(loc);
-          if (ageText) {
-            const ageIcon = L.divIcon({
-              className: 'age-marker',
-              html: `<div class="age-badge">${ageText}</div>`,
-              iconSize: [44, 20],
-              iconAnchor: [22, 30]
-            });
-            L.marker([loc.lat, loc.lng], { icon: ageIcon, interactive: false }).addTo(map);
-          }
-        });
-        if (pathCoords.length > 1) {
-          const bounds = L.latLngBounds(pathCoords);
-          map.fitBounds(bounds, { padding: [48, 48], maxZoom: 6 });
-        } else if (pathCoords.length === 1) {
-          map.setView(pathCoords[0], 6);
-        }
-        mapRef.current = {
-          _type: 'leaflet',
-          setView: (latlng, z) => map.setView(latlng, Number.isFinite(z) ? z : 7),
-          setActive
-        };
-        setActive(activeIndex);
+      const showMapGate = (msg) => {
+        const el = document.getElementById('map');
+        if (!el) return;
+        if (el.querySelector('#amap-gate')) return;
+        const wrap = document.createElement('div');
+        wrap.id = 'amap-gate';
+        wrap.style.position = 'absolute';
+        wrap.style.left = '0';
+        wrap.style.top = '0';
+        wrap.style.right = '0';
+        wrap.style.bottom = '0';
+        wrap.style.zIndex = '999';
+        wrap.style.display = 'flex';
+        wrap.style.alignItems = 'center';
+        wrap.style.justifyContent = 'center';
+        wrap.style.background = 'rgba(0,0,0,0.35)';
+        wrap.innerHTML = `<div style="width:min(520px,92vw);border-radius:14px;padding:16px;background:rgba(255,255,255,0.92);border:1px solid rgba(200,180,150,0.5);box-shadow:0 18px 44px rgba(0,0,0,0.22)"><div style="font-weight:800;color:#7c2d12;font-size:14px">地图需要高德 Web Key</div><div style="margin-top:6px;color:rgba(15,23,42,0.68);font-size:12px;line-height:1.5">${String(msg || '请在服务端 .env 配置 Amap_API_Key 后刷新页面。')}</div></div>`;
+        el.style.position = 'relative';
+        el.appendChild(wrap);
       };
       const initAmap = async () => {
         // AMap version: renders a clearer basemap in China and avoids tile DNS issues.
@@ -881,9 +827,9 @@ const App = () => {
       (async () => {
         try {
           const ok = await initAmap();
-          if (!ok) initLeaflet();
+          if (!ok) showMapGate('请在服务端 .env 配置 Amap_API_Key，或在链接参数中传入 amapKey。');
         } catch (_) {
-          initLeaflet();
+          showMapGate('高德地图加载失败，请检查 Key / Security 配置。');
         }
       })();
     }

@@ -681,6 +681,7 @@ def _amap_config_js() -> bytes:
         os.getenv("AMAP_SECURITY")
         or os.getenv("AMAP_SECURITY_JS_CODE")
         or os.getenv("AMAP_SCODE")
+        or os.getenv("Amap_API_Secret")
         or ""
     ).strip()
     payload = {
@@ -919,7 +920,8 @@ def _batch_split_ancient_modern(
     if not pending:
         with _CACHE_LOCK:
             return {t: _SPLIT_CACHE[t] for t in ordered if t in _SPLIT_CACHE}
-    if str(os.getenv("STORY_MAP_DISABLE_LLM_SPLIT", "")).strip().lower() in {"1", "true", "yes", "y", "on"}:
+    use_llm = str(os.getenv("STORY_MAP_ENABLE_LLM_SPLIT", "")).strip().lower() in {"1", "true", "yes", "y", "on"}
+    if not use_llm:
         with _CACHE_LOCK:
             for text in pending:
                 if text in _SPLIT_CACHE:
@@ -989,7 +991,8 @@ def _split_ancient_modern(loc_text: str, event_callback: Optional[callable] = No
         cached = _SPLIT_CACHE.get(loc_text)
     if cached:
         return cached
-    if str(os.getenv("STORY_MAP_DISABLE_LLM_SPLIT", "")).strip().lower() in {"1", "true", "yes", "y", "on"}:
+    use_llm = str(os.getenv("STORY_MAP_ENABLE_LLM_SPLIT", "")).strip().lower() in {"1", "true", "yes", "y", "on"}
+    if not use_llm:
         result = _split_ancient_modern_heuristic(loc_text)
         with _CACHE_LOCK:
             _SPLIT_CACHE[loc_text] = result
@@ -1076,9 +1079,42 @@ def _parse_date_location(text: str, keys: List[str]) -> tuple[str, str]:
     if not loc_raw:
         loc_raw = str(text or "").strip("。；; ")
 
+    # Strip trailing uncertain-meta parentheses like "（存疑，生年不详）",
+    # but keep "一说/或说/另说" since those are useful as candidates in UI.
+    try:
+        if not re.search(r"(一说|或说|又说|另说)", loc_raw):
+            loc_raw = re.sub(
+                r"[（(][^）)]*(存疑|不详|未详|未知|无法确认|生年不详|卒年不详)[^）)]*[）)]\s*$",
+                "",
+                loc_raw,
+            )
+    except Exception:
+        pass
+
+    loc_raw = re.sub(
+        r"^\s*(?:约|大约|约于)?\s*(公元前|公元|前)?\s*\d{1,4}\s*年(?:\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*(?:日|号))?)?\s*[?？]?\s*[，,]?\s*",
+        "",
+        loc_raw,
+    ).strip("。；; ")
+    loc_raw = re.sub(
+        r"^\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*(?:日|号))?\s*[?？]?\s*[，,]?\s*",
+        "",
+        loc_raw,
+    ).strip("。；; ")
+    loc_raw = re.sub(r"^\s*\d{1,2}\s*(?:日|号)\s*[?？]?\s*[，,]?\s*", "", loc_raw).strip("。；; ")
+    loc_raw = re.sub(r"^\s*(?:约|大约|约于)?\s*\d{1,2}\s*世纪(?:初|中|末)?\s*[，,]?\s*", "", loc_raw).strip("。；; ")
     parts = [p.strip("。；; ") for p in re.split(r"[，,]", loc_raw) if p.strip("。；; ")]
-    loc = parts[-1] if parts else ""
-    loc = re.sub(r"^一说[^，,]+[，,]\s*", "", loc).strip("。；; ")
+    bad = re.compile(r"(存疑|不详|未详|未知|无法确认|生年不详|卒年不详)")
+    loc = ""
+    for p in parts:
+        if not p or bad.search(p):
+            continue
+        loc = p
+        break
+    if not loc:
+        loc = parts[0] if parts else ""
+    loc = loc.strip("。；; ")
+    loc = re.sub(r"^\s*(?:出生于|出生在|生于|生在|于|在)\s*", "", loc).strip("。；; ")
     return date, loc
 
 
@@ -1810,6 +1846,36 @@ def _read_text(path: str) -> str:
         return ""
 
 
+def _extract_export_data_from_html(html_text: str) -> Optional[Dict[str, object]]:
+    if not isinstance(html_text, str) or not html_text.strip():
+        return None
+    idx = html_text.find("window.__EXPORT_DATA__")
+    if idx < 0:
+        return None
+    prefix = html_text.rfind("const data", 0, idx)
+    if prefix < 0:
+        return None
+    eq = html_text.find("=", prefix, idx)
+    if eq < 0:
+        return None
+    brace = html_text.find("{", eq, idx)
+    if brace < 0:
+        return None
+    semi = html_text.rfind(";", brace, idx)
+    if semi < 0:
+        return None
+    raw = html_text[brace:semi].strip()
+    if not raw.startswith("{") or not raw.endswith("}"):
+        return None
+    try:
+        data = json.loads(raw)
+    except Exception:
+        return None
+    if not isinstance(data, dict):
+        return None
+    return data
+
+
 def _load_profile_from_md(md: str, event_callback: Optional[callable] = None) -> Optional[Dict[str, object]]:
     if not md:
         return None
@@ -1889,42 +1955,143 @@ def run_interactive() -> None:
 
 
 def _generate_for_person(
-    client: StoryAgentLLM,
+    client: Optional[StoryAgentLLM],
     person: str,
     progress: Optional[callable] = None,
     allow_cache: bool = True,
     event_callback: Optional[callable] = None,
 ) -> Dict[str, object]:
     md_path, html_path = _story_paths(person)
-    if allow_cache and os.path.exists(md_path) and os.path.exists(html_path):
-        md = _read_text(md_path)
-        profile = _load_profile_from_md(md, event_callback=event_callback)
-        if profile:
-            cached_html = _read_text(html_path)
-            birth_date = (profile.get("person") or {}).get("birth", {}).get("date", "")
-            death_date = (profile.get("person") or {}).get("death", {}).get("date", "")
-            has_birth = bool(birth_date and f'"birth": {{"date": "{birth_date}"' in cached_html)
-            has_death = bool(death_date and f'"death": {{"date": "{death_date}"' in cached_html)
-            if 'data-export="markdown"' not in cached_html or (birth_date and not has_birth) or (death_date and not has_death):
-                profile["markdown"] = md
-                html = render_profile_html(profile)
-                _write_text(html_path, html)
-            if progress:
-                progress(f"{person} 命中缓存")
+    if allow_cache and os.path.exists(html_path):
+        cached_html = _read_text(html_path)
+        needs_refresh = (
+            ("export-bar" in cached_html)
+            or ("leaflet" in cached_html)
+            or ("/amap-config.js" not in cached_html)
+        )
+        if (not needs_refresh) and ("window.__EXPORT_DATA__" in cached_html):
+            export_data = _extract_export_data_from_html(cached_html)
+            if export_data and os.path.exists(md_path):
+                md = _read_text(md_path)
+                if md:
+                    export_data["markdown"] = md
             return {
                 "ok": True,
                 "person": person,
-                "markdown_path": md_path,
+                "markdown_path": md_path if os.path.exists(md_path) else "",
                 "html_path": html_path,
                 "steps": [{"label": "命中缓存", "duration": "0.00s"}],
                 "duration": {"total": "0.00s"},
-                "_profile": profile,
+                "_profile": export_data,
                 "cached": True,
             }
+        md = _read_text(md_path) if os.path.exists(md_path) else ""
+        export_data = _extract_export_data_from_html(cached_html)
+        if export_data:
+            if md:
+                export_data["markdown"] = md
+            html = render_profile_html(export_data)
+            _write_text(html_path, html)
+            return {
+                "ok": True,
+                "person": person,
+                "markdown_path": md_path if os.path.exists(md_path) else "",
+                "html_path": html_path,
+                "steps": [{"label": "刷新缓存", "duration": "0.00s"}],
+                "duration": {"total": "0.00s"},
+                "_profile": export_data,
+                "cached": True,
+                "refreshed": True,
+            }
+        if md:
+            profile = _load_profile_from_md(md, event_callback=event_callback)
+            if profile:
+                profile["markdown"] = md
+                html = render_profile_html(profile)
+                _write_text(html_path, html)
+                return {
+                    "ok": True,
+                    "person": person,
+                    "markdown_path": md_path,
+                    "html_path": html_path,
+                    "steps": [{"label": "刷新缓存", "duration": "0.00s"}],
+                    "duration": {"total": "0.00s"},
+                    "_profile": profile,
+                    "cached": True,
+                    "refreshed": True,
+                }
+
+    if allow_cache and os.path.exists(md_path) and (not os.path.exists(html_path)):
+        t0 = time.perf_counter()
+        steps = []
+        md = _read_text(md_path)
+        if not md.strip():
+            return {"ok": False, "person": person, "error": "Markdown 为空，无法渲染"}
+
+        if progress:
+            progress(f"{person} 复用现有 Markdown")
+        t_step = time.perf_counter()
+        md = _normalize_markdown_tables(md)
+        t_norm = time.perf_counter() - t_step
+        steps.append({"label": "复用Markdown", "duration": _format_seconds(t_norm)})
+
+        if progress:
+            progress(f"{person} 地理编码")
+        t_step = time.perf_counter()
+        md_geo = append_coords_section(md)
+        t_geo = time.perf_counter() - t_step
+        steps.append({"label": "地理编码", "duration": _format_seconds(t_geo)})
+
+        if progress:
+            progress(f"{person} 地图渲染")
+        t_step = time.perf_counter()
+        render_error = ""
+        try:
+            places = parse_places(md_geo)
+            events = parse_events(md_geo)
+            pts = build_points(places, events)
+            html = render_html(person, pts, md=md_geo)
+        except Exception as exc:
+            render_error = str(exc).strip() or "地图渲染失败"
+            _LOGGER.warning("render_failed person=%s error=%s", person, exc)
+            html = render_osm_html(person, [], "")
+        t_render = time.perf_counter() - t_step
+        steps.append({"label": "地图渲染", "duration": _format_seconds(t_render)})
+
+        if progress:
+            progress(f"{person} 文件写入")
+        t_step = time.perf_counter()
+        out = save_html(person, html)
+        t_save = time.perf_counter() - t_step
+        steps.append({"label": "文件写入", "duration": _format_seconds(t_save)})
+
+        total = time.perf_counter() - t0
+        profile = _load_profile_from_md(md_geo, event_callback=event_callback)
+        result = {
+            "ok": True,
+            "person": person,
+            "markdown_path": md_path,
+            "html_path": out,
+            "steps": steps,
+            "duration": {
+                "geocode": _format_seconds(t_geo),
+                "render": _format_seconds(t_render),
+                "save": _format_seconds(t_save),
+                "total": _format_seconds(total),
+            },
+            "_profile": profile,
+            "cached": False,
+            "used_existing_markdown": True,
+        }
+        if render_error:
+            result["warning"] = render_error
+        return result
     t0 = time.perf_counter()
     if progress:
         progress(f"{person} 生平生成")
     t_step = time.perf_counter()
+    if client is None:
+        client = _get_llm_client(event_callback=event_callback)
     md = generate_historical_markdown(client, person)
     t_md = time.perf_counter() - t_step
     if not md:
@@ -2197,6 +2364,7 @@ _PENDING = 0
 _ACTIVE = 0
 _TASK_LOCK = threading.Lock()
 _TASKS: Dict[str, Dict[str, object]] = {}
+_HOME_COORDS_LOCK = threading.Lock()
 
 
 def _shutdown_executor() -> None:
@@ -2264,8 +2432,32 @@ def _run_task(task_id: str, text: str, allow_cache: bool = True) -> None:
     _append_progress(task_id, "人物识别")
     def _llm_event(message: str) -> None:
         _append_progress(task_id, "模型日志", message)
-    client = _get_llm_client(event_callback=_llm_event)
-    targets = extract_historical_figures(client, text)
+    text_clean = str(text or "").strip()
+    story_dir = os.path.join(_project_root(), "storymap", "examples", "story")
+    known_people = set()
+    try:
+        for p in os.listdir(story_dir):
+            if p.endswith(".md"):
+                stem = os.path.splitext(p)[0].strip()
+                if stem:
+                    known_people.add(stem)
+    except Exception:
+        known_people = set()
+
+    targets: List[str] = []
+    if text_clean and text_clean in known_people:
+        targets = [text_clean]
+        _append_progress(task_id, "人物识别", f"命中本地人物：{text_clean}")
+    else:
+        parts = [p.strip() for p in re.split(r"[、，,\\s]+", text_clean) if p.strip()]
+        if parts and all(p in known_people for p in parts) and len(parts) >= 2:
+            targets = parts[:10]
+            _append_progress(task_id, "人物识别", f"命中本地人物：{'、'.join(targets)}")
+
+    client: Optional[StoryAgentLLM] = None
+    if not targets:
+        client = _get_llm_client(event_callback=_llm_event)
+        targets = extract_historical_figures(client, text)
     if not targets:
         fallback = str(text or "").strip()
         if fallback:
@@ -2625,6 +2817,75 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
             self.wfile.write(payload)
             return
             
+        if self.path == "/coords/bulk":
+            length = int(self.headers.get("Content-Length", "0") or "0")
+            body = self.rfile.read(length).decode("utf-8", errors="ignore") if length else ""
+            if not body:
+                payload = json.dumps({"ok": False, "error": "body required"}, ensure_ascii=False).encode("utf-8")
+                self._set_headers(400, len(payload), allowed)
+                self.wfile.write(payload)
+                return
+            try:
+                data = json.loads(body)
+            except Exception:
+                data = None
+            items = data.get("items") if isinstance(data, dict) else None
+            if not isinstance(items, dict) or not items:
+                payload = json.dumps({"ok": False, "error": "items required"}, ensure_ascii=False).encode("utf-8")
+                self._set_headers(400, len(payload), allowed)
+                self.wfile.write(payload)
+                return
+            home_path = os.path.join(_project_root(), "storymap", "examples", "story_map", "stellar_home_data.json")
+            updated = 0
+            total = 0
+            with _HOME_COORDS_LOCK:
+                try:
+                    with open(home_path, "r", encoding="utf-8") as f:
+                        home = json.load(f)
+                except Exception:
+                    home = {}
+                if not isinstance(home, dict):
+                    home = {}
+                nodes = home.get("nodes") if isinstance(home.get("nodes"), list) else []
+                if not isinstance(nodes, list):
+                    nodes = []
+                for n in nodes:
+                    if not isinstance(n, dict):
+                        continue
+                    person = str(n.get("person") or "").strip()
+                    if not person:
+                        continue
+                    v = items.get(person)
+                    if not (isinstance(v, list) and len(v) >= 2):
+                        continue
+                    try:
+                        lat = float(v[0])
+                        lng = float(v[1])
+                    except Exception:
+                        continue
+                    if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                        continue
+                    before_ok = isinstance(n.get("birth_lat"), (int, float)) and isinstance(n.get("birth_lng"), (int, float))
+                    n["birth_lat"] = lat
+                    n["birth_lng"] = lng
+                    after_ok = True
+                    if (not before_ok) and after_ok:
+                        updated += 1
+                total = len([n for n in nodes if isinstance(n, dict)])
+                home["nodes"] = nodes
+                try:
+                    with open(home_path, "w", encoding="utf-8") as f:
+                        json.dump(home, f, ensure_ascii=False)
+                except Exception as e:
+                    payload = json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False).encode("utf-8")
+                    self._set_headers(500, len(payload), allowed)
+                    self.wfile.write(payload)
+                    return
+            payload = json.dumps({"ok": True, "updated": updated, "total": total}, ensure_ascii=False).encode("utf-8")
+            self._set_headers(200, len(payload), allowed)
+            self.wfile.write(payload)
+            return
+
         # Add proxy for LLM calls from frontend
         if self.path == "/api/ai/proxy":
             # Browser -> server proxy for LLM calls. This keeps API keys on the

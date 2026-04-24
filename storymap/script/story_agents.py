@@ -69,10 +69,17 @@ class StoryAgentLLM:
             os.getenv("MIMO_API_KEY")
             or os.getenv("MIMO_API_Key")
             or os.getenv("MIMO_APIKEY")
+            or os.getenv("MIMO_APIKey")
+            or os.getenv("MIMO_APIKEY")
             or os.getenv("API_KEY")
             or os.getenv("API_Key")
         )
-        fallback_base = os.getenv("MIMO_BASE_URL") or os.getenv("BASE_URL") or "https://api.xiaomimimo.com/v1"
+        fallback_base = (
+            os.getenv("MIMO_BASE_URL")
+            or os.getenv("BASE_URL")
+            or os.getenv("Amap_API_Base_URL")
+            or "https://api.xiaomimimo.com/v1"
+        )
 
         resolved_base = (baseUrl or os.getenv("LLM_BASE_URL") or fallback_base or "").strip()
         default_model = "mimo-v2.5-pro" if "xiaomimimo.com" in resolved_base else "mimo-v2-pro"

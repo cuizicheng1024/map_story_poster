@@ -5,11 +5,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import sys
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+from urllib.parse import quote as url_quote
+from urllib.request import Request, urlopen
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -44,6 +51,20 @@ class HtmlEntry:
     mtime: float
 
 
+def _html_birth_has_coords(html_path: Path) -> bool:
+    try:
+        text = html_path.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return False
+    m = re.search(r"\"birth\"\\s*:\\s*\\{([\\s\\S]*?)\\}\\s*,\\s*\"death\"", text)
+    if not m:
+        m = re.search(r"\"birth\"\\s*:\\s*\\{([\\s\\S]*?)\\}", text)
+    if not m:
+        return False
+    body = m.group(1)
+    return bool(re.search(r"\"lat\"\\s*:\\s*-?\\d+(?:\\.\\d+)?", body) and re.search(r"\"lng\"\\s*:\\s*-?\\d+(?:\\.\\d+)?", body))
+
+
 def _scan_latest_html(story_map_dir: Path) -> Dict[str, HtmlEntry]:
     latest: Dict[str, HtmlEntry] = {}
     for p in story_map_dir.glob("*.html"):
@@ -54,7 +75,15 @@ def _scan_latest_html(story_map_dir: Path) -> Dict[str, HtmlEntry]:
             continue
         e = HtmlEntry(person=person, file=p.name, mtime=p.stat().st_mtime)
         cur = latest.get(person)
-        if cur is None or e.mtime > cur.mtime:
+        if cur is None:
+            latest[person] = e
+            continue
+        cur_has = _html_birth_has_coords(story_map_dir / cur.file)
+        e_has = _html_birth_has_coords(p)
+        if e_has and not cur_has:
+            latest[person] = e
+            continue
+        if e_has == cur_has and e.mtime > cur.mtime:
             latest[person] = e
     return latest
 
@@ -119,23 +148,35 @@ def _scan_people_from_story_map_html(story_map_dir: Path) -> List[str]:
 def _extract_years_from_md(md_text: str) -> Tuple[Optional[int], Optional[int]]:
     text = md_text
 
+    def parse_years(s: str) -> List[int]:
+        out: List[int] = []
+        src = str(s or "")
+        for m in re.finditer(r"(?<!\d)(-?\d{1,4})(?!\d)", src):
+            try:
+                y = int(m.group(1))
+            except Exception:
+                continue
+            if y < 0:
+                out.append(y)
+                continue
+            prefix = src[max(0, m.start() - 8) : m.start()]
+            p = prefix.strip()
+            if "公元前" in prefix or p.endswith("前") or "BC" in prefix.upper():
+                y = -y
+            out.append(y)
+        return out
+
     def pick_year(s: str) -> Optional[int]:
-        ys = re.findall(r"(?<!\d)(-?\d{1,4})(?!\d)", str(s or ""))
+        ys = parse_years(s)
         if not ys:
             return None
-        try:
-            return int(ys[0])
-        except Exception:
-            return None
+        return ys[0]
 
     def pick_two_years(s: str) -> Tuple[Optional[int], Optional[int]]:
-        ys = re.findall(r"(?<!\d)(-?\d{1,4})(?!\d)", str(s or ""))
+        ys = parse_years(s)
         if len(ys) < 2:
             return None, None
-        try:
-            return int(ys[0]), int(ys[1])
-        except Exception:
-            return None, None
+        return ys[0], ys[1]
 
     m = re.search(r"\*\*生卒年\*\*[:：]\s*([^\n]+)", text)
     if not m:
@@ -171,9 +212,42 @@ def _extract_birthplace_from_md(md_text: str) -> Tuple[str, str, str]:
     if not m:
         return "", "", ""
     text = m.group(1).strip()
+    if not re.search(r"(一说|或说|又说|另说)", text):
+        text = re.sub(
+            r"[（(][^）)]*(存疑|不详|未详|未知|无法确认|生年不详|卒年不详)[^）)]*[）)]\s*$",
+            "",
+            text,
+        ).strip()
+    text = re.sub(
+        r"^\s*(?:约|大约|约于)?\s*(公元前|公元|前)?\s*\d{1,4}\s*年(?:\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*(?:日|号))?)?\s*[?？]?\s*[，,]?\s*",
+        "",
+        text,
+    ).strip()
+    text = re.sub(
+        r"^\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*(?:日|号))?\s*[?？]?\s*[，,]?\s*",
+        "",
+        text,
+    ).strip()
+    text = re.sub(r"^\s*\d{1,2}\s*(?:日|号)\s*[?？]?\s*[，,]?\s*", "", text).strip()
+    text = re.sub(r"^\s*(?:约|大约|约于)?\s*\d{1,2}\s*世纪(?:初|中|末)?\s*[，,]?\s*", "", text).strip()
+    if not text:
+        return "", "", ""
+    if re.fullmatch(r"(?:约|大约|约于)?\s*(公元前|公元|前)?\s*\d{1,4}\s*年(?:\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*(?:日|号))?)?\s*", text):
+        return "", "", ""
+    if re.fullmatch(r"\d{1,2}\s*月(?:\s*\d{1,2}\s*(?:日|号))?\s*", text):
+        return "", "", ""
     parts = [p.strip() for p in re.split(r"[，,]", text) if p.strip()]
-    loc = parts[-1] if parts else text
-    loc = re.sub(r"^一说[^，,]+[，,]\s*", "", loc).strip()
+    bad = re.compile(r"(存疑|不详|未详|未知|无法确认|生年不详|卒年不详)")
+    loc = ""
+    for p in parts:
+        if not p or bad.search(p):
+            continue
+        loc = p
+        break
+    if not loc:
+        loc = parts[0] if parts else text
+    loc = loc.strip()
+    loc = re.sub(r"^\s*(?:出生于|出生在|生于|生在|于|在)\s*", "", loc).strip()
     ancient = loc
     modern = ""
     if "（" in loc and "）" in loc:
@@ -359,6 +433,7 @@ def _render_index_html(title: str, data_file: str) -> str:
           <input id="q" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-slate-900/10" placeholder="例如：苏轼" />
           <button id="go" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800">查看</button>
         </div>
+        <div id="genStatus" class="hidden mt-2 text-xs text-slate-600"></div>
       </div>
 
       <div class="card graph overflow-hidden relative">
@@ -370,9 +445,20 @@ def _render_index_html(title: str, data_file: str) -> str:
               <button id="tabMap" class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10">地图视角</button>
             </div>
           </div>
-          <div class="text-[11px] font-normal text-white/60 flex items-center gap-3">窗口内：<span id="activeCount">-</span><span class="text-white/30">|</span>坐标点：<span id="coordCount">-</span></div>
+          <div class="text-[11px] font-normal text-white/60 flex items-center gap-2">窗口内：<span id="activeCount">-</span><span class="text-white/30">|</span>坐标点：<span id="coordCount">-</span><button id="resetView" class="ml-2 px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/70 hover:bg-white/15">重置视图</button></div>
         </div>
         <div class="px-6 pb-2 -mt-2 text-[11px] text-white/60">拖动时间窗筛选人物；悬停查看简介；点击节点进入人物页</div>
+        <div class="px-6 pb-2 -mt-1 text-[11px] text-white/55 flex flex-wrap gap-x-4 gap-y-1">
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#22c55e"></span><span>先秦/公元前</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#ef4444"></span><span>秦汉</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#60a5fa"></span><span>魏晋南北朝</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#f59e0b"></span><span>隋</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#fb7185"></span><span>唐</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#a855f7"></span><span>宋元</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#10b981"></span><span>明清</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#f97316"></span><span>近代</span></div>
+          <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full" style="background:#eab308"></span><span>现代</span></div>
+        </div>
 
         <div class="relative px-3 pb-3 overflow-hidden">
           <div id="tabTrack" class="flex w-[200%]" style="transform: translateX(0%); transition: transform 720ms cubic-bezier(0.22, 1, 0.36, 1); will-change: transform;">
@@ -404,9 +490,15 @@ def _render_index_html(title: str, data_file: str) -> str:
             <div class="absolute left-1/2 -translate-x-1/2 bottom-2 text-[10px] text-white/55" id="midLabel"></div>
           </div>
           <div class="flex items-center justify-between mt-2 text-[11px] text-white/55">
-            <div>起：<span id="startYear">-</span></div>
+            <div class="flex items-center gap-2">
+              <span>起：</span>
+              <input id="startYearInput" class="w-24 px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/80 outline-none focus:ring-2 focus:ring-white/10" type="number" />
+            </div>
             <div>窗口跨度：约 <span id="spanYear">-</span> 年</div>
-            <div>止：<span id="endYear">-</span></div>
+            <div class="flex items-center gap-2">
+              <span>止：</span>
+              <input id="endYearInput" class="w-24 px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/80 outline-none focus:ring-2 focus:ring-white/10" type="number" />
+            </div>
           </div>
         </div>
       </div>
@@ -431,9 +523,9 @@ def _render_index_html(title: str, data_file: str) -> str:
       const $mDeath = document.getElementById("mDeath");
       const $activeCount = document.getElementById("activeCount");
       const $coordCount = document.getElementById("coordCount");
-      const $startYear = document.getElementById("startYear");
-      const $endYear = document.getElementById("endYear");
       const $spanYear = document.getElementById("spanYear");
+      const $startYearInput = document.getElementById("startYearInput");
+      const $endYearInput = document.getElementById("endYearInput");
       const $minLabel = document.getElementById("minLabel");
       const $maxLabel = document.getElementById("maxLabel");
       const $midLabel = document.getElementById("midLabel");
@@ -441,6 +533,8 @@ def _render_index_html(title: str, data_file: str) -> str:
       const $tabGraph = document.getElementById("tabGraph");
       const $tabMap = document.getElementById("tabMap");
       const $chinaMap = document.getElementById("chinaMap");
+      const $genStatus = document.getElementById("genStatus");
+      const $resetView = document.getElementById("resetView");
 
       const W = $c.width;
       const H = $c.height;
@@ -465,15 +559,17 @@ def _render_index_html(title: str, data_file: str) -> str:
         if (y == null) return "rgba(255,255,255,0.75)";
         if (y < 0) return "#22c55e";
         if (y < 220) return "#ef4444";
-        if (y < 600) return "#60a5fa";
-        if (y < 907) return "#f59e0b";
+        if (y < 589) return "#60a5fa";
+        if (y < 618) return "#f59e0b";
+        if (y < 907) return "#fb7185";
         if (y < 1279) return "#a855f7";
         if (y < 1644) return "#10b981";
+        if (y < 1840) return "#10b981";
         if (y < 1911) return "#f97316";
         return "#eab308";
       }};
 
-      const esc = (s) => String(s || "").replace(/[&<>\"']/g, (c) => ({{"&":"&amp;","<":"&lt;",">":"&gt;","\\\"":"&quot;","'":"&#39;"}})[c]);
+      const esc = (s) => String(s || "").replace(/[&<>\"']/g, (c) => ({{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}})[c]);
 
       let nodes = [];
       let edges = [];
@@ -487,9 +583,86 @@ def _render_index_html(title: str, data_file: str) -> str:
       let dragStartA = 0;
       let dragStartB = 0;
       let hover = null;
+      let selectedIdx = -1;
+      let selected = null;
+      let spotlightIdx = -1;
+      let spotlight = null;
+      let _clickTimer = null;
+
+      let camScale = 1.0;
+      let camOffX = 0.0;
+      let camOffY = 0.0;
+
+      const worldToScreen = (x, y) => {{
+        return {{
+          x: x * camScale + camOffX,
+          y: y * camScale + camOffY,
+        }};
+      }};
+      const screenToWorld = (x, y) => {{
+        return {{
+          x: (x - camOffX) / camScale,
+          y: (y - camOffY) / camScale,
+        }};
+      }};
+      const setSelected = (n) => {{
+        if (!n || typeof n._idx !== "number") {{
+          selectedIdx = -1;
+          selected = null;
+          spotlightIdx = -1;
+          spotlight = null;
+          showTip(null);
+          draw();
+          return;
+        }}
+        selectedIdx = n._idx;
+        selected = n;
+        spotlightIdx = -1;
+        spotlight = null;
+        showTip(null);
+        draw();
+      }};
+      const setSpotlight = (n, clientX, clientY) => {{
+        if (!n || typeof n._idx !== "number") {{
+          spotlightIdx = -1;
+          spotlight = null;
+          draw();
+          return;
+        }}
+        spotlightIdx = n._idx;
+        spotlight = n;
+        showTip(n, clientX, clientY);
+        draw();
+      }};
 
       const toT = (year) => (year - minYear) / (maxYear - minYear);
       const fromT = (t) => Math.round(minYear + t * (maxYear - minYear));
+
+      const setYearInputs = () => {{
+        if ($startYearInput) $startYearInput.value = String(startYear);
+        if ($endYearInput) $endYearInput.value = String(endYear);
+      }};
+      const applyYearInputs = () => {{
+        const a = $startYearInput ? Number($startYearInput.value) : NaN;
+        const b = $endYearInput ? Number($endYearInput.value) : NaN;
+        if (!Number.isFinite(a) || !Number.isFinite(b)) {{
+          setYearInputs();
+          return;
+        }}
+        let na = Math.round(a);
+        let nb = Math.round(b);
+        if (na > nb) {{ const t = na; na = nb; nb = t; }}
+        na = clamp(na, minYear, maxYear);
+        nb = clamp(nb, minYear, maxYear);
+        if (na === nb) nb = clamp(na + 1, minYear, maxYear);
+        startYear = na;
+        endYear = nb;
+        setHandles();
+        updateActiveCount();
+        updateCoordCount();
+        updateMapMarkers();
+        draw();
+      }};
 
       const handlePosPx = () => {{
         const r = $rail.getBoundingClientRect();
@@ -537,9 +710,8 @@ def _render_index_html(title: str, data_file: str) -> str:
           $maskR.style.left = rightPct;
           $maskR.style.width = ((1 - t2) * 100).toFixed(4) + "%";
         }}
-        $startYear.textContent = String(startYear);
-        $endYear.textContent = String(endYear);
         $spanYear.textContent = String(Math.max(0, endYear - startYear));
+        setYearInputs();
         $minLabel.textContent = "前800";
         $maxLabel.textContent = String(maxYear);
         $midLabel.textContent = "0";
@@ -574,11 +746,14 @@ def _render_index_html(title: str, data_file: str) -> str:
           {{ name: "秦", a: -221, b: -206 }},
           {{ name: "汉", a: -206, b: 220 }},
           {{ name: "魏晋南北", a: 220, b: 589 }},
-          {{ name: "隋唐", a: 589, b: 907 }},
+          {{ name: "隋", a: 581, b: 618 }},
+          {{ name: "唐", a: 618, b: 907 }},
           {{ name: "宋", a: 960, b: 1279 }},
           {{ name: "元", a: 1271, b: 1368 }},
           {{ name: "明", a: 1368, b: 1644 }},
           {{ name: "清", a: 1644, b: 1840 }},
+          {{ name: "近代", a: 1840, b: 1911 }},
+          {{ name: "现代", a: 1911, b: 2000 }},
         ];
         const bandColors = [
           "rgba(56,189,248,0.12)",
@@ -600,7 +775,7 @@ def _render_index_html(title: str, data_file: str) -> str:
           const left = (l * 100).toFixed(4) + "%";
           const width = ((r - l) * 100).toFixed(4) + "%";
           const bg = bandColors[i % bandColors.length];
-          pieces.push(`<div style="position:absolute;left:${{left}};width:${{width}};top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:${{bg}};border-right:1px solid rgba(255,255,255,0.12);">${{esc(b.name)}}</div>`);
+          pieces.push(`<div style="position:absolute;left:${{left}};width:${{width}};top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:visible;background:${{bg}};border-right:1px solid rgba(255,255,255,0.12);"><span style="white-space:nowrap;padding:0 6px;text-shadow:0 1px 0 rgba(0,0,0,0.25)">${{esc(b.name)}}</span></div>`);
         }}
         $bands.innerHTML = pieces.join("");
         $bands.style.position = "absolute";
@@ -612,6 +787,11 @@ def _render_index_html(title: str, data_file: str) -> str:
         ctx.fillRect(0, 0, W, H);
 
         ctx.globalCompositeOperation = "source-over";
+        const selectedSet = new Set();
+        if (selectedIdx >= 0 && neigh[selectedIdx]) {{
+          selectedSet.add(selectedIdx);
+          for (const j of (neigh[selectedIdx] || [])) selectedSet.add(j);
+        }}
         if (edges.length) {{
           ctx.lineWidth = 1;
           ctx.strokeStyle = "rgba(255,255,255,0.10)";
@@ -620,9 +800,11 @@ def _render_index_html(title: str, data_file: str) -> str:
             const a = nodes[e.a];
             const b = nodes[e.b];
             if (!a || !b) continue;
+            const pa = worldToScreen(a.x, a.y);
+            const pb = worldToScreen(b.x, b.y);
             ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
+            ctx.moveTo(pa.x, pa.y);
+            ctx.lineTo(pb.x, pb.y);
             ctx.stroke();
           }}
           ctx.globalAlpha = 1.0;
@@ -634,27 +816,35 @@ def _render_index_html(title: str, data_file: str) -> str:
             const b = nodes[e.b];
             if (!a || !b) continue;
             if (!(inWindow(a) && inWindow(b))) continue;
+            const pa = worldToScreen(a.x, a.y);
+            const pb = worldToScreen(b.x, b.y);
             ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
+            ctx.moveTo(pa.x, pa.y);
+            ctx.lineTo(pb.x, pb.y);
             ctx.stroke();
           }}
           ctx.globalAlpha = 1.0;
 
-          if (hover && typeof hover._idx === "number") {{
-            const i = hover._idx;
-            const ns = neigh[i] || [];
+          const hiIdx = selectedIdx >= 0
+            ? selectedIdx
+            : (spotlightIdx >= 0
+                ? spotlightIdx
+                : (hover && typeof hover._idx === "number" ? hover._idx : -1));
+          if (hiIdx >= 0) {{
+            const ns = neigh[hiIdx] || [];
             ctx.strokeStyle = "rgba(34,197,94,0.85)";
-            ctx.lineWidth = 1.5;
-            ctx.globalAlpha = 0.55;
+            ctx.lineWidth = 1.8;
+            ctx.globalAlpha = 0.70;
             for (const j of ns) {{
-              const a = nodes[i];
+              const a = nodes[hiIdx];
               const b = nodes[j];
               if (!a || !b) continue;
               if (!(inWindow(a) && inWindow(b))) continue;
+              const pa = worldToScreen(a.x, a.y);
+              const pb = worldToScreen(b.x, b.y);
               ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
+              ctx.moveTo(pa.x, pa.y);
+              ctx.lineTo(pb.x, pb.y);
               ctx.stroke();
             }}
             ctx.globalAlpha = 1.0;
@@ -666,36 +856,61 @@ def _render_index_html(title: str, data_file: str) -> str:
         for (const n of nodes) {{
           const p = (typeof n.p === "number") ? clamp(n.p, 0, 1) : (inWindow(n) ? 1 : 0);
           const active = p > 0.55;
-          let r = 4.4 + p * 2.8;
+          let r = (4.4 + p * 2.8) * camScale;
           let alpha = 0.10 + p * 0.88;
           let col = p > 0 ? colorByYear(n.birth_year) : "rgba(255,255,255,0.30)";
-          if (hover && hover.person === n.person) {{
-            r = 9.2;
+          const i = n._idx;
+          const hovered = hover && hover.person === n.person;
+          const selectedHere = selected && selected.person === n.person;
+          const spotlightHere = (selectedIdx < 0) && spotlight && spotlight.person === n.person;
+          if (selectedIdx >= 0) {{
+            if (!selectedSet.has(i)) {{
+              alpha *= 0.12;
+              col = "rgba(255,255,255,0.22)";
+            }} else {{
+              alpha = Math.max(alpha, 0.70);
+            }}
+          }}
+          if (hovered) {{
+            r = 9.2 * camScale;
             alpha = 1.0;
             col = "#fbbf24";
           }}
+          if (selectedHere) {{
+            r = 10.5 * camScale;
+            alpha = 1.0;
+            col = "#fbbf24";
+          }}
+          if (spotlightHere) {{
+            r = 11.0 * camScale;
+            alpha = 1.0;
+            col = "#fbbf24";
+          }}
+          const pt = worldToScreen(n.x, n.y);
           ctx.beginPath();
           ctx.fillStyle = col;
           ctx.globalAlpha = alpha;
-          ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+          ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
           ctx.fill();
           if (active) {{
             ctx.beginPath();
             ctx.strokeStyle = "rgba(255,255,255,0.22)";
             ctx.globalAlpha = 0.35 + p * 0.35;
-            ctx.lineWidth = 1;
-            ctx.arc(n.x, n.y, r + 2.6, 0, Math.PI * 2);
+            ctx.lineWidth = 1 * camScale;
+            ctx.arc(pt.x, pt.y, r + 2.6 * camScale, 0, Math.PI * 2);
             ctx.stroke();
           }}
         }}
         ctx.globalAlpha = 1.0;
         ctx.lineWidth = 1;
 
-        if (hover) {{
+        if (hover || (selectedIdx >= 0 && selected)) {{
+          const n = hover || selected;
+          const pt = worldToScreen(n.x, n.y);
           ctx.beginPath();
           ctx.strokeStyle = "rgba(255,255,255,0.75)";
-          ctx.lineWidth = 2;
-          ctx.arc(hover.x, hover.y, 9, 0, Math.PI * 2);
+          ctx.lineWidth = 2 * camScale;
+          ctx.arc(pt.x, pt.y, 10 * camScale, 0, Math.PI * 2);
           ctx.stroke();
         }}
       }};
@@ -728,13 +943,15 @@ def _render_index_html(title: str, data_file: str) -> str:
       }};
 
       const pickNode = (mx, my) => {{
+        const w = screenToWorld(mx, my);
         let best = null;
         let bestD = 999999;
         for (const n of nodes) {{
-          const dx = mx - n.x;
-          const dy = my - n.y;
+          const dx = w.x - n.x;
+          const dy = w.y - n.y;
           const d = dx*dx + dy*dy;
-          if (d < bestD && d < 16*16) {{
+          const thr = (16 / camScale);
+          if (d < bestD && d < thr*thr) {{
             bestD = d;
             best = n;
           }}
@@ -769,21 +986,198 @@ def _render_index_html(title: str, data_file: str) -> str:
         setHoverMarkers(n);
       }};
 
+      const setGenStatus = (txt) => {{
+        if (!$genStatus) return;
+        const t = String(txt || "").trim();
+        if (!t) {{
+          $genStatus.classList.add("hidden");
+          $genStatus.textContent = "";
+          return;
+        }}
+        $genStatus.textContent = t;
+        $genStatus.classList.remove("hidden");
+      }};
+      const clearGenTask = () => {{
+        try {{ localStorage.removeItem("stellar_gen_task_v1"); }} catch (_) {{}}
+      }};
+      const fetchWithTimeout = (url, ms) => {{
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), ms || 12000);
+        return fetch(url, {{ cache: "no-store", signal: controller.signal }}).finally(() => clearTimeout(id));
+      }};
+
       const openPerson = (name) => {{
         const q = String(name || "").trim();
         if (!q) return;
-        const n = nodes.find((x) => x.person === q);
-        if (n && n.file) {{
-          const href = "./" + encodeURIComponent(n.file).replace(/%2F/g, "/");
-          window.location.href = href;
-          return;
+        const btn = $go;
+        const oldText = btn ? btn.textContent : "";
+        if (btn) {{
+          btn.disabled = true;
+          btn.textContent = "生成中…";
         }}
-        alert("该人物暂无已生成的人物页（HTML）。");
+        setGenStatus("正在生成：" + q + "（可切换到关系图/地图视角，生成继续）");
+        const done = () => {{
+          if (btn) {{
+            btn.disabled = false;
+            btn.textContent = oldText || "查看";
+          }}
+          setGenStatus("");
+          clearGenTask();
+        }};
+        const fail = (msg) => {{
+          done();
+          alert(msg || "生成失败");
+        }};
+        fetchWithTimeout(`/generate?person=${{encodeURIComponent(q)}}`, 15000)
+          .then((r) => r.json())
+          .then((data) => {{
+            if (!data || !data.ok || !data.task_id) throw new Error(data?.error || "generate_failed");
+            const taskId = data.task_id;
+            try {{ localStorage.setItem("stellar_gen_task_v1", JSON.stringify({{ person: q, taskId, ts: Date.now() }})); }} catch (_) {{}}
+            let tries = 0;
+            const maxTries = 160;
+            const tick = () => {{
+              tries += 1;
+              if (tries > maxTries) {{
+                fail("生成超时，请稍后重试");
+                return;
+              }}
+              fetchWithTimeout(`/task?id=${{encodeURIComponent(taskId)}}`, 12000)
+                .then((r) => r.json())
+                .then((s) => {{
+                  if (!s || !s.ok) throw new Error(s?.error || "task_failed");
+                  const st = String(s.status || "");
+                  if (st === "failed") throw new Error(s.error || "task_failed");
+                  if (st === "completed") {{
+                    const htmlRel = s?.result?.files?.[0]?.html || "";
+                    if (!htmlRel) throw new Error("no_html");
+                    const href = "/" + String(htmlRel).replace(/^\\/+/, "");
+                    done();
+                    window.location.href = href;
+                    return;
+                  }}
+                  try {{
+                    const progress = Array.isArray(s.progress) ? s.progress : [];
+                    const last = progress.length ? progress[progress.length - 1] : null;
+                    const label = last && last.label ? String(last.label) : "";
+                    const pct = last && typeof last.pct === "number" ? Math.round(last.pct * 100) : null;
+                    const extra = pct != null ? ("（" + String(pct) + "%）") : "";
+                    setGenStatus("正在生成：" + q + (label ? (" · " + label) : "") + extra + "（可切换到关系图/地图视角，生成继续）");
+                  }} catch (_) {{}}
+                  setTimeout(tick, 800);
+                }})
+                .catch((e) => fail(String(e?.message || e || "task_failed")));
+            }};
+            setTimeout(tick, 600);
+          }})
+          .catch((e) => fail(String(e?.message || e || "generate_failed")));
+      }};
+      window.__openPerson = openPerson;
+
+      const resumeGenTask = () => {{
+        let raw = "";
+        try {{ raw = localStorage.getItem("stellar_gen_task_v1") || ""; }} catch (_) {{}}
+        if (!raw) return;
+        let obj = null;
+        try {{ obj = JSON.parse(raw); }} catch (_) {{ obj = null; }}
+        const taskId = obj && obj.taskId ? String(obj.taskId) : "";
+        const person = obj && obj.person ? String(obj.person) : "";
+        if (!taskId || !person) return;
+        const btn = $go;
+        const oldText = btn ? btn.textContent : "";
+        if (btn) {{
+          btn.disabled = true;
+          btn.textContent = "生成中…";
+        }}
+        setGenStatus("正在生成：" + person + "（可切换到关系图/地图视角，生成继续）");
+        let tries = 0;
+        const maxTries = 160;
+        const done = () => {{
+          if (btn) {{
+            btn.disabled = false;
+            btn.textContent = oldText || "查看";
+          }}
+          setGenStatus("");
+          clearGenTask();
+        }};
+        const fail = () => {{
+          done();
+        }};
+        const tick = () => {{
+          tries += 1;
+          if (tries > maxTries) return fail();
+          fetchWithTimeout(`/task?id=${{encodeURIComponent(taskId)}}`, 12000)
+            .then((r) => r.json())
+            .then((s) => {{
+              if (!s || !s.ok) return fail();
+              const st = String(s.status || "");
+              if (st === "failed") return fail();
+              if (st === "completed") {{
+                const htmlRel = s?.result?.files?.[0]?.html || "";
+                if (!htmlRel) return fail();
+                const href = "/" + String(htmlRel).replace(/^\\/+/, "");
+                done();
+                window.location.href = href;
+                return;
+              }}
+              try {{
+                const progress = Array.isArray(s.progress) ? s.progress : [];
+                const last = progress.length ? progress[progress.length - 1] : null;
+                const label = last && last.label ? String(last.label) : "";
+                const pct = last && typeof last.pct === "number" ? Math.round(last.pct * 100) : null;
+                const extra = pct != null ? ("（" + String(pct) + "%）") : "";
+                setGenStatus("正在生成：" + person + (label ? (" · " + label) : "") + extra + "（可切换到关系图/地图视角，生成继续）");
+              }} catch (_) {{}}
+              setTimeout(tick, 900);
+            }})
+            .catch(() => fail());
+        }};
+        setTimeout(tick, 300);
+      }};
+      try {{
+        document.addEventListener("visibilitychange", () => {{
+          if (!document.hidden) resumeGenTask();
+        }});
+      }} catch (_) {{}}
+      setTimeout(resumeGenTask, 300);
+
+      const findPersonNode = (name) => {{
+        const q = String(name || "").trim();
+        if (!q) return null;
+        for (const n of nodes) {{
+          if (String(n.person || "").trim() === q) return n;
+        }}
+        const q2 = q.toLowerCase();
+        for (const n of nodes) {{
+          const p = String(n.person || "").trim().toLowerCase();
+          if (p === q2) return n;
+        }}
+        for (const n of nodes) {{
+          const p = String(n.person || "").trim().toLowerCase();
+          if (p && p.includes(q2)) return n;
+        }}
+        return null;
+      }};
+      const focusPersonInGraph = (name, clientX, clientY) => {{
+        const n = findPersonNode(name);
+        if (!n) return false;
+        setTab("graph");
+        camScale = clamp(1.9, 0.6, 2.4);
+        camOffX = (W * 0.50) - n.x * camScale;
+        camOffY = (H * 0.50) - n.y * camScale;
+        setSpotlight(n, clientX || (window.innerWidth * 0.5), clientY || (window.innerHeight * 0.3));
+        return true;
       }};
 
-      $go.addEventListener("click", () => openPerson($q.value));
+      const onSearch = (ev) => {{
+        const name = $q.value;
+        if (focusPersonInGraph(name, ev?.clientX, ev?.clientY)) return;
+        openPerson(name);
+      }};
+
+      $go.addEventListener("click", (ev) => onSearch(ev));
       $q.addEventListener("keydown", (e) => {{
-        if (e.key === "Enter") openPerson($q.value);
+        if (e.key === "Enter") onSearch(e);
       }});
 
       let currentTab = "graph";
@@ -889,6 +1283,124 @@ def _render_index_html(title: str, data_file: str) -> str:
         return wrap;
       }};
 
+      const COORD_CACHE_KEY = "stellar_birth_coords_v1";
+      const readCoordCache = () => {{
+        try {{
+          const raw = localStorage.getItem(COORD_CACHE_KEY);
+          const obj = raw ? JSON.parse(raw) : null;
+          return (obj && typeof obj === "object") ? obj : {{}};
+        }} catch (_) {{
+          return {{}};
+        }}
+      }};
+      const writeCoordCache = (cache) => {{
+        try {{
+          localStorage.setItem(COORD_CACHE_KEY, JSON.stringify(cache));
+        }} catch (_) {{}}
+      }};
+      let _coordDirty = {{}};
+      let _coordDirtyCount = 0;
+      let _coordFlushTimer = null;
+      const _flushCoordsToServer = () => {{
+        const items = _coordDirty;
+        const n = _coordDirtyCount;
+        _coordDirty = {{}};
+        _coordDirtyCount = 0;
+        if (_coordFlushTimer) {{
+          clearTimeout(_coordFlushTimer);
+          _coordFlushTimer = null;
+        }}
+        if (!n) return;
+        try {{
+          fetch("/coords/bulk", {{
+            method: "POST",
+            headers: {{ "Content-Type": "application/json" }},
+            body: JSON.stringify({{ items }}),
+          }}).catch(() => {{}});
+        }} catch (_) {{}}
+      }};
+      const _markCoordDirty = (person, lat, lng) => {{
+        const p = String(person || "").trim();
+        if (!p) return;
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+        _coordDirty[p] = [lat, lng];
+        _coordDirtyCount += 1;
+        if (_coordFlushTimer) return;
+        _coordFlushTimer = setTimeout(_flushCoordsToServer, 1200);
+      }};
+      const applyCoordCacheToNodes = (cache) => {{
+        if (!cache) return;
+        for (const n of nodes) {{
+          const k = String(n.person || "").trim();
+          const v = k ? cache[k] : null;
+          if (v && (typeof n.birth_lat !== "number" || typeof n.birth_lng !== "number") && Array.isArray(v) && v.length >= 2) {{
+            const lat = Number(v[0]);
+            const lng = Number(v[1]);
+            if (Number.isFinite(lat) && Number.isFinite(lng)) {{
+              n.birth_lat = lat;
+              n.birth_lng = lng;
+            }}
+          }}
+        }}
+      }};
+      const geocodeText = (n) => {{
+        const m = String(n.birthplace_modern || "").trim().replace(/^今\\s*/g, "");
+        if (m) return m;
+        const raw = String(n.birthplace_raw || "").trim();
+        if (raw) {{
+          const t = raw.split(/[；;，,]/)[0].replace(/[（(].*?[）)]/g, "").replace(/^约\\s*/g, "").replace(/^公元前?\\d+年\\s*/g, "").trim();
+          if (t) return t;
+        }}
+        const bp = String(n.birthplace || "").trim();
+        return bp.split(/[；;，,]/)[0].replace(/[（(].*?[）)]/g, "").trim();
+      }};
+      const prefillCoordsNoMap = () => {{
+        const key = _getAmapKey();
+        if (!key) return;
+        const cache = readCoordCache();
+        applyCoordCacheToNodes(cache);
+        updateCoordCount();
+        _ensureAmap().then(() => {{
+          if (!window.AMap || !window.AMap.Geocoder) return;
+          const geocoder = new window.AMap.Geocoder({{ city: "全国" }});
+          const pending = nodes.filter((n) => (typeof n.birth_lat !== "number" || typeof n.birth_lng !== "number"));
+          if (!pending.length) return;
+          const limit = pending.length;
+          let idx = 0;
+          const tick = () => {{
+            if (idx >= pending.length || idx >= limit) {{
+              writeCoordCache(cache);
+              applyCoordCacheToNodes(cache);
+              updateCoordCount();
+              _flushCoordsToServer();
+              return;
+            }}
+            const n = pending[idx++];
+            const q = geocodeText(n);
+            const person = String(n.person || "").trim();
+            if (!q || !person) return setTimeout(tick, 80);
+            geocoder.getLocation(q, (status, result) => {{
+              if (status === "complete" && result && result.geocodes && result.geocodes.length) {{
+                const loc = result.geocodes[0].location;
+                if (loc && typeof loc.getLng === "function" && typeof loc.getLat === "function") {{
+                  const lng = Number(loc.getLng());
+                  const lat = Number(loc.getLat());
+                  if (Number.isFinite(lat) && Number.isFinite(lng)) {{
+                    n.birth_lat = lat;
+                    n.birth_lng = lng;
+                    cache[person] = [lat, lng];
+                    updateCoordCount();
+                    _markCoordDirty(person, lat, lng);
+                  }}
+                }}
+              }}
+              setTimeout(tick, 140);
+            }});
+          }};
+          setTimeout(tick, 400);
+        }}).catch(() => {{}});
+      }};
+
       const setTab = (tab) => {{
         currentTab = tab;
         if ($tabTrack) {{
@@ -919,37 +1431,85 @@ def _render_index_html(title: str, data_file: str) -> str:
             zoom: 4,
             center: [105.0, 35.5],
             viewMode: "2D",
-            mapStyle: "amap://styles/normal",
+            mapStyle: "amap://styles/whitesmoke",
             resizeEnable: true,
           }});
-
-          const COORD_CACHE_KEY = "stellar_birth_coords_v1";
-          const readCoordCache = () => {{
+          try {{
+            const mohe = [122.340, 53.480];
+            const tengchong = [98.490, 25.020];
+            const mid = [(mohe[0] + tengchong[0]) / 2, (mohe[1] + tengchong[1]) / 2];
+            const line = new window.AMap.Polyline({{
+              path: [mohe, tengchong],
+              strokeColor: "rgba(249,115,22,0.92)",
+              strokeWeight: 3,
+              strokeStyle: "dashed",
+              strokeDasharray: [10, 8],
+              zIndex: 300,
+            }});
+            line.setMap(amap);
+            const dx = tengchong[0] - mohe[0];
+            const dy = tengchong[1] - mohe[1];
+            const len = Math.hypot(dx, dy) || 1;
+            const nx = (-dy) / len;
+            const ny = dx / len;
+            const offsetDeg = 0.6;
+            const labelPos = [mid[0] + nx * offsetDeg, mid[1] + ny * offsetDeg];
+            const ang = (Math.atan2(dy, dx) * 180) / Math.PI;
+            const label = new window.AMap.Marker({{
+              position: labelPos,
+              anchor: "center",
+              offset: new window.AMap.Pixel(0, 0),
+              clickable: false,
+              content:
+                '<div style="transform:rotate(' +
+                String(ang.toFixed(2)) +
+                'deg);transform-origin:center;background:rgba(15,23,42,0.72);border:1px solid rgba(255,255,255,0.22);color:rgba(255,255,255,0.96);padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap">胡焕庸线</div>',
+              zIndex: 320,
+            }});
+            label.setMap(amap);
             try {{
-              const raw = localStorage.getItem(COORD_CACHE_KEY);
-              const obj = raw ? JSON.parse(raw) : null;
-              return (obj && typeof obj === "object") ? obj : {{}};
-            }} catch (_) {{
-              return {{}};
-            }}
-          }};
-          const writeCoordCache = (cache) => {{
-            try {{
-              localStorage.setItem(COORD_CACHE_KEY, JSON.stringify(cache));
+              const dot = new window.AMap.CircleMarker({{
+                center: mid,
+                radius: 5,
+                strokeColor: "rgba(255,255,255,0.65)",
+                strokeWeight: 1,
+                fillColor: "rgba(249,115,22,0.92)",
+                fillOpacity: 1,
+                zIndex: 330,
+              }});
+              dot.setMap(amap);
             }} catch (_) {{}}
-          }};
+
+            const mkText = (text, pos) => {{
+              const t = new window.AMap.Text({{
+                text,
+                position: pos,
+                offset: new window.AMap.Pixel(0, -16),
+                style: {{
+                  background: "rgba(255,255,255,0.92)",
+                  border: "1px solid rgba(15,23,42,0.18)",
+                  color: "rgba(15,23,42,0.92)",
+                  padding: "4px 8px",
+                  borderRadius: "999px",
+                  fontSize: "12px",
+                  fontWeight: "700",
+                }},
+                zIndex: 320,
+              }});
+              t.setMap(amap);
+              return t;
+            }};
+            mkText("漠河", mohe);
+            mkText("腾冲", tengchong);
+          }} catch (_) {{}}
           const coordCache = readCoordCache();
-          for (const n of nodes) {{
-            const k = String(n.person || "").trim();
-            const v = k ? coordCache[k] : null;
-            if (v && typeof n.birth_lat !== "number" && typeof n.birth_lng !== "number" && Array.isArray(v) && v.length >= 2) {{
-              const lat = Number(v[0]);
-              const lng = Number(v[1]);
-              if (Number.isFinite(lat) && Number.isFinite(lng)) {{
-                n.birth_lat = lat;
-                n.birth_lng = lng;
-              }}
-            }}
+          applyCoordCacheToNodes(coordCache);
+
+          let infoWin = null;
+          try {{
+            infoWin = new window.AMap.InfoWindow({{ offset: new window.AMap.Pixel(0, -22) }});
+          }} catch (_) {{
+            infoWin = null;
           }}
 
           // Use markers (+ optional clusterer) to make dense distributions readable.
@@ -964,7 +1524,30 @@ def _render_index_html(title: str, data_file: str) -> str:
               anchor: "center",
               clickable: true,
             }});
-            mk.on("click", () => openPerson(n.person));
+            mk.on("click", () => {{
+              try {{
+                const years = (n.birth_year != null && n.death_year != null) ? `${{n.birth_year}}-${{n.death_year}}` : (n.birth_year != null ? `${{n.birth_year}}-?` : (n.death_year != null ? `?- ${{n.death_year}}` : "未知"));
+                const dynasty = String(n.dynasty || "").trim();
+                const bp = String(n.birthplace || "").trim();
+                const bpm = String(n.birthplace_modern || "").trim();
+                const quote = String(n.quote || "").trim();
+                const personJs = String(n.person || "").replace(/'/g, "\\\\'");
+                let html = '';
+                html += '<div style="min-width:220px;max-width:280px">';
+                html += '<div style="font-weight:800;color:#0f172a;font-size:14px">' + esc(n.person) + '</div>';
+                html += '<div style="margin-top:4px;color:rgba(15,23,42,0.70);font-size:12px">生卒：' + esc(years) + '</div>';
+                if (dynasty) html += '<div style="margin-top:4px;color:rgba(15,23,42,0.70);font-size:12px">时代：' + esc(dynasty) + '</div>';
+                if (bp) html += '<div style="margin-top:4px;color:rgba(15,23,42,0.70);font-size:12px">籍贯：' + esc(bp) + (bpm ? ('（' + esc(bpm) + '）') : '') + '</div>';
+                if (quote) html += '<div style="margin-top:6px;color:rgba(15,23,42,0.82);font-size:12px;line-height:1.4">' + esc(quote) + '</div>';
+                html += '<div style="margin-top:8px"><button onclick="window.__openPerson && window.__openPerson(\\'' + personJs + '\\')" style="background:#0f172a;color:#fff;border:0;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer">打开人物页</button></div>';
+                html += '</div>';
+                if (infoWin) {{
+                  infoWin.setContent(html);
+                  infoWin.open(amap, [lng, lat]);
+                }}
+              }} catch (_) {{}}
+            }});
+            mk.on("dblclick", () => openPerson(n.person));
             try {{ mk.setMap(amap); }} catch (_) {{}}
             markers.push({{ mk, n }});
           }};
@@ -989,18 +1572,6 @@ def _render_index_html(title: str, data_file: str) -> str:
           }} catch (_) {{}}
           updateMapMarkers();
 
-          const geocodeText = (n) => {{
-            const m = String(n.birthplace_modern || "").trim().replace(/^今\\s*/g, "");
-            if (m) return m;
-            const raw = String(n.birthplace_raw || "").trim();
-            if (raw) {{
-              const t = raw.split(/[；;，,]/)[0].replace(/[（(].*?[）)]/g, "").replace(/^约\\s*/g, "").replace(/^公元前?\\d+年\\s*/g, "").trim();
-              if (t) return t;
-            }}
-            const bp = String(n.birthplace || "").trim();
-            return bp.split(/[；;，,]/)[0].replace(/[（(].*?[）)]/g, "").trim();
-          }};
-
           const autoFillCoords = () => {{
             let need = 0;
             for (const n of nodes) {{
@@ -1010,13 +1581,14 @@ def _render_index_html(title: str, data_file: str) -> str:
             if (!window.AMap || !window.AMap.Geocoder) return;
             const geocoder = new window.AMap.Geocoder({{ city: "全国" }});
             const pending = nodes.filter((n) => (typeof n.birth_lat !== "number" || typeof n.birth_lng !== "number"));
-            const limit = 120;
+            const limit = pending.length;
             let idx = 0;
             const tick = () => {{
               if (idx >= pending.length || idx >= limit) {{
                 writeCoordCache(coordCache);
                 updateCoordCount();
                 updateMapMarkers();
+                _flushCoordsToServer();
                 return;
               }}
               const n = pending[idx++];
@@ -1033,9 +1605,11 @@ def _render_index_html(title: str, data_file: str) -> str:
                       n.birth_lat = lat;
                       n.birth_lng = lng;
                       coordCache[person] = [lat, lng];
+                      writeCoordCache(coordCache);
                       addMarker(n);
                       updateCoordCount();
                       updateMapMarkers();
+                      _markCoordDirty(person, lat, lng);
                     }}
                   }}
                 }}
@@ -1069,6 +1643,18 @@ def _render_index_html(title: str, data_file: str) -> str:
 
       if ($tabGraph) $tabGraph.addEventListener("click", () => setTab("graph"));
       if ($tabMap) $tabMap.addEventListener("click", () => setTab("map"));
+      if ($resetView) $resetView.addEventListener("click", () => {{
+        if (currentTab === "map") {{
+          try {{
+            if (amap) amap.setZoomAndCenter(4, [105.0, 35.5]);
+          }} catch (_) {{}}
+          return;
+        }}
+        camScale = 1.0;
+        camOffX = 0.0;
+        camOffY = 0.0;
+        setSelected(null);
+      }});
       setTab("graph");
 
       const onMouseMove = (e) => {{
@@ -1093,8 +1679,67 @@ def _render_index_html(title: str, data_file: str) -> str:
         const mx = (event.clientX - rect.left) * (W / rect.width);
         const my = (event.clientY - rect.top) * (H / rect.height);
         const n = pickNode(mx, my);
+        if (_clickTimer) clearTimeout(_clickTimer);
+        _clickTimer = setTimeout(() => {{
+          if (n) {{
+            setSelected(n);
+          }} else {{
+            setSelected(null);
+          }}
+          _clickTimer = null;
+        }}, 220);
+      }});
+      $c.addEventListener("dblclick", (event) => {{
+        if (_clickTimer) {{
+          clearTimeout(_clickTimer);
+          _clickTimer = null;
+        }}
+        const rect = $c.getBoundingClientRect();
+        const mx = (event.clientX - rect.left) * (W / rect.width);
+        const my = (event.clientY - rect.top) * (H / rect.height);
+        const n = pickNode(mx, my);
         if (n) openPerson(n.person);
       }});
+
+      let isPanning = false;
+      let panStartX = 0;
+      let panStartY = 0;
+      let panStartOffX = 0;
+      let panStartOffY = 0;
+      $c.addEventListener("mousedown", (e) => {{
+        if (!(e.button === 2 || (e.shiftKey && e.button === 0) || e.button === 1)) return;
+        isPanning = true;
+        panStartX = e.clientX;
+        panStartY = e.clientY;
+        panStartOffX = camOffX;
+        panStartOffY = camOffY;
+        try {{ e.preventDefault(); }} catch (_) {{}}
+      }});
+      $c.addEventListener("contextmenu", (e) => {{
+        try {{ e.preventDefault(); }} catch (_) {{}}
+      }});
+      window.addEventListener("mouseup", () => {{
+        isPanning = false;
+      }});
+      window.addEventListener("mousemove", (e) => {{
+        if (!isPanning) return;
+        camOffX = panStartOffX + (e.clientX - panStartX) * (W / $c.getBoundingClientRect().width);
+        camOffY = panStartOffY + (e.clientY - panStartY) * (H / $c.getBoundingClientRect().height);
+        draw();
+      }});
+      $c.addEventListener("wheel", (e) => {{
+        const rect = $c.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (W / rect.width);
+        const my = (e.clientY - rect.top) * (H / rect.height);
+        const before = screenToWorld(mx, my);
+        const dir = e.deltaY > 0 ? -1 : 1;
+        const factor = dir > 0 ? 1.12 : 1 / 1.12;
+        camScale = clamp(camScale * factor, 0.35, 3.8);
+        camOffX = mx - before.x * camScale;
+        camOffY = my - before.y * camScale;
+        draw();
+        try {{ e.preventDefault(); }} catch (_) {{}}
+      }}, {{ passive: false }});
 
       const railRect = () => $rail.getBoundingClientRect();
 
@@ -1176,6 +1821,18 @@ def _render_index_html(title: str, data_file: str) -> str:
         updateMapMarkers();
         draw();
       }});
+      if ($startYearInput) {{
+        $startYearInput.addEventListener("keydown", (e) => {{
+          if (e.key === "Enter") applyYearInputs();
+        }});
+        $startYearInput.addEventListener("blur", applyYearInputs);
+      }}
+      if ($endYearInput) {{
+        $endYearInput.addEventListener("keydown", (e) => {{
+          if (e.key === "Enter") applyYearInputs();
+        }});
+        $endYearInput.addEventListener("blur", applyYearInputs);
+      }}
 
       const groupKey = (n) => {{
         const d = String(n.dynasty || "").trim();
@@ -1236,10 +1893,19 @@ def _render_index_html(title: str, data_file: str) -> str:
           picked.push(best);
         }});
 
-        const tFor = (n) => {{
-          const y = n.birth_year;
-          if (typeof y !== "number") return null;
-          return clamp((y - minYear) / (maxYear - minYear), 0, 1);
+        const yearList = raw.map((n) => n.birth_year).filter((y) => typeof y === "number" && Number.isFinite(y)).sort((a, b) => a - b);
+        const yearToPct = (y) => {{
+          if (!yearList.length) return null;
+          if (typeof y !== "number" || !Number.isFinite(y)) return null;
+          let lo = 0, hi = yearList.length - 1;
+          while (lo < hi) {{
+            const mid = (lo + hi) >> 1;
+            if (yearList[mid] < y) lo = mid + 1;
+            else hi = mid;
+          }}
+          const i = lo;
+          if (yearList.length <= 1) return 0.5;
+          return clamp(i / (yearList.length - 1), 0, 1);
         }};
 
         const laneFor = (n) => {{
@@ -1278,7 +1944,7 @@ def _render_index_html(title: str, data_file: str) -> str:
 
         nodes = raw.map((n, idx) => {{
           const seed = hash(n.person || "");
-          const t = tFor(n);
+          const t = yearToPct(n.birth_year);
           const x0 = t == null ? (pad + rand01(seed + 1) * (W - pad * 2)) : (pad + t * (W - pad * 2));
           const yLane = laneFor(n);
           const y0 = pad + yLane * (H - pad * 2) + (rand01(seed + 2) - 0.5) * 26;
@@ -1305,6 +1971,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         setHandles();
         updateActiveCount();
         updateCoordCount();
+        prefillCoordsNoMap();
         draw();
         window.requestAnimationFrame(animate);
       }});
@@ -1330,7 +1997,475 @@ def main() -> int:
     story_md_dir = Path(args.story_md_dir).resolve()
     spotlight_path = Path(args.spotlight).resolve()
 
+    try:
+        from dotenv import load_dotenv  # type: ignore
+
+        load_dotenv(dotenv_path=str((REPO_ROOT / ".env").resolve()))
+        load_dotenv(dotenv_path=str((REPO_ROOT.parent / ".env").resolve()))
+        load_dotenv(dotenv_path=str((REPO_ROOT.parent.parent / ".env").resolve()))
+        load_dotenv(dotenv_path=str((REPO_ROOT / "data" / ".env").resolve()))
+    except Exception:
+        pass
+
     latest_html = _scan_latest_html(story_map_dir)
+    geocode_city = None
+    try:
+        sys.path.insert(0, str((REPO_ROOT / "storymap" / "script").resolve()))
+        from map_client import geocode_city as _geocode_city  # type: ignore
+
+        geocode_city = _geocode_city
+    except Exception:
+        geocode_city = None
+    geocode_limit = int(os.getenv("STELLAR_HOME_GEOCODE_LIMIT", "0") or "0")
+    geocode_used = 0
+
+    hist_index_path = (REPO_ROOT / "data" / "historical_places_index.jsonl").resolve()
+    hist_index: Dict[str, Tuple[float, float]] = {}
+
+    def _norm_place_key(s: str) -> str:
+        t = str(s or "").strip()
+        if not t:
+            return ""
+        t = re.sub(r"[\\s\\(\\)（）\\[\\]【】<>《》“”‘’\"'·•,，。；;:：/\\\\-—]+", "", t)
+        return t.strip().lower()
+
+    def _load_hist_index() -> Dict[str, Tuple[float, float]]:
+        if not hist_index_path.exists():
+            return {}
+        mapping: Dict[str, Tuple[float, float]] = {}
+        try:
+            with hist_index_path.open("r", encoding="utf-8") as f:
+                for line in f:
+                    s = (line or "").strip()
+                    if not s:
+                        continue
+                    try:
+                        obj = json.loads(s)
+                    except Exception:
+                        continue
+                    if not isinstance(obj, dict):
+                        continue
+                    ancient = str(obj.get("ancient_name") or "").strip()
+                    modern = str(obj.get("modern_name") or "").strip()
+                    lat = obj.get("lat")
+                    lon = obj.get("lon")
+                    try:
+                        lat_f = float(lat)
+                        lon_f = float(lon)
+                    except Exception:
+                        continue
+                    if not (-90 <= lat_f <= 90 and -180 <= lon_f <= 180):
+                        continue
+                    for key in (ancient, modern):
+                        nk = _norm_place_key(key)
+                        if nk and nk not in mapping:
+                            mapping[nk] = (lat_f, lon_f)
+        except Exception:
+            return {}
+        return mapping
+
+    hist_index = _load_hist_index()
+
+    def _hist_lookup(*names: str) -> Optional[Tuple[float, float]]:
+        for name in names:
+            nk = _norm_place_key(name)
+            if not nk:
+                continue
+            coord = hist_index.get(nk)
+            if coord:
+                return coord
+        return None
+
+    def _parse_coords_table_from_md(md_text: str) -> Dict[str, Tuple[float, float]]:
+        if not isinstance(md_text, str) or not md_text.strip():
+            return {}
+        lines = md_text.splitlines()
+        in_section = False
+        table_started = False
+        idx_name = None
+        idx_lat = None
+        idx_lng = None
+        out: Dict[str, Tuple[float, float]] = {}
+        for line in lines:
+            s = (line or "").strip()
+            if s.startswith("## "):
+                title = s.lstrip("#").strip()
+                in_section = "地点坐标" in title
+                table_started = False
+                idx_name = None
+                idx_lat = None
+                idx_lng = None
+                continue
+            if not in_section:
+                continue
+            if s.startswith("|") and (not table_started):
+                header = [c.strip() for c in s.strip("|").split("|")]
+                for i, c in enumerate(header):
+                    cl = c.lower()
+                    if ("现称" in c) or ("地点" in c) or ("location" in cl) or ("place" in cl):
+                        idx_name = i
+                    if ("纬度" in c) or ("lat" in cl):
+                        idx_lat = i
+                    if ("经度" in c) or ("lng" in cl) or ("lon" in cl) or ("long" in cl):
+                        idx_lng = i
+                table_started = True
+                continue
+            if table_started:
+                if (not s) or (not s.startswith("|")):
+                    break
+                cols = [c.strip() for c in s.strip("|").split("|")]
+                if idx_name is None or idx_lat is None or idx_lng is None:
+                    continue
+                if idx_name >= len(cols) or idx_lat >= len(cols) or idx_lng >= len(cols):
+                    continue
+                name = cols[idx_name]
+                if re.fullmatch(r":?-+:?", cols[idx_lat].replace(" ", "")) or re.fullmatch(
+                    r":?-+:?", cols[idx_lng].replace(" ", "")
+                ):
+                    continue
+                try:
+                    lat = float(cols[idx_lat])
+                    lng = float(cols[idx_lng])
+                except Exception:
+                    continue
+                if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+                    continue
+                variants = [str(name or "").strip()]
+                try:
+                    stripped = re.sub(r"[（(].*?[）)]", "", str(name or "")).strip()
+                    if stripped and stripped not in variants:
+                        variants.append(stripped)
+                    if "（" in name:
+                        left = name.split("（", 1)[0].strip()
+                        if left and left not in variants:
+                            variants.append(left)
+                    if "(" in name:
+                        left = name.split("(", 1)[0].strip()
+                        if left and left not in variants:
+                            variants.append(left)
+                except Exception:
+                    pass
+                for v in variants:
+                    nk = _norm_place_key(v)
+                    if nk and nk not in out:
+                        out[nk] = (lat, lng)
+        return out
+
+    amap_key = (
+        os.getenv("locaion_api")
+        or os.getenv("location_api")
+        or os.getenv("LOCATION_API")
+        or os.getenv("AMAP_WEBSERVICE_KEY")
+        or os.getenv("AMAP_WEB_SERVICE_KEY")
+        or os.getenv("AMAP_REST_KEY")
+        or ""
+    ).strip()
+    amap_limit = int(os.getenv("STELLAR_HOME_AMAP_GEOCODE_LIMIT", "5000") or "5000")
+    amap_interval_s = float(os.getenv("STELLAR_HOME_AMAP_MIN_INTERVAL", "0.08") or "0.08")
+    amap_concurrency = int(os.getenv("STELLAR_HOME_AMAP_CONCURRENCY", "6") or "6")
+    amap_qps = float(os.getenv("STELLAR_HOME_AMAP_QPS", "8") or "8")
+    if not (amap_concurrency > 0):
+        amap_concurrency = 1
+    if not (amap_qps > 0):
+        amap_qps = 8.0
+    amap_min_interval_s = max(amap_interval_s, 1.0 / float(amap_qps))
+    amap_req_used = 0
+    amap_last_ts = 0.0
+    amap_lock = threading.Lock()
+    amap_cache_path = (REPO_ROOT / "cache" / "amap_geocode_cache.json").resolve()
+    amap_cache: Dict[str, Optional[Tuple[float, float]]] = {}
+    try:
+        if amap_cache_path.exists():
+            raw_cache = json.loads(amap_cache_path.read_text(encoding="utf-8"))
+            if isinstance(raw_cache, dict):
+                for k, v in raw_cache.items():
+                    if not isinstance(k, str) or not k.strip():
+                        continue
+                    kk = k.strip()
+                    if v is None:
+                        amap_cache[kk] = None
+                        continue
+                    if isinstance(v, list) and len(v) >= 2:
+                        try:
+                            lat = float(v[0])
+                            lng = float(v[1])
+                        except Exception:
+                            continue
+                        if -90 <= lat <= 90 and -180 <= lng <= 180:
+                            amap_cache[kk] = (lat, lng)
+    except Exception:
+        amap_cache = {}
+
+    def _amap_geocode(address: str) -> Optional[Tuple[float, float]]:
+        nonlocal amap_last_ts, amap_req_used
+        addr = str(address or "").strip()
+        if not addr or not amap_key:
+            return None
+        if addr in amap_cache:
+            return amap_cache.get(addr)
+        with amap_lock:
+            if amap_req_used >= amap_limit:
+                return None
+            amap_req_used += 1
+            now = time.time()
+            wait = (amap_last_ts + amap_min_interval_s) - now
+            amap_last_ts = max(amap_last_ts, now) + amap_min_interval_s
+        if wait > 0:
+            time.sleep(wait)
+        url = (
+            "https://restapi.amap.com/v3/geocode/geo"
+            f"?address={url_quote(addr, safe='')}&key={url_quote(amap_key, safe='')}"
+        )
+        try:
+            req = Request(url, headers={"User-Agent": "StoryMap/1.0"})
+            with urlopen(req, timeout=12) as resp:
+                data = json.loads(resp.read().decode("utf-8", errors="ignore"))
+        except Exception:
+            amap_cache[addr] = None
+            return None
+        if not isinstance(data, dict) or str(data.get("status")) != "1":
+            amap_cache[addr] = None
+            return None
+        geocodes = data.get("geocodes")
+        if not isinstance(geocodes, list) or not geocodes:
+            amap_cache[addr] = None
+            return None
+        g0 = geocodes[0] if isinstance(geocodes[0], dict) else None
+        if not isinstance(g0, dict):
+            amap_cache[addr] = None
+            return None
+        loc = str(g0.get("location") or "").strip()
+        if not loc or "," not in loc:
+            amap_cache[addr] = None
+            return None
+        a, b = loc.split(",", 1)
+        try:
+            lng = float(a.strip())
+            lat = float(b.strip())
+        except Exception:
+            amap_cache[addr] = None
+            return None
+        if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+            amap_cache[addr] = None
+            return None
+        res = (lat, lng)
+        amap_cache[addr] = res
+        return res
+
+    def _looks_foreign_query(q: str) -> bool:
+        s = str(q or "").strip()
+        if not s:
+            return False
+        if re.search(r"[A-Za-z]", s):
+            return True
+        return bool(
+            re.search(
+                r"(美国|智利|法国|英国|俄罗斯|希腊|乌克兰|西班牙|意大利|德国|日本|韩国|朝鲜|越南|泰国|缅甸|斯里兰卡|印度尼西亚|印度|巴西|阿根廷|墨西哥|古巴|加拿大|澳大利亚|新西兰|南非|埃及|以色列|巴勒斯坦|土耳其|伊朗|伊拉克|叙利亚|阿富汗|巴基斯坦|挪威|瑞典|芬兰|丹麦|冰岛|荷兰|比利时|瑞士|奥地利|葡萄牙|波兰|捷克|匈牙利|罗马尼亚|保加利亚|塞尔维亚|克罗地亚|爱尔兰|苏联)",
+                s,
+            )
+        )
+
+    def _looks_like_geocode_query(q: str) -> bool:
+        s = str(q or "").strip()
+        if not s:
+            return False
+        if _looks_foreign_query(s):
+            return False
+        if re.search(r"(存疑|不详|无法确认|具体地点存疑|未知)", s):
+            return False
+        if re.search(r"^\\d{1,2}\\s*月(?:\\s*\\d{1,2}\\s*(?:日|号))?$", s):
+            return False
+        if re.search(r"^(?:约|大约|约于)?\\s*(公元前|公元|前)?\\s*\\d{1,4}\\s*年(?:\\s*\\d{1,2}\\s*月(?:\\s*\\d{1,2}\\s*(?:日|号))?)?$", s):
+            return False
+        if re.search(r"^(?:约|大约|约于)?\\s*\\d{1,2}\\s*世纪(?:初|中|末)?$", s):
+            return False
+        return True
+
+    def _make_geocode_query(birthplace_modern: str, birthplace_ancient: str, birthplace_raw: str) -> str:
+        q = (birthplace_modern or birthplace_ancient or birthplace_raw or "").strip()
+        q = re.sub(r"^今\\s*", "", q).strip()
+        q = re.sub(r"^(?:出生于|出生在|生于|生在|于|在)\\s*", "", q).strip()
+        q = re.sub(r"[（(].*?[）)]", "", q).strip()
+        q = q.split("，", 1)[0].split(",", 1)[0].split("；", 1)[0].split(";", 1)[0].strip()
+        return q
+
+    def _amap_geocode_batch(addresses: List[str]) -> None:
+        if not amap_key:
+            return
+        uniq: List[str] = []
+        seen = set()
+        for a in addresses:
+            s = str(a or "").strip()
+            if not s or s in seen:
+                continue
+            seen.add(s)
+            if s in amap_cache:
+                continue
+            if not _looks_like_geocode_query(s):
+                amap_cache[s] = None
+                continue
+            uniq.append(s)
+        if not uniq:
+            return
+
+        def worker(addr: str) -> Tuple[str, Optional[Tuple[float, float]]]:
+            return (addr, _amap_geocode(addr))
+
+        with ThreadPoolExecutor(max_workers=amap_concurrency) as ex:
+            futs = [ex.submit(worker, a) for a in uniq]
+            for fut in as_completed(futs):
+                try:
+                    addr, res = fut.result()
+                except Exception:
+                    continue
+                if addr and addr not in amap_cache:
+                    amap_cache[addr] = res
+
+    foreign_limit = int(os.getenv("STELLAR_HOME_FOREIGN_GEOCODE_LIMIT", "1500") or "1500")
+    foreign_concurrency = int(os.getenv("STELLAR_HOME_FOREIGN_CONCURRENCY", "6") or "6")
+    foreign_qps = float(os.getenv("STELLAR_HOME_FOREIGN_QPS", "6") or "6")
+    if not (foreign_concurrency > 0):
+        foreign_concurrency = 1
+    if not (foreign_qps > 0):
+        foreign_qps = 6.0
+    foreign_min_interval_s = max(1.0 / float(foreign_qps), 0.05)
+    foreign_req_used = 0
+    foreign_last_ts = 0.0
+    foreign_lock = threading.Lock()
+    foreign_cache_path = (REPO_ROOT / "cache" / "foreign_geocode_cache.json").resolve()
+    foreign_cache: Dict[str, Optional[Tuple[float, float]]] = {}
+    try:
+        if foreign_cache_path.exists():
+            raw_cache = json.loads(foreign_cache_path.read_text(encoding="utf-8"))
+            if isinstance(raw_cache, dict):
+                for k, v in raw_cache.items():
+                    if not isinstance(k, str) or not k.strip():
+                        continue
+                    kk = k.strip()
+                    if v is None:
+                        foreign_cache[kk] = None
+                        continue
+                    if isinstance(v, list) and len(v) >= 2:
+                        try:
+                            lat = float(v[0])
+                            lng = float(v[1])
+                        except Exception:
+                            continue
+                        if -90 <= lat <= 90 and -180 <= lng <= 180:
+                            foreign_cache[kk] = (lat, lng)
+    except Exception:
+        foreign_cache = {}
+
+    def _looks_like_foreign_geocode_query(q: str) -> bool:
+        s = str(q or "").strip()
+        if not s:
+            return False
+        if not _looks_foreign_query(s):
+            return False
+        if re.search(r"(存疑|不详|无法确认|具体地点存疑|未知)", s):
+            return False
+        if re.search(r"^\\d{1,2}\\s*月(?:\\s*\\d{1,2}\\s*(?:日|号))?$", s):
+            return False
+        if re.search(r"^(?:约|大约|约于)?\\s*(公元前|公元|前)?\\s*\\d{1,4}\\s*年(?:\\s*\\d{1,2}\\s*月(?:\\s*\\d{1,2}\\s*(?:日|号))?)?$", s):
+            return False
+        if re.search(r"^(?:约|大约|约于)?\\s*\\d{1,2}\\s*世纪(?:初|中|末)?$", s):
+            return False
+        return True
+
+    def _foreign_geocode(address: str) -> Optional[Tuple[float, float]]:
+        nonlocal foreign_last_ts, foreign_req_used
+        addr = str(address or "").strip()
+        if not addr:
+            return None
+        if addr in foreign_cache:
+            cached = foreign_cache.get(addr)
+            if cached is not None:
+                return cached
+        with foreign_lock:
+            if foreign_req_used >= foreign_limit:
+                return None
+            foreign_req_used += 1
+            now = time.time()
+            wait = (foreign_last_ts + foreign_min_interval_s) - now
+            foreign_last_ts = max(foreign_last_ts, now) + foreign_min_interval_s
+        if wait > 0:
+            time.sleep(wait)
+        data = None
+        try:
+            url = f"https://photon.komoot.io/api/?limit=1&q={url_quote(addr, safe='')}"
+            req = Request(url, headers={"User-Agent": "StoryMap/1.0"})
+            with urlopen(req, timeout=18) as resp:
+                data = json.loads(resp.read().decode("utf-8", errors="ignore"))
+        except Exception:
+            data = None
+        lat = None
+        lng = None
+        if isinstance(data, dict):
+            feats = data.get("features")
+            if isinstance(feats, list) and feats:
+                f0 = feats[0] if isinstance(feats[0], dict) else None
+                geom = f0.get("geometry") if isinstance(f0, dict) else None
+                coords = geom.get("coordinates") if isinstance(geom, dict) else None
+                if isinstance(coords, list) and len(coords) >= 2:
+                    try:
+                        lng = float(coords[0])
+                        lat = float(coords[1])
+                    except Exception:
+                        lat = None
+                        lng = None
+        if lat is None or lng is None:
+            try:
+                url = f"https://nominatim.openstreetmap.org/search?format=json&limit=1&q={url_quote(addr, safe='')}"
+                req = Request(url, headers={"User-Agent": "StoryMap/1.0"})
+                with urlopen(req, timeout=18) as resp:
+                    data2 = json.loads(resp.read().decode("utf-8", errors="ignore"))
+                if isinstance(data2, list) and data2:
+                    d0 = data2[0] if isinstance(data2[0], dict) else None
+                    if isinstance(d0, dict):
+                        lat = float(d0.get("lat"))
+                        lng = float(d0.get("lon"))
+            except Exception:
+                lat = None
+                lng = None
+        if lat is None or lng is None:
+            foreign_cache[addr] = None
+            return None
+        if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+            foreign_cache[addr] = None
+            return None
+        res = (float(lat), float(lng))
+        foreign_cache[addr] = res
+        return res
+
+    def _foreign_geocode_batch(addresses: List[str]) -> None:
+        uniq: List[str] = []
+        seen = set()
+        for a in addresses:
+            s = str(a or "").strip()
+            if not s or s in seen:
+                continue
+            seen.add(s)
+            if s in foreign_cache:
+                continue
+            if not _looks_like_foreign_geocode_query(s):
+                foreign_cache[s] = None
+                continue
+            uniq.append(s)
+        if not uniq:
+            return
+
+        def worker(addr: str) -> Tuple[str, Optional[Tuple[float, float]]]:
+            return (addr, _foreign_geocode(addr))
+
+        with ThreadPoolExecutor(max_workers=foreign_concurrency) as ex:
+            futs = [ex.submit(worker, a) for a in uniq]
+            for fut in as_completed(futs):
+                try:
+                    addr, res = fut.result()
+                except Exception:
+                    continue
+                if addr and addr not in foreign_cache:
+                    foreign_cache[addr] = res
 
     md_names = _scan_people_from_story_md(story_md_dir)
     html_names = _scan_people_from_story_map_html(story_map_dir)
@@ -1344,6 +2479,8 @@ def main() -> int:
     nodes: List[Dict[str, Any]] = []
     min_year: Optional[int] = None
     max_year: Optional[int] = None
+    pending_amap: Dict[int, str] = {}
+    pending_foreign: Dict[int, str] = {}
     for name in names:
         md_path = story_md_dir / f"{name}.md"
         birth_year = None
@@ -1353,12 +2490,14 @@ def main() -> int:
         birthplace_raw = ""
         birthplace_ancient = ""
         birthplace_modern = ""
+        coords_table: Dict[str, Tuple[float, float]] = {}
         if md_path.exists():
             md_text = md_path.read_text(encoding="utf-8")
             birth_year, death_year = _extract_years_from_md(md_text)
             dynasty = _dynasty_hint_from_md(md_text)
             relations = _extract_relations(md_text)
             birthplace_raw, birthplace_ancient, birthplace_modern = _extract_birthplace_from_md(md_text)
+            coords_table = _parse_coords_table_from_md(md_text)
         if birth_year is not None:
             min_year = birth_year if min_year is None else min(min_year, birth_year)
             max_year = birth_year if max_year is None else max(max_year, birth_year)
@@ -1382,6 +2521,69 @@ def main() -> int:
                 dynasty = dyn2
             if not birthplace_raw and bp:
                 birthplace_raw, birthplace_ancient, birthplace_modern = _extract_birthplace_from_md(f"**出生**：{bp}")
+        if (birth_lat is None or birth_lng is None) and coords_table:
+            cands = [birthplace_modern, birthplace_ancient, birthplace_raw]
+            picked = None
+            for c in cands:
+                s = str(c or "").strip()
+                if not s:
+                    continue
+                s = re.sub(r"^今\\s*", "", s).strip()
+                s = re.sub(r"^(?:出生于|出生在|生于|生在|于|在)\\s*", "", s).strip()
+                s2 = re.sub(r"[（(].*?[）)]", "", s).strip()
+                for k in (s, s2):
+                    nk = _norm_place_key(k)
+                    if nk and nk in coords_table:
+                        picked = coords_table[nk]
+                        break
+                    if nk:
+                        for ck, cv in coords_table.items():
+                            if not ck:
+                                continue
+                            if (ck in nk) or (nk in ck):
+                                picked = cv
+                                break
+                    if picked:
+                        break
+                if picked:
+                    break
+            if picked:
+                birth_lat = float(picked[0])
+                birth_lng = float(picked[1])
+        if (birth_lat is None or birth_lng is None) and hist_index:
+            c1 = (birthplace_modern or "").strip()
+            c2 = (birthplace_ancient or "").strip()
+            c3 = (birthplace_raw or "").strip()
+            c1 = re.sub(r"^今\\s*", "", c1).strip()
+            c2 = re.sub(r"^今\\s*", "", c2).strip()
+            c3 = re.sub(r"^今\\s*", "", c3).strip()
+            c1b = re.sub(r"[（(].*?[）)]", "", c1).strip()
+            c2b = re.sub(r"[（(].*?[）)]", "", c2).strip()
+            c3b = re.sub(r"[（(].*?[）)]", "", c3).strip()
+            coord0 = _hist_lookup(c1, c2, c3, c1b, c2b, c3b)
+            if coord0:
+                birth_lat = float(coord0[0])
+                birth_lng = float(coord0[1])
+        if amap_key and (birth_lat is None or birth_lng is None):
+            q = _make_geocode_query(birthplace_modern, birthplace_ancient, birthplace_raw)
+            if _looks_like_geocode_query(q):
+                pending_amap[len(nodes)] = q
+            elif _looks_like_foreign_geocode_query(q):
+                pending_foreign[len(nodes)] = q
+        if geocode_city and geocode_used < geocode_limit and (birth_lat is None or birth_lng is None):
+            q = (birthplace_modern or birthplace_ancient or birthplace_raw or "").strip()
+            q = re.sub(r"^今\\s*", "", q).strip()
+            q = re.sub(r"^(?:出生于|出生在|生于|生在|于|在)\\s*", "", q).strip()
+            q = re.sub(r"[（(].*?[）)]", "", q).strip()
+            if q:
+                try:
+                    coord = geocode_city(q)
+                except Exception:
+                    coord = None
+                if coord and isinstance(coord, tuple) and len(coord) >= 2:
+                    birth_lat = float(coord[0])
+                    birth_lng = float(coord[1])
+                    geocode_used += 1
         nodes.append(
             {
                 "person": name,
@@ -1399,6 +2601,25 @@ def main() -> int:
                 "relations": relations,
             }
         )
+
+    if amap_key and pending_amap:
+        _amap_geocode_batch(list(pending_amap.values()))
+        for idx, q in pending_amap.items():
+            if idx < 0 or idx >= len(nodes):
+                continue
+            coord = amap_cache.get(q)
+            if coord and isinstance(coord, tuple) and len(coord) >= 2:
+                nodes[idx]["birth_lat"] = float(coord[0])
+                nodes[idx]["birth_lng"] = float(coord[1])
+    if pending_foreign:
+        _foreign_geocode_batch(list(pending_foreign.values()))
+        for idx, q in pending_foreign.items():
+            if idx < 0 or idx >= len(nodes):
+                continue
+            coord = foreign_cache.get(q)
+            if coord and isinstance(coord, tuple) and len(coord) >= 2:
+                nodes[idx]["birth_lat"] = float(coord[0])
+                nodes[idx]["birth_lng"] = float(coord[1])
 
     person_to_idx = {n["person"]: i for i, n in enumerate(nodes)}
     edges: List[Dict[str, int]] = []
@@ -1494,6 +2715,32 @@ def main() -> int:
         "edges": edges,
         "kg_edges": kg_edges,
     }
+    try:
+        amap_cache_path.parent.mkdir(parents=True, exist_ok=True)
+        payload_cache: Dict[str, Any] = {}
+        for k, v in amap_cache.items():
+            if not isinstance(k, str) or not k.strip():
+                continue
+            if v is None:
+                payload_cache[k] = None
+            else:
+                payload_cache[k] = [float(v[0]), float(v[1])]
+        amap_cache_path.write_text(json.dumps(payload_cache, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+    try:
+        foreign_cache_path.parent.mkdir(parents=True, exist_ok=True)
+        payload_cache2: Dict[str, Any] = {}
+        for k, v in foreign_cache.items():
+            if not isinstance(k, str) or not k.strip():
+                continue
+            if v is None:
+                payload_cache2[k] = None
+            else:
+                payload_cache2[k] = [float(v[0]), float(v[1])]
+        foreign_cache_path.write_text(json.dumps(payload_cache2, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
     out_data.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     out_index.write_text(_render_index_html(args.title, out_data.name), encoding="utf-8")
     print(json.dumps({"ok": True, "index": str(out_index), "data": str(out_data), "count": len(nodes)}, ensure_ascii=False))
