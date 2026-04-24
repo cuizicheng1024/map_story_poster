@@ -418,6 +418,11 @@ def _render_index_html(title: str, data_file: str) -> str:
         cursor: ew-resize;
         touch-action: none;
       }}
+      @keyframes twinkle {{
+        0% {{ transform: scale(1); opacity: 0.82; }}
+        50% {{ transform: scale(1.12); opacity: 1; }}
+        100% {{ transform: scale(1); opacity: 0.86; }}
+      }}
     </style>
   </head>
   <body class="min-h-screen">
@@ -445,7 +450,28 @@ def _render_index_html(title: str, data_file: str) -> str:
               <button id="tabMap" class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:bg-white/10">地图视角</button>
             </div>
           </div>
-          <div class="text-[11px] font-normal text-white/60 flex items-center gap-2">窗口内：<span id="activeCount">-</span><span class="text-white/30">|</span>坐标点：<span id="coordCount">-</span><button id="resetView" class="ml-2 px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/70 hover:bg-white/15">重置视图</button></div>
+          <div class="text-[11px] font-normal text-white/60 flex items-center gap-2">
+            窗口内：<span id="activeCount">-</span><span class="text-white/30">|</span>坐标点：<span id="coordCount">-</span>
+            <label class="ml-2 inline-flex items-center gap-1 select-none text-white/65">
+              <span>底图</span>
+              <select id="mapStyle" class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/80 outline-none focus:ring-2 focus:ring-white/10">
+                <option value="amap://styles/whitesmoke">浅灰</option>
+                <option value="amap://styles/normal">默认</option>
+                <option value="amap://styles/light">明亮</option>
+                <option value="amap://styles/dark">深色</option>
+                <option value="amap://styles/fresh">清新</option>
+                <option value="amap://styles/grey">灰度</option>
+                <option value="amap://styles/macaron">马卡龙</option>
+                <option value="amap://styles/blue">蓝调</option>
+              </select>
+            </label>
+            <label class="ml-2 inline-flex items-center gap-1 select-none cursor-pointer text-white/65">
+              <input id="onlyActiveMarkers" type="checkbox" class="accent-white/70" />
+              <span>仅显示时间窗</span>
+            </label>
+            <button id="focusPerson" class="ml-1 px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/70 hover:bg-white/15">定位人物</button>
+            <button id="resetView" class="ml-1 px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/70 hover:bg-white/15">重置视图</button>
+          </div>
         </div>
         <div class="px-6 pb-2 -mt-2 text-[11px] text-white/60">拖动时间窗筛选人物；悬停查看简介；点击节点进入人物页</div>
         <div class="px-6 pb-2 -mt-1 text-[11px] text-white/55 flex flex-wrap gap-x-4 gap-y-1">
@@ -501,6 +527,14 @@ def _render_index_html(title: str, data_file: str) -> str:
               <input id="endYearInput" class="w-24 px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white/80 outline-none focus:ring-2 focus:ring-white/10" type="number" />
             </div>
           </div>
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-3 text-[11px] text-white/60" id="presetBar">
+            <button data-preset="all" class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 hover:bg-white/15">全部</button>
+            <button data-preset="tang" class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 hover:bg-white/15">唐</button>
+            <button data-preset="song" class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 hover:bg-white/15">宋</button>
+            <button data-preset="mingqing" class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 hover:bg-white/15">明清</button>
+            <button data-preset="modern" class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 hover:bg-white/15">近代</button>
+            <button data-preset="contemporary" class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 hover:bg-white/15">现代</button>
+          </div>
         </div>
       </div>
 
@@ -538,6 +572,10 @@ def _render_index_html(title: str, data_file: str) -> str:
       const $chinaMap = document.getElementById("chinaMap");
       const $genStatus = document.getElementById("genStatus");
       const $resetView = document.getElementById("resetView");
+      const $onlyActiveMarkers = document.getElementById("onlyActiveMarkers");
+      const $focusPerson = document.getElementById("focusPerson");
+      const $mapStyle = document.getElementById("mapStyle");
+      const $presetBar = document.getElementById("presetBar");
 
       const W = $c.width;
       const H = $c.height;
@@ -845,6 +883,8 @@ def _render_index_html(title: str, data_file: str) -> str:
         $midLabel.textContent = "0";
         renderTicks();
         setLifeBar(spotlight || selected);
+        persistTimeWindow();
+        scheduleMapFit();
       }};
 
       const inWindow = (n) => {{
@@ -1315,6 +1355,36 @@ def _render_index_html(title: str, data_file: str) -> str:
       let markers = [];
       let amap = null;
       let amapLoading = false;
+      let onlyActiveMarkers = false;
+      let _fitMapTimer = null;
+      let _persistTimer = null;
+      let mapStyleValue = "amap://styles/whitesmoke";
+
+      const _setMapStyleValue = (style) => {{
+        const s = String(style || "").trim();
+        mapStyleValue = s || "amap://styles/whitesmoke";
+        if ($mapStyle) {{
+          try {{ $mapStyle.value = mapStyleValue; }} catch (_) {{}}
+        }}
+        try {{ localStorage.setItem("stellar_map_style_v1", mapStyleValue); }} catch (_) {{}}
+        if (amap && typeof amap.setMapStyle === "function") {{
+          try {{ amap.setMapStyle(mapStyleValue); }} catch (_) {{}}
+        }}
+      }};
+
+      const _initMapStyleValue = () => {{
+        let saved = "";
+        try {{ saved = (localStorage.getItem("stellar_map_style_v1") || "").trim(); }} catch (_) {{}}
+        if (saved) mapStyleValue = saved;
+        if ($mapStyle) {{
+          try {{
+            if (saved) $mapStyle.value = saved;
+            else if ($mapStyle.value) mapStyleValue = String($mapStyle.value || "").trim() || mapStyleValue;
+          }} catch (_) {{}}
+          $mapStyle.addEventListener("change", () => _setMapStyleValue($mapStyle.value));
+        }}
+      }};
+      _initMapStyleValue();
 
       const _getAmapKey = () => {{
         let k = "";
@@ -1473,6 +1543,57 @@ def _render_index_html(title: str, data_file: str) -> str:
           }}
         }}
       }};
+
+      const TIME_WINDOW_KEY = "stellar_time_window_v1";
+      const readTimeWindow = () => {{
+        try {{
+          const raw = localStorage.getItem(TIME_WINDOW_KEY);
+          const obj = raw ? JSON.parse(raw) : null;
+          if (!obj || typeof obj !== "object") return null;
+          const a = Number(obj.a);
+          const b = Number(obj.b);
+          if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+          return {{ a: Math.round(a), b: Math.round(b) }};
+        }} catch (_) {{
+          return null;
+        }}
+      }};
+      const persistTimeWindow = () => {{
+        if (_persistTimer) clearTimeout(_persistTimer);
+        _persistTimer = setTimeout(() => {{
+          try {{
+            localStorage.setItem(TIME_WINDOW_KEY, JSON.stringify({{ a: startYear, b: endYear }}));
+          }} catch (_) {{}}
+        }}, 260);
+      }};
+
+      const scheduleMapFit = () => {{
+        if (_fitMapTimer) clearTimeout(_fitMapTimer);
+        _fitMapTimer = setTimeout(() => {{
+          if (currentTab !== "map" || !mapInited || !amap) return;
+          const act = [];
+          for (const it of markers) {{
+            if (!it || !it.mk || !it.n) continue;
+            if (!inWindow(it.n)) continue;
+            act.push(it.mk);
+          }}
+          if (!act.length) return;
+          try {{
+            amap.setFitView(act, false, [80, 80, 80, 80]);
+          }} catch (_) {{}}
+        }}, 220);
+      }};
+
+      const centerMapOnPerson = (n) => {{
+        if (!n || !amap) return;
+        const lat = n.birth_lat;
+        const lng = n.birth_lng;
+        if (typeof lat !== "number" || typeof lng !== "number") return;
+        try {{
+          const z = Math.max(6, Number(amap.getZoom ? amap.getZoom() : 6) || 6);
+          amap.setZoomAndCenter(Math.min(10, z), [lng, lat]);
+        }} catch (_) {{}}
+      }};
       const geocodeText = (n) => {{
         const m = String(n.birthplace_modern || "").trim().replace(/^今\\s*/g, "");
         if (m) return m;
@@ -1547,6 +1668,7 @@ def _render_index_html(title: str, data_file: str) -> str:
         }}
         if (tab === "map") {{
           initMapOnce();
+          scheduleMapFit();
         }}
       }};
 
@@ -1561,7 +1683,7 @@ def _render_index_html(title: str, data_file: str) -> str:
             zoom: 4,
             center: [105.0, 35.5],
             viewMode: "2D",
-            mapStyle: "amap://styles/whitesmoke",
+            mapStyle: mapStyleValue || "amap://styles/whitesmoke",
             resizeEnable: true,
           }});
           try {{
@@ -1580,8 +1702,12 @@ def _render_index_html(title: str, data_file: str) -> str:
             const dx = tengchong[0] - mohe[0];
             const dy = tengchong[1] - mohe[1];
             const len = Math.hypot(dx, dy) || 1;
-            const nx = (-dy) / len;
-            const ny = dx / len;
+            let nx = (-dy) / len;
+            let ny = dx / len;
+            if (ny < 0) {{
+              nx = -nx;
+              ny = -ny;
+            }}
             const offsetDeg = 0.6;
             const labelPos = [mid[0] + nx * offsetDeg, mid[1] + ny * offsetDeg];
             const ang = (Math.atan2(dy, dx) * 180) / Math.PI;
@@ -1650,7 +1776,7 @@ def _render_index_html(title: str, data_file: str) -> str:
             const mk = new window.AMap.Marker({{
               position: [lng, lat],
               offset: new window.AMap.Pixel(-6, -6),
-              content: '<div style="width:14px;height:14px;border-radius:999px;background:rgba(34,197,94,0.78);border:2px solid rgba(15,23,42,0.55);box-shadow:0 10px 22px rgba(34,197,94,0.22)"></div>',
+              content: '<svg width="13" height="13" viewBox="0 0 24 24" style="filter:drop-shadow(0 0 6px rgba(255,255,255,0.22));"><path fill="rgba(232,234,237,0.72)" d="M12 2l2.9 6.9L22 9.8l-5 4.9L18.2 22 12 18.6 5.8 22 7 14.7 2 9.8l7.1-1L12 2z"></path></svg>',
               anchor: "center",
               clickable: true,
             }});
@@ -1763,16 +1889,71 @@ def _render_index_html(title: str, data_file: str) -> str:
         for (const it of markers) {{
           const n = it.n;
           const active = inWindow(n);
-          const bg = active ? "rgba(34,197,94,0.55)" : "rgba(255,255,255,0.22)";
-          const br = active ? "rgba(34,197,94,0.80)" : "rgba(255,255,255,0.28)";
-          const sh = active ? "0 10px 18px rgba(34,197,94,0.20)" : "0 6px 14px rgba(0,0,0,0.16)";
-          it.mk.setContent(`<div style="width:${{active ? 14 : 12}}px;height:${{active ? 14 : 12}}px;border-radius:999px;background:${{bg}};border:1px solid ${{br}};box-shadow:${{sh}}"></div>`);
-          it.mk.setOffset(new window.AMap.Pixel(-(active ? 7 : 6), -(active ? 7 : 6)));
+          if (onlyActiveMarkers && !active) {{
+            try {{ it.mk.hide(); }} catch (_) {{}}
+            continue;
+          }}
+          try {{ it.mk.show(); }} catch (_) {{}}
+          const sz = active ? 16 : 13;
+          const fill = active ? "rgba(138,180,248,0.96)" : "rgba(232,234,237,0.70)";
+          const glow = active ? "rgba(26,115,232,0.55)" : "rgba(154,160,166,0.22)";
+          const anim = active ? "animation:twinkle 2.2s ease-in-out infinite;" : "";
+          it.mk.setContent(
+            `<svg width="${{sz}}" height="${{sz}}" viewBox="0 0 24 24" style="${{anim}}filter:drop-shadow(0 0 ${{active ? 10 : 6}}px ${{glow}});">
+              <path fill="${{fill}}" d="M12 2l2.9 6.9L22 9.8l-5 4.9L18.2 22 12 18.6 5.8 22 7 14.7 2 9.8l7.1-1L12 2z"></path>
+            </svg>`
+          );
+          it.mk.setOffset(new window.AMap.Pixel(-Math.round(sz / 2), -Math.round(sz / 2)));
         }}
       }};
 
       if ($tabGraph) $tabGraph.addEventListener("click", () => setTab("graph"));
       if ($tabMap) $tabMap.addEventListener("click", () => setTab("map"));
+      if ($onlyActiveMarkers) {{
+        $onlyActiveMarkers.addEventListener("change", () => {{
+          onlyActiveMarkers = Boolean($onlyActiveMarkers.checked);
+          updateMapMarkers();
+          scheduleMapFit();
+        }});
+      }}
+      if ($focusPerson) {{
+        $focusPerson.addEventListener("click", () => {{
+          const n = spotlight || selected;
+          if (!n) return;
+          if (currentTab !== "map") {{
+            setTab("map");
+          }}
+          setTimeout(() => {{
+            centerMapOnPerson(n);
+          }}, 260);
+        }});
+      }}
+      if ($presetBar) {{
+        $presetBar.addEventListener("click", (e) => {{
+          const t = e && e.target ? e.target : null;
+          const btn = t && t.closest ? t.closest("button[data-preset]") : null;
+          const key = btn ? String(btn.getAttribute("data-preset") || "") : "";
+          if (!key) return;
+          const presets = {{
+            all: [minYear, maxYear],
+            tang: [618, 907],
+            song: [960, 1279],
+            mingqing: [1368, 1840],
+            modern: [1840, 1911],
+            contemporary: [1911, maxYear],
+          }};
+          const r = presets[key];
+          if (!r) return;
+          startYear = clamp(r[0], minYear, maxYear);
+          endYear = clamp(r[1], minYear, maxYear);
+          if (startYear >= endYear) endYear = clamp(startYear + 1, minYear, maxYear);
+          setHandles();
+          updateActiveCount();
+          updateCoordCount();
+          updateMapMarkers();
+          draw();
+        }});
+      }}
       if ($resetView) $resetView.addEventListener("click", () => {{
         if (currentTab === "map") {{
           try {{
@@ -2123,6 +2304,14 @@ def _render_index_html(title: str, data_file: str) -> str:
         maxYear = data.max_year ?? 1840;
         startYear = data.default_start ?? 0;
         endYear = data.default_end ?? 1840;
+        const savedWin = readTimeWindow();
+        if (savedWin) {{
+          const a = clamp(savedWin.a, minYear, maxYear);
+          const b = clamp(savedWin.b, minYear, maxYear);
+          startYear = Math.min(a, b);
+          endYear = Math.max(a, b);
+          if (startYear === endYear) endYear = clamp(startYear + 1, minYear, maxYear);
+        }}
         buildNeigh();
         renderBands();
         setHandles();
@@ -2782,59 +2971,27 @@ def main() -> int:
     edges: List[Dict[str, int]] = []
     kg_edges: List[Dict[str, int]] = []
 
-    def add_links(keys: List[int], k: int, max_edges: int) -> None:
-        nonlocal edges
-        for i, a in enumerate(keys):
-            for j in range(1, k + 1):
-                if i + j >= len(keys):
-                    break
-                b = keys[i + j]
-                edges.append({"a": a, "b": b})
-                if len(edges) >= max_edges:
-                    return
-
-    by_dyn: Dict[str, List[int]] = {}
-    by_surname: Dict[str, List[int]] = {}
-    for i, n in enumerate(nodes):
-        d = str(n.get("dynasty") or "").strip()
-        if d:
-            dk = d[:6]
-            by_dyn.setdefault(dk, []).append(i)
-        p = str(n.get("person") or "").strip()
-        if p:
-            by_surname.setdefault(p[0], []).append(i)
-
-    def sort_key(i: int) -> Tuple[int, int, str]:
-        n = nodes[i]
-        by = n.get("birth_year")
-        dy = n.get("death_year")
-        a = int(by) if isinstance(by, int) else 999999
-        b = int(dy) if isinstance(dy, int) else 999999
-        return (a, b, str(n.get("person") or ""))
-
     max_edges = 2200
-    for dk, arr in sorted(by_dyn.items(), key=lambda x: x[0]):
-        ids = sorted(arr, key=sort_key)
-        add_links(ids[:80], k=6, max_edges=max_edges)
-        if len(edges) >= max_edges:
-            break
+    edge_set: set[Tuple[int, int]] = set()
 
-    if len(edges) < max_edges:
-        for sk, arr in sorted(by_surname.items(), key=lambda x: x[0]):
-            ids = sorted(arr, key=sort_key)
-            add_links(ids[:40], k=3, max_edges=max_edges)
-            if len(edges) >= max_edges:
-                break
+    def add_edge(i: int, j: int) -> None:
+        nonlocal edges
+        if i == j:
+            return
+        a, b = (i, j) if i < j else (j, i)
+        key = (a, b)
+        if key in edge_set:
+            return
+        edge_set.add(key)
+        edges.append({"a": a, "b": b})
 
-    rel_edges = 0
     for i, n in enumerate(nodes):
         rels = n.get("relations") if isinstance(n.get("relations"), list) else []
         for r in rels:
             j = person_to_idx.get(r)
             if j is None or j == i:
                 continue
-            edges.append({"a": i, "b": j})
-            rel_edges += 1
+            add_edge(i, j)
             if len(edges) >= max_edges:
                 break
         if len(edges) >= max_edges:
@@ -2847,13 +3004,24 @@ def main() -> int:
             for e in raw_edges:
                 if not isinstance(e, dict):
                     continue
+                typ = str(e.get("type") or "").strip().lower()
+                w = e.get("weight")
+                if typ != "same_book":
+                    continue
+                try:
+                    if int(w or 0) < 2:
+                        continue
+                except Exception:
+                    continue
                 a = str(e.get("source") or "").strip()
                 b = str(e.get("target") or "").strip()
                 ia = person_to_idx.get(a)
                 ib = person_to_idx.get(b)
                 if ia is None or ib is None or ia == ib:
                     continue
-                kg_edges.append({"a": ia, "b": ib})
+                add_edge(ia, ib)
+                if len(edges) >= max_edges:
+                    break
     except Exception:
         kg_edges = []
 

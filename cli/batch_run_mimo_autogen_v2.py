@@ -370,6 +370,62 @@ def fact_check_with_mimo(
         return {"pass": False, "risk_level": "high", "issues": [], "corrected_facts": {}, "notes": f"json_parse_failed: {exc}"}, api_attempt
 
 
+def load_latest_person_html(person: str) -> str:
+    html_dir = REPO_ROOT / "storymap" / "examples" / "story_map"
+    prefix = _safe_filename(person)
+    cands = [
+        p
+        for p in html_dir.glob(f"{prefix}*.html")
+        if p.is_file() and p.name != "index.html" and p.name.startswith(prefix)
+    ]
+    if not cands:
+        return ""
+    cands.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    try:
+        return cands[0].read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return ""
+
+
+def repair_markdown_with_mimo(
+    *,
+    person: str,
+    markdown: str,
+    html: str,
+    api_key: str,
+    model: str,
+    base_url: str,
+    timeout_s: int,
+    retries: int,
+    retry_backoff_s: float,
+) -> Tuple[Optional[str], ApiAttempt]:
+    sys_msg = (
+        "你是严谨的历史人物知识性错误校对编辑。你将收到某位人物的中文 Markdown（为人物页来源）"
+        "以及该人物页的 HTML（仅供参考）。请对内容做事实核查与修订，纠正明显的知识性错误与自相矛盾处。"
+        "要求：\n"
+        "1) 只输出修订后的 Markdown，不要输出解释、JSON 或其它内容；\n"
+        "2) 尽量保留原有章节结构与写作风格，仅在必要处改动；\n"
+        "3) 对无法确定的内容，请改写为“存疑/可能/待考”，不要凭空编造具体年份/地点/人名；\n"
+        "4) 不要删除“## 地点坐标”章节与表格；若坐标不确定，可保留并标注存疑。\n"
+    )
+    html_snip = _safe_str(html, limit=65000)
+    md_snip = _safe_str(markdown, limit=65000)
+    user_msg = f"人物：{person}\n\n现有 Markdown：\n{md_snip}\n\n人物页 HTML（可能是旧版渲染，仅供参考）：\n{html_snip}\n"
+    content, api_attempt = call_openai_compatible_with_meta(
+        messages=[{"role": "system", "content": sys_msg}, {"role": "user", "content": user_msg}],
+        api_key=api_key,
+        model=model,
+        base_url=base_url,
+        timeout_s=timeout_s,
+        temperature=0.0,
+        max_retries=retries,
+        retry_backoff_s=retry_backoff_s,
+    )
+    if content is None:
+        return None, api_attempt
+    return strip_md_fence(content), api_attempt
+
+
 def ensure_required_sections(md: str) -> str:
     import auto_generate as ag
 
@@ -718,6 +774,141 @@ def run_one_full(
     return result
 
 
+def run_one_fact_repair(
+    *,
+    person: str,
+    out_dir: Path,
+    timeout_s: int,
+    retries: int,
+    retry_backoff_s: float,
+) -> RunResult:
+    run_dir = out_dir / "runs" / person
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    api_key = (
+        os.getenv("MIMO_API_KEY")
+        or os.getenv("MIMO_API_Key")
+        or os.getenv("MIMO_APIKEY")
+        or os.getenv("API_KEY")
+        or os.getenv("LLM_API_KEY")
+        or ""
+    ).strip()
+    base_url = (
+        os.getenv("MIMO_BASE_URL")
+        or os.getenv("BASE_URL")
+        or os.getenv("LLM_BASE_URL")
+        or os.getenv("Amap_API_Base_URL")
+        or "https://api.xiaomimimo.com/v1"
+    ).strip()
+    model = (os.getenv("MODEL") or os.getenv("LLM_MODEL_ID") or "mimo-v2-pro").strip()
+
+    md_path = default_story_md_path(person)
+    input_md = ""
+    try:
+        if md_path.exists():
+            input_md = md_path.read_text(encoding="utf-8")
+    except Exception:
+        input_md = ""
+    html = load_latest_person_html(person)
+
+    write_text(
+        run_dir / "meta.json",
+        json.dumps(
+            {
+                "person": person,
+                "mode": "fact_repair",
+                "env": {
+                    "API_KEY_present": bool(api_key),
+                    "API_KEY_masked": _mask_token(api_key),
+                    "BASE_URL": base_url,
+                    "MODEL": model,
+                },
+                "input": {
+                    "md_path": str(md_path),
+                    "md_present": bool(input_md.strip()),
+                    "html_present": bool(html.strip()),
+                },
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+    )
+
+    t_all0 = time.perf_counter()
+
+    if not api_key:
+        api_attempt = ApiAttempt(
+            ok=False,
+            status_code=None,
+            error_type="missing_api_key",
+            error_message="missing MIMO_API_KEY/API_KEY/LLM_API_KEY",
+            duration_s=0.0,
+            usage=None,
+        )
+        repaired_md = ""
+    elif not input_md.strip():
+        api_attempt = ApiAttempt(
+            ok=False,
+            status_code=None,
+            error_type="missing_input_markdown",
+            error_message="missing story markdown for this person",
+            duration_s=0.0,
+            usage=None,
+        )
+        repaired_md = ""
+    else:
+        repaired_md, api_attempt = repair_markdown_with_mimo(
+            person=person,
+            markdown=input_md,
+            html=html,
+            api_key=api_key,
+            model=model,
+            base_url=base_url,
+            timeout_s=timeout_s,
+            retries=retries,
+            retry_backoff_s=retry_backoff_s,
+        )
+
+    if repaired_md is None:
+        repaired_md = ""
+
+    if input_md.strip():
+        write_text(run_dir / "input_markdown.md", input_md)
+    if html.strip():
+        write_text(run_dir / "input_html_excerpt.html", _safe_str(html, limit=120000))
+
+    write_text(run_dir / "raw_markdown.md", repaired_md)
+    write_text(run_dir / "api_attempt.json", json.dumps(asdict(api_attempt), ensure_ascii=False, indent=2))
+
+    ok_e2e, raw_checks, ensure_checks, parse_info, geocode_summary = run_pipeline_only(
+        person=person,
+        raw_md=repaired_md or input_md,
+        run_dir=run_dir,
+    )
+
+    duration_s = time.perf_counter() - t_all0
+    result = RunResult(
+        person=person,
+        ok_end_to_end=bool(ok_e2e),
+        duration_s=duration_s,
+        api=api_attempt,
+        fact_check_api=ApiAttempt(ok=False, status_code=None, error_type="not_run", error_message="", duration_s=0.0, usage=None),
+        fact_check={},
+        fact_check_pass=False,
+        markdown_raw_checks=raw_checks,
+        markdown_after_ensure_checks=ensure_checks,
+        storymap_parse=parse_info,
+        geocode=geocode_summary,
+        output={
+            "run_dir": str(run_dir),
+            "md_path": str(default_story_md_path(person)),
+            "html_path": str(parse_info.get("html_path") or ""),
+        },
+    )
+    write_text(run_dir / "result.json", json.dumps(asdict(result), ensure_ascii=False, indent=2))
+    return result
+
+
 def load_existing_results(out_dir: Path) -> Dict[str, RunResult]:
     results: Dict[str, RunResult] = {}
     runs_dir = out_dir / "runs"
@@ -932,6 +1123,8 @@ def main() -> int:
     parser.add_argument("--out-dir", type=str, default="", help="指定输出目录（用于断点续跑）；不填则新建 batch_runs/<ts>")
     parser.add_argument("--people", type=str, default="", help="逗号分隔的人物列表；不填则用内置 16 人")
     parser.add_argument("--people-json", type=str, default="", help="读取人物列表的 JSON 文件（数组）")
+    parser.add_argument("--fact-repair", action="store_true", help="对已存在的人物页做知识性错误修订（读取现有 Markdown/HTML，输出修订后 Markdown 并重渲 HTML）")
+    parser.add_argument("--fact-repair-limit", type=int, default=int(os.getenv("FACT_REPAIR_LIMIT", "0") or "0"), help="fact-repair 模式下仅处理前 N 个（0 表示不限制）")
     parser.add_argument(
         "--missing-html",
         action="store_true",
@@ -969,6 +1162,15 @@ def main() -> int:
             stem = stem.split("__pure__", 1)[0]
         return stem.strip()
 
+    def _html_people() -> List[str]:
+        html_dir = REPO_ROOT / "storymap" / "examples" / "story_map"
+        html_files = [p for p in html_dir.glob("*.html") if p.is_file() and p.name != "index.html"]
+        people = sorted({_person_from_filename(p.name) for p in html_files if _person_from_filename(p.name)})
+        lim = int(args.fact_repair_limit or 0)
+        if lim > 0:
+            people = people[:lim]
+        return people
+
     def _missing_people() -> List[str]:
         md_dir = REPO_ROOT / "storymap" / "examples" / "story"
         html_dir = REPO_ROOT / "storymap" / "examples" / "story_map"
@@ -982,7 +1184,9 @@ def main() -> int:
         return missing
 
     # people
-    if args.missing_html:
+    if args.fact_repair and (not args.people.strip()) and (not args.people_json.strip()):
+        people = _html_people()
+    elif args.missing_html:
         people = _missing_people()
     elif args.people_json.strip():
         people_path = Path(args.people_json)
@@ -1076,6 +1280,14 @@ def main() -> int:
         conc = 50
 
     def _run_one(p: str) -> RunResult:
+        if args.fact_repair:
+            return run_one_fact_repair(
+                person=p,
+                out_dir=out_dir,
+                timeout_s=args.timeout,
+                retries=args.retries,
+                retry_backoff_s=args.retry_backoff,
+            )
         return run_one_full(
             person=p,
             out_dir=out_dir,

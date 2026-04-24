@@ -37,15 +37,6 @@ def main() -> int:
             {"source": a, "target": b, "type": typ, "weight": int(w), "evidence": evidence}
         )
 
-    by_surname = {}
-    for n in names:
-        key = n[0]
-        by_surname.setdefault(key, []).append(n)
-    for key, arr in by_surname.items():
-        arr = sorted(arr)
-        for i in range(len(arr) - 1):
-            add_edge(arr[i], arr[i + 1], "surname", 1, f"同姓：{key}")
-
     for tag, path in by_book_sources:
         if not path.exists():
             continue
@@ -66,16 +57,6 @@ def main() -> int:
                     f"同册（{tag}）：{book}",
                 )
 
-    for i, n in enumerate(names):
-        r1 = _seeded_unit(n + "|bridge1")
-        r2 = _seeded_unit(n + "|bridge2")
-        j1 = int(r1 * len(names)) % len(names)
-        j2 = int(r2 * len(names)) % len(names)
-        if j1 != i:
-            add_edge(n, names[j1], "bridge", 1, "")
-        if j2 != i and j2 != j1:
-            add_edge(n, names[j2], "bridge", 1, "")
-
     graph = {
         "nodes": [{"id": n, "label": n} for n in names],
         "edges": edges,
@@ -93,4 +74,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
