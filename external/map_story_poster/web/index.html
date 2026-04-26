@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoryMap 交互入口</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    body {
+      font-family: "Inter", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      background: #f8f9fa;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(218, 220, 224, 0.8);
+    }
+    .google-blue {
+      background: #1a73e8;
+    }
+    .google-blue:hover {
+      background: #1765cc;
+    }
+    .google-outline {
+      border-color: #1a73e8;
+      color: #1a73e8;
+    }
+    .google-outline:hover {
+      background: rgba(26, 115, 232, 0.08);
+    }
+    .google-pill {
+      background: rgba(26, 115, 232, 0.08);
+      color: #1a73e8;
+    }
+    .google-pill:hover {
+      background: rgba(26, 115, 232, 0.16);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

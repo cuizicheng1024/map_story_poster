@@ -1,0 +1,18 @@
+{
+  "counts": {
+    "blogId": 1,
+    "/blog/": 0,
+    "/blogs/": 2,
+    "/server": 21,
+    "discussion": 20,
+    "cdn.modelers.cn": 1,
+    "/file": 5,
+    "/files": 2,
+    "upload": 295
+  },
+  "first_blogId_idx": 2817880,
+  "snippet": "sh-BFEKDTna.js\"),__vite__mapDeps([396,151,152,397,87,398])),beforeEnter:async(e,t)=>{if(await Wn(e)===!1)return!1;const{blogId:r,status:o,state:a}=e.query,i=o||a;return!r||!i?{name:\"blog\"}:typeof r!=\"string\"||typeof i!=\"string\"||!/^\\d+$/.test(r)?{name:\"blog\"}:!0}},{path:\"/blogs/:account/:repo\",name:\"blogcontent\",meta:{title:Og(\"blog.blogContent\")},component:",
+  "server_paths": [
+    "/server/image_center/image/upload"
+  ]
+}

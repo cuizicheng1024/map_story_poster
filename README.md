@@ -1,82 +1,91 @@
-# 🗺️ StoryMap：从时空视角重新发现历史人物的生命轨迹 ✨
+# 地图故事（面向中学生与中学教师）
 
-🧭 借助地图，我们可以把文学与历史研究中偏感性、经验性的“人物分析”，转成可回放、可检索的**时空轨迹**，关注人物的行走与迁徙，而不仅仅是片段化的个人经历。
+打开网页，输入一个历史人物名字，就能看到这个人的“人生足迹地图”：他去过哪些地方、发生了什么事、以及对应的教材知识点与考点。
 
-🌍 从更宏观的视角重看历史人物：沿着他的足迹，我们能更容易洞悉成长变化，也能看到他与其他人物在时空上的关联。
+## 功能概览
+- 首页「人类群星闪耀时」：提供“关系图/地图视角”，并用“时间窗”筛选人物；悬停可看人物简介，点击可进入人物页
+- 人物页：人物卡片（时代/籍贯/简介）、生命轨迹地图（点线+事件）、人物对话（MiMo）、对应教材考点/考点要点
 
-“峨眉山月半轮秋，影入平羌江水流”，李白都去哪里追过月亮？
+## 快速开始（本地运行）
 
-“问余平生事业，黄州惠州儋州”，苏轼的颠沛与旷达，是怎样的一条心酸路？
+### 1) 准备
+- 安装 Python 3.11
+- 配置 MiMo：可在项目根目录 `.env` 或 `external/map_story_poster/.env` 中写入 `MIMO_API_KEY=...`（推荐放在 `external/map_story_poster/.env`，服务启动时会读取）
 
-"出师未捷身先死，长使英雄泪满襟"，丞相的北伐之路是何等凶险？
-
-**StoryMap** 面向中学学生/中学教师/文史爱好者，遵循 **“人物—时空—事件”** 的叙事主线，提供了地图可视化工具：输入一个名字，就生成一份可交互的足迹地图课件，让课本上的文字有了“地理的重量”。
-
-### 🎯 为什么推荐给中学生/教师？
-- **💡 辅助高效备课**：自动抓取人物生平，省去翻阅史料、查找古地名的繁琐过程。
-- **📍 直观展现轨迹**：将文字叙述转化为地图足迹，人物的一生流转一目了然。
-- **📚 跨学科教学**：契合“大语文”、“大历史”教学理念，在地图中讲诗词，在地理中读历史。
-- **✨ 吸引学生注意力**：生成可交互网页，支持时间轴联动和事件弹窗，让课堂更有参与感。
-
-### 📸 演示
-
-![人物页：人物要点 + 地图轨迹](docs/assets/moler_post_01.png)
-![主页：人类群星闪耀时 + 时间轴联动](docs/assets/moler_post_03.png)
-![人物页：地点连线与节点信息](docs/assets/moler_post_05.png)
-
-主页当前默认展示：
-- “人类群星闪耀时”关系图（支持悬停查看简介、点击进入人物页）
-- 地图视角（高德底图），并绘制“漠河—腾冲线”作为分界线
-- 时间窗支持拖动筛选 + 起止年份可直接输入自定义
-
-### ⚙️ 后台自动流程
-项目在后台通过一套智能化的流程，为您打理好一切：
-
-1. **输入姓名**：您只需输入想讲的人物（如：`曹操`）。
-2. **生成故事**：自动整理人物档案、人生关键足迹（时间、地点、事件）以及教材中的考点。
-3. **定位古地名**：系统会自动把“润州”、“京口”等古地名精准对应到现代地图坐标。
-4. **生成课件网页**：最终打包成一个漂亮的 HTML 网页，包含时间轴和地图动效，直接用浏览器就能打开。
-
----
-
-### 🚀 如何开始使用
-
-#### ✅ 本地一键体验（推荐）
-1) 启动服务（提供主页、人物页生成、对话接口等）：
+### 2) 生成并查看人物地图（示例 3-5 个）
 ```bash
-python3 storymap/script/story_map.py --serve --port 8765
+python3 scripts/batch_test_map_story_poster.py --names data/sample_5_names.json --out_dir outputs/output_batch_storymap_pep_history
+python3 -m http.server 8000
+```
+打开目录页：
+`http://localhost:8000/outputs/output_batch_storymap_pep_history/`
+
+## 全量人物页（约 518）与对话功能
+
+### 1) 批量重渲人物页（不调用模型）
+```bash
+python3 external/map_story_poster/cli/generate_pure_story_map.py --render-all --all-mode nogeocode
+```
+命令行会输出 `[i/total] OK xxx`，可作为实时进度。
+
+### 2) 启动本地服务（用于打开人物页 + 对话接口）
+```bash
+python3 external/map_story_poster/storymap/script/story_map.py --serve --port 8765
+```
+打开：
+`http://localhost:8765/`
+
+人物页里的“开始对话”会请求本地的 `/api/ai/proxy`，因此建议通过该服务打开页面（而不是直接双击 file:// 打开）。
+
+### 3) 人物页能看到什么？
+- 基本信息卡：姓名、称号/摘要、时代、生卒、籍贯（古称/今称）
+- 生命轨迹地图：按行程地点绘制点线，支持缩放/拖拽；点击地点可查看事件与材料引用
+- 对话：点击“开始对话”后可向人物提问（走本地服务的 `/api/ai/proxy`，由服务端调用 MiMo）
+- 教材与考点：页面下方展示与该人物相关的教材知识点、可考点要点（便于中学教学与复习）
+
+### 4) 提交前冒烟检查（推荐）
+```bash
+# Python 语法检查
+python3 -m py_compile external/map_story_poster/storymap/script/*.py external/map_story_poster/tools/build_stellar_homepage.py
+
+# Web 前端构建检查（可选）
+cd external/map_story_poster/web && npm run build
+
+# 服务健康检查
+python3 -c "import urllib.request; r=urllib.request.urlopen('http://localhost:8765/health',timeout=10); print(r.status, r.read().decode('utf-8','ignore'))"
 ```
 
-2) 浏览器打开主页：
-- `http://localhost:8765/`
+对话接口会返回 `meta.used_fallback`：
+- `false`：已调用大模型（MiMo）
+- `true`：走了本地兜底回复（通常是模型配置/网络/超时问题）
 
-#### 🔎 未收录人物
-如果主页搜索框输入的人物不在当前库中，会通过服务端实时生成（依赖模型接口配置），生成完成后自动跳转到人物页。
+## 首页（人类群星闪耀时）
+```bash
+python3 external/map_story_poster/tools/build_stellar_homepage.py
+```
+生成产物在：
+`external/map_story_poster/storymap/examples/story_map/index.html`
 
-#### 🧪 示例人物（可直接输入体验）
-- 苏轼
-- 李白
-- 辛弃疾
+### 首页能看到什么？
+- 关系图：以节点展示人物群像；可拖拽/缩放；悬停显示人物简介；点击进入人物页
+- 地图视角：按人物籍贯/出生地的现代地理位置展示分布（用于对比“人才地理分布”）
+- 时间窗：通过拖动时间窗筛选人物范围；并展示“时间窗内省份名人 Top5”等统计
 
+### 检索未收录人物（自动生成）
+- 在首页搜索框输入“当前库中没有的人物”时，会提示“正在生成，请稍候…”，并在后台通过本地服务生成对应人物页，完成后自动打开
+- 该功能需要通过本地服务访问首页（`http://localhost:8765/`），并正确配置模型接口（用于生成 Markdown/人物页）
 
+## 人物真实性核查（web_search 产物）
+- 报告目录：`external/map_story_poster/data/validation_reports/web_search_truth_audit/`
+- 索引文件：`external/map_story_poster/data/validation_reports/index_web_search_truth.json`
 
-### ✅ 无奖测试
-猜猜这些名句是谁写的？
-1. 峨眉山月半轮秋，影入平羌江水流
-![人物页：事件卡片与地图联动](docs/assets/moler_post_06.png)
+## 部署与访问（GitHub）
+- 仅静态页面（GitHub Pages）：可以把 `external/map_story_poster/storymap/examples/story_map/` 作为静态站点部署，让别人直接浏览首页与人物页
+- 对话/模型能力：GitHub Pages 不能运行本项目的 Python 服务，因此无法提供 `/api/ai/proxy`；如果要让别人也能对话，需要你单独部署后端服务并在服务端配置你的 `MIMO_API_KEY`（不建议把 key 暴露到前端）
+- 访问者行为/查询记录：只有在你部署后端服务并做日志/埋点时才能看到访客查询了什么、访问了哪些页面；纯静态托管一般只能看到页面访问量（且粒度有限）
 
-2. 问余平生事业，黄州惠州儋州
-![人物页：左侧时间轴 + 轨迹连线](docs/assets/moler_post_02.png)
-
-3. 关东有义士，兴兵讨群凶
-
-![人物页：时间轴驱动的地点/事件弹窗](docs/assets/moler_post_04.png)
----
-
-
-TODO：
-- 各年份的实际边界
-- 秦占位太小，优化
-- 人物详情页的信息优化
-- 优化时间轴效果
-- 用女娲.skill蒸馏历史人物，可以和用户对话
+## 目录说明
+- `external/map_story_poster/`：主产品仓库（StoryMap 生成与渲染）
+- `scripts/`：本仓库的批量/数据构建脚本
+- `data/`：抽取的人名名单、知识图谱、本地古今地名索引
+- `outputs/`：本地生成的 HTML/报告输出（不建议提交）

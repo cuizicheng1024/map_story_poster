@@ -2,4033 +2,1109 @@
   "nodes": [
     {
       "id": "隋炀帝",
-      "label": "隋炀帝"
+      "label": "隋炀帝",
+      "dynasty": "éæ"
     },
     {
       "id": "隋文帝",
-      "label": "隋文帝"
+      "label": "隋文帝",
+      "dynasty": "ååææ«æè³éæ"
     },
     {
       "id": "李密",
-      "label": "李密"
+      "label": "李密",
+      "dynasty": "ä¸å½èæ±è³è¥¿æ"
     },
     {
       "id": "罗隐",
-      "label": "罗隐"
+      "label": "罗隐",
+      "dynasty": "æåè³äºä»£åå½ï¼å´è¶ï¼"
     },
     {
       "id": "李世民",
-      "label": "李世民"
+      "label": "李世民",
+      "dynasty": "åæ"
     },
     {
       "id": "李渊",
-      "label": "李渊"
+      "label": "李渊",
+      "dynasty": "éæ«åå"
     },
     {
       "id": "唐太宗",
-      "label": "唐太宗"
+      "label": "唐太宗",
+      "dynasty": "åæ"
     },
     {
       "id": "武则天",
-      "label": "武则天"
+      "label": "武则天",
+      "dynasty": "åæï¼åæ¹å½å·ä¸ºâå¨âï¼å²ç§°âæ­¦å¨âï¼"
     },
     {
       "id": "唐高宗",
-      "label": "唐高宗"
+      "label": "唐高宗",
+      "dynasty": "åæ"
     },
     {
       "id": "唐玄宗",
-      "label": "唐玄宗"
+      "label": "唐玄宗",
+      "dynasty": "åæ"
     },
     {
       "id": "骆宾王",
-      "label": "骆宾王"
+      "label": "骆宾王",
+      "dynasty": "åä»£ï¼ååï¼"
     },
     {
       "id": "陆羽",
-      "label": "陆羽"
+      "label": "陆羽",
+      "dynasty": "åä»£"
     },
     {
       "id": "白居易",
-      "label": "白居易"
+      "label": "白居易",
+      "dynasty": "åä»£"
     },
     {
       "id": "崔融",
-      "label": "崔融"
+      "label": "崔融",
+      "dynasty": "åæ"
     },
     {
       "id": "郭子仪",
-      "label": "郭子仪"
+      "label": "郭子仪",
+      "dynasty": "åæ"
     },
     {
       "id": "黄巢",
-      "label": "黄巢"
+      "label": "黄巢",
+      "dynasty": "åææ«å¹´"
     },
     {
       "id": "王仙芝",
-      "label": "王仙芝"
+      "label": "王仙芝",
+      "dynasty": "åææ«å¹´"
     },
     {
       "id": "唐僖宗",
-      "label": "唐僖宗"
+      "label": "唐僖宗",
+      "dynasty": "åæï¼æåï¼"
     },
     {
       "id": "朱温",
-      "label": "朱温"
+      "label": "朱温",
+      "dynasty": "åæ«äºä»£"
     },
     {
       "id": "赵翼",
-      "label": "赵翼"
+      "label": "赵翼",
+      "dynasty": "æ¸ä»£ï¼ä¹¾éãååºå¹´é´ï¼"
     },
     {
       "id": "杜甫",
-      "label": "杜甫"
+      "label": "杜甫",
+      "dynasty": "åä»£"
     },
     {
       "id": "钱镠",
-      "label": "钱镠"
+      "label": "钱镠",
+      "dynasty": "äºä»£åå½ï¼å´è¶å½ï¼"
     },
     {
       "id": "文成公主",
-      "label": "文成公主"
+      "label": "文成公主",
+      "dynasty": "åæãåè"
     },
     {
       "id": "松赞干布",
-      "label": "松赞干布"
+      "label": "松赞干布",
+      "dynasty": "åææ¶æï¼åèçæï¼"
     },
     {
       "id": "大祚荣",
-      "label": "大祚荣"
+      "label": "大祚荣",
+      "dynasty": "åæï¼æ¸¤æµ·å½ï¼"
     },
     {
       "id": "皮逻阁",
-      "label": "皮逻阁"
+      "label": "皮逻阁",
+      "dynasty": "åä»£ï¼åè¯ï¼"
     },
     {
       "id": "王建",
-      "label": "王建"
+      "label": "王建",
+      "dynasty": "äºä»£åå½ï¼åèï¼"
     },
     {
       "id": "元稹",
-      "label": "元稹"
+      "label": "元稹",
+      "dynasty": "åæï¼ä¸­åï¼"
     },
     {
       "id": "释迦牟尼",
-      "label": "释迦牟尼"
+      "label": "释迦牟尼",
+      "dynasty": "å¤å°åº¦ï¼çº¦å¬åå6ä¸çºªè³å5ä¸çºªï¼"
     },
     {
       "id": "崔致远",
-      "label": "崔致远"
+      "label": "崔致远",
+      "dynasty": "æ°ç½ï¼æé²åå²ï¼"
     },
     {
       "id": "玄奘",
-      "label": "玄奘"
+      "label": "玄奘",
+      "dynasty": "åä»£"
     },
     {
       "id": "鉴真",
-      "label": "鉴真"
+      "label": "鉴真",
+      "dynasty": "åä»£"
     },
     {
       "id": "王玠",
-      "label": "王玠"
+      "label": "王玠",
+      "dynasty": "åä»£ï¼å·ä½æ¶æå­çï¼"
     },
     {
       "id": "柳宗元",
-      "label": "柳宗元"
+      "label": "柳宗元",
+      "dynasty": "åä»£"
     },
     {
       "id": "李白",
-      "label": "李白"
+      "label": "李白",
+      "dynasty": "åæ"
     },
     {
       "id": "颜真卿",
-      "label": "颜真卿"
+      "label": "颜真卿",
+      "dynasty": "åæ"
     },
     {
       "id": "柳公权",
-      "label": "柳公权"
+      "label": "柳公权",
+      "dynasty": "åæï¼ä¸­æåï¼"
     },
     {
       "id": "阎立本",
-      "label": "阎立本"
+      "label": "阎立本",
+      "dynasty": "åæï¼ååï¼"
     },
     {
       "id": "吴道子",
-      "label": "吴道子"
+      "label": "吴道子",
+      "dynasty": "åä»£ï¼çåï¼"
     },
     {
       "id": "李春",
-      "label": "李春"
+      "label": "李春",
+      "dynasty": "éä»£"
     },
     {
       "id": "王安石",
-      "label": "王安石"
+      "label": "王安石",
+      "dynasty": "åå®"
     },
     {
       "id": "岳飞",
-      "label": "岳飞"
+      "label": "岳飞",
+      "dynasty": "åå®æ«å¹´è³åå®åå¹´"
     },
     {
       "id": "文天祥",
-      "label": "文天祥"
-    },
-    {
-      "id": "温儒敏",
-      "label": "温儒敏"
-    },
-    {
-      "id": "舒婷",
-      "label": "舒婷"
-    },
-    {
-      "id": "方志敏",
-      "label": "方志敏"
-    },
-    {
-      "id": "周恩来",
-      "label": "周恩来"
-    },
-    {
-      "id": "鲁迅",
-      "label": "鲁迅"
-    },
-    {
-      "id": "卞之琳",
-      "label": "卞之琳"
-    },
-    {
-      "id": "芦荻",
-      "label": "芦荻"
-    },
-    {
-      "id": "陈培迪",
-      "label": "陈培迪"
-    },
-    {
-      "id": "聂鲁达",
-      "label": "聂鲁达"
-    },
-    {
-      "id": "萧红",
-      "label": "萧红"
-    },
-    {
-      "id": "陈实",
-      "label": "陈实"
-    },
-    {
-      "id": "巴金",
-      "label": "巴金"
-    },
-    {
-      "id": "夸父",
-      "label": "夸父"
-    },
-    {
-      "id": "嫦娥",
-      "label": "嫦娥"
-    },
-    {
-      "id": "女娲",
-      "label": "女娲"
-    },
-    {
-      "id": "重耳",
-      "label": "重耳"
-    },
-    {
-      "id": "卫文公",
-      "label": "卫文公"
-    },
-    {
-      "id": "狐偃",
-      "label": "狐偃"
-    },
-    {
-      "id": "胡居仁",
-      "label": "胡居仁"
-    },
-    {
-      "id": "孔乙己",
-      "label": "孔乙己"
-    },
-    {
-      "id": "普洛诃尔",
-      "label": "普洛诃尔"
-    },
-    {
-      "id": "赫留金",
-      "label": "赫留金"
-    },
-    {
-      "id": "奥楚蔑洛夫",
-      "label": "奥楚蔑洛夫"
-    },
-    {
-      "id": "阿城",
-      "label": "阿城"
-    },
-    {
-      "id": "一丈青大娘",
-      "label": "一丈青大娘"
-    },
-    {
-      "id": "柳罐斗",
-      "label": "柳罐斗"
-    },
-    {
-      "id": "吉老秤",
-      "label": "吉老秤"
-    },
-    {
-      "id": "郑端午",
-      "label": "郑端午"
-    },
-    {
-      "id": "花鞋杜四",
-      "label": "花鞋杜四"
-    },
-    {
-      "id": "双喜",
-      "label": "双喜"
-    },
-    {
-      "id": "迅哥儿",
-      "label": "迅哥儿"
-    },
-    {
-      "id": "外祖母",
-      "label": "外祖母"
-    },
-    {
-      "id": "母亲",
-      "label": "母亲"
-    },
-    {
-      "id": "阿发",
-      "label": "阿发"
-    },
-    {
-      "id": "桂生",
-      "label": "桂生"
-    },
-    {
-      "id": "六一公公",
-      "label": "六一公公"
-    },
-    {
-      "id": "贺敬之",
-      "label": "贺敬之"
-    },
-    {
-      "id": "毛泽东",
-      "label": "毛泽东"
-    },
-    {
-      "id": "莫耶",
-      "label": "莫耶"
-    },
-    {
-      "id": "祁念曾",
-      "label": "祁念曾"
-    },
-    {
-      "id": "曹靖华",
-      "label": "曹靖华"
-    },
-    {
-      "id": "吴伯箫",
-      "label": "吴伯箫"
-    },
-    {
-      "id": "张中行",
-      "label": "张中行"
-    },
-    {
-      "id": "叶圣陶",
-      "label": "叶圣陶"
-    },
-    {
-      "id": "茅盾",
-      "label": "茅盾"
-    },
-    {
-      "id": "茨威格",
-      "label": "茨威格"
-    },
-    {
-      "id": "列夫·托尔斯泰",
-      "label": "列夫·托尔斯泰"
-    },
-    {
-      "id": "莫顿·亨特",
-      "label": "莫顿·亨特"
-    },
-    {
-      "id": "歌德",
-      "label": "歌德"
-    },
-    {
-      "id": "萧伯纳",
-      "label": "萧伯纳"
-    },
-    {
-      "id": "陈元方",
-      "label": "陈元方"
-    },
-    {
-      "id": "孔融",
-      "label": "孔融"
-    },
-    {
-      "id": "陈韪",
-      "label": "陈韪"
-    },
-    {
-      "id": "钱钟书",
-      "label": "钱钟书"
-    },
-    {
-      "id": "阿道夫·门采尔",
-      "label": "阿道夫·门采尔"
-    },
-    {
-      "id": "竺可桢",
-      "label": "竺可桢"
-    },
-    {
-      "id": "阿西莫夫",
-      "label": "阿西莫夫"
-    },
-    {
-      "id": "孟庆任",
-      "label": "孟庆任"
-    },
-    {
-      "id": "S.M.斯季绍夫",
-      "label": "S.M.斯季绍夫"
-    },
-    {
-      "id": "麦克霍恩",
-      "label": "麦克霍恩"
-    },
-    {
-      "id": "利奥波德",
-      "label": "利奥波德"
-    },
-    {
-      "id": "侯文蕙",
-      "label": "侯文蕙"
-    },
-    {
-      "id": "袁鹰",
-      "label": "袁鹰"
-    },
-    {
-      "id": "宗璞",
-      "label": "宗璞"
-    },
-    {
-      "id": "普希金",
-      "label": "普希金"
-    },
-    {
-      "id": "弗罗斯特",
-      "label": "弗罗斯特"
-    },
-    {
-      "id": "陈子昂",
-      "label": "陈子昂"
-    },
-    {
-      "id": "陆游",
-      "label": "陆游"
-    },
-    {
-      "id": "龚自珍",
-      "label": "龚自珍"
-    },
-    {
-      "id": "杨利伟",
-      "label": "杨利伟"
-    },
-    {
-      "id": "许晨",
-      "label": "许晨"
-    },
-    {
-      "id": "刘慈欣",
-      "label": "刘慈欣"
-    },
-    {
-      "id": "沈括",
-      "label": "沈括"
-    },
-    {
-      "id": "杜牧",
-      "label": "杜牧"
-    },
-    {
-      "id": "李商隐",
-      "label": "李商隐"
-    },
-    {
-      "id": "杨万里",
-      "label": "杨万里"
-    },
-    {
-      "id": "赵师秀",
-      "label": "赵师秀"
-    },
-    {
-      "id": "邓稼先",
-      "label": "邓稼先"
-    },
-    {
-      "id": "杨振宁",
-      "label": "杨振宁"
-    },
-    {
-      "id": "张爱萍",
-      "label": "张爱萍"
-    },
-    {
-      "id": "于敏",
-      "label": "于敏"
-    },
-    {
-      "id": "奥本海默",
-      "label": "奥本海默"
-    },
-    {
-      "id": "闻一多",
-      "label": "闻一多"
-    },
-    {
-      "id": "臧克家",
-      "label": "臧克家"
-    },
-    {
-      "id": "颜回",
-      "label": "颜回"
-    },
-    {
-      "id": "孔子",
-      "label": "孔子"
-    },
-    {
-      "id": "闻立鹏",
-      "label": "闻立鹏"
-    },
-    {
-      "id": "李公朴",
-      "label": "李公朴"
-    },
-    {
-      "id": "蒋介石",
-      "label": "蒋介石"
-    },
-    {
-      "id": "米开朗琪罗",
-      "label": "米开朗琪罗"
-    },
-    {
-      "id": "王雪飞",
-      "label": "王雪飞"
-    },
-    {
-      "id": "陀思妥耶夫斯基",
-      "label": "陀思妥耶夫斯基"
-    },
-    {
-      "id": "托尔斯泰",
-      "label": "托尔斯泰"
-    },
-    {
-      "id": "屠格涅夫",
-      "label": "屠格涅夫"
-    },
-    {
-      "id": "高尔基",
-      "label": "高尔基"
-    },
-    {
-      "id": "朱德",
-      "label": "朱德"
-    },
-    {
-      "id": "爱因斯坦",
-      "label": "爱因斯坦"
-    },
-    {
-      "id": "陆定一",
-      "label": "陆定一"
-    },
-    {
-      "id": "杨得志",
-      "label": "杨得志"
-    },
-    {
-      "id": "杨成武",
-      "label": "杨成武"
-    },
-    {
-      "id": "魏巍",
-      "label": "魏巍"
-    },
-    {
-      "id": "董希文",
-      "label": "董希文"
-    },
-    {
-      "id": "毛主席",
-      "label": "毛主席"
-    },
-    {
-      "id": "端木蕻良",
-      "label": "端木蕻良"
-    },
-    {
-      "id": "狐仙姑",
-      "label": "狐仙姑"
-    },
-    {
-      "id": "曹京平",
-      "label": "曹京平"
-    },
-    {
-      "id": "骨力裴罗",
-      "label": "骨力裴罗"
-    },
-    {
-      "id": "阿倍仲麻吕",
-      "label": "阿倍仲麻吕"
-    },
-    {
-      "id": "齐世荣",
-      "label": "齐世荣"
-    },
-    {
-      "id": "侯建新",
-      "label": "侯建新"
-    },
-    {
-      "id": "许斌",
-      "label": "许斌"
-    },
-    {
-      "id": "王婉旎",
-      "label": "王婉旎"
-    },
-    {
-      "id": "田涛",
-      "label": "田涛"
-    },
-    {
-      "id": "任世江",
-      "label": "任世江"
-    },
-    {
-      "id": "杨西云",
-      "label": "杨西云"
-    },
-    {
-      "id": "张葳",
-      "label": "张葳"
-    },
-    {
-      "id": "张玉兴",
-      "label": "张玉兴"
-    },
-    {
-      "id": "赵文君",
-      "label": "赵文君"
-    },
-    {
-      "id": "徐滨",
-      "label": "徐滨"
-    },
-    {
-      "id": "张蓓",
-      "label": "张蓓"
-    },
-    {
-      "id": "列宁",
-      "label": "列宁"
-    },
-    {
-      "id": "罗斯福",
-      "label": "罗斯福"
-    },
-    {
-      "id": "玻利瓦尔",
-      "label": "玻利瓦尔"
-    },
-    {
-      "id": "圣马丁",
-      "label": "圣马丁"
-    },
-    {
-      "id": "章西女王",
-      "label": "章西女王"
-    },
-    {
-      "id": "伊丽莎白一世",
-      "label": "伊丽莎白一世"
-    },
-    {
-      "id": "彼得一世",
-      "label": "彼得一世"
-    },
-    {
-      "id": "亚历山大二世",
-      "label": "亚历山大二世"
-    },
-    {
-      "id": "伊凡四世",
-      "label": "伊凡四世"
-    },
-    {
-      "id": "叶卡捷琳娜二世",
-      "label": "叶卡捷琳娜二世"
-    },
-    {
-      "id": "拿破仑",
-      "label": "拿破仑"
-    },
-    {
-      "id": "尼古拉一世",
-      "label": "尼古拉一世"
-    },
-    {
-      "id": "塔布曼",
-      "label": "塔布曼"
-    },
-    {
-      "id": "林肯",
-      "label": "林肯"
-    },
-    {
-      "id": "法拉第",
-      "label": "法拉第"
-    },
-    {
-      "id": "爱迪生",
-      "label": "爱迪生"
-    },
-    {
-      "id": "威尔伯·莱特",
-      "label": "威尔伯·莱特"
-    },
-    {
-      "id": "奥维尔·莱特",
-      "label": "奥维尔·莱特"
-    },
-    {
-      "id": "冯如",
-      "label": "冯如"
-    },
-    {
-      "id": "诺贝尔",
-      "label": "诺贝尔"
-    },
-    {
-      "id": "海厄特",
-      "label": "海厄特"
-    },
-    {
-      "id": "夏尔多内",
-      "label": "夏尔多内"
-    },
-    {
-      "id": "马尔萨斯",
-      "label": "马尔萨斯"
-    },
-    {
-      "id": "阿萨·勃里格斯",
-      "label": "阿萨·勃里格斯"
-    },
-    {
-      "id": "牛顿",
-      "label": "牛顿"
-    },
-    {
-      "id": "达尔文",
-      "label": "达尔文"
-    },
-    {
-      "id": "巴尔扎克",
-      "label": "巴尔扎克"
-    },
-    {
-      "id": "贝多芬",
-      "label": "贝多芬"
-    },
-    {
-      "id": "梵高",
-      "label": "梵高"
-    },
-    {
-      "id": "居里夫人",
-      "label": "居里夫人"
-    },
-    {
-      "id": "尼古拉二世",
-      "label": "尼古拉二世"
-    },
-    {
-      "id": "劳合·乔治",
-      "label": "劳合·乔治"
-    },
-    {
-      "id": "克里孟梭",
-      "label": "克里孟梭"
-    },
-    {
-      "id": "威尔逊",
-      "label": "威尔逊"
-    },
-    {
-      "id": "威廉二世",
-      "label": "威廉二世"
-    },
-    {
-      "id": "朱小蔓",
-      "label": "朱小蔓"
-    },
-    {
-      "id": "陈大文",
-      "label": "陈大文"
-    },
-    {
-      "id": "王敬波",
-      "label": "王敬波"
-    },
-    {
-      "id": "张祖涛",
-      "label": "张祖涛"
-    },
-    {
-      "id": "于文豪",
-      "label": "于文豪"
-    },
-    {
-      "id": "王忠文",
-      "label": "王忠文"
-    },
-    {
-      "id": "李红勃",
-      "label": "李红勃"
-    },
-    {
-      "id": "吴又存",
-      "label": "吴又存"
-    },
-    {
-      "id": "郑宁",
-      "label": "郑宁"
-    },
-    {
-      "id": "郎艳",
-      "label": "郎艳"
-    },
-    {
-      "id": "唐银平",
-      "label": "唐银平"
-    },
-    {
-      "id": "曹鎏",
-      "label": "曹鎏"
-    },
-    {
-      "id": "雷逸",
-      "label": "雷逸"
-    },
-    {
-      "id": "余书芬",
-      "label": "余书芬"
-    },
-    {
-      "id": "张广宇",
-      "label": "张广宇"
-    },
-    {
-      "id": "于艳",
-      "label": "于艳"
-    },
-    {
-      "id": "孙中山",
-      "label": "孙中山"
-    },
-    {
-      "id": "柯先生",
-      "label": "柯先生"
-    },
-    {
-      "id": "小眉",
-      "label": "小眉"
-    },
-    {
-      "id": "王某",
-      "label": "王某"
-    },
-    {
-      "id": "张某",
-      "label": "张某"
-    },
-    {
-      "id": "习近平",
-      "label": "习近平"
-    },
-    {
-      "id": "马克思",
-      "label": "马克思"
-    },
-    {
-      "id": "邓小平",
-      "label": "邓小平"
-    },
-    {
-      "id": "小刚",
-      "label": "小刚"
-    },
-    {
-      "id": "小凡",
-      "label": "小凡"
-    },
-    {
-      "id": "小华",
-      "label": "小华"
-    },
-    {
-      "id": "小云",
-      "label": "小云"
-    },
-    {
-      "id": "小岩",
-      "label": "小岩"
-    },
-    {
-      "id": "罗先生",
-      "label": "罗先生"
-    },
-    {
-      "id": "刘某",
-      "label": "刘某"
-    },
-    {
-      "id": "严某",
-      "label": "严某"
-    },
-    {
-      "id": "小郑",
-      "label": "小郑"
-    },
-    {
-      "id": "晓明",
-      "label": "晓明"
-    },
-    {
-      "id": "高国希",
-      "label": "高国希"
-    },
-    {
-      "id": "吴蓉",
-      "label": "吴蓉"
-    },
-    {
-      "id": "秦书珩",
-      "label": "秦书珩"
-    },
-    {
-      "id": "王坤",
-      "label": "王坤"
-    },
-    {
-      "id": "成平",
-      "label": "成平"
-    },
-    {
-      "id": "刘胡权",
-      "label": "刘胡权"
-    },
-    {
-      "id": "闵凡祥",
-      "label": "闵凡祥"
-    },
-    {
-      "id": "张尚达",
-      "label": "张尚达"
-    },
-    {
-      "id": "陈春辉",
-      "label": "陈春辉"
-    },
-    {
-      "id": "贾玮",
-      "label": "贾玮"
-    },
-    {
-      "id": "杨学建",
-      "label": "杨学建"
-    },
-    {
-      "id": "王承玥",
-      "label": "王承玥"
-    },
-    {
-      "id": "王俊宏",
-      "label": "王俊宏"
-    },
-    {
-      "id": "徐悲鸿",
-      "label": "徐悲鸿"
-    },
-    {
-      "id": "老朱",
-      "label": "老朱"
-    },
-    {
-      "id": "郑和",
-      "label": "郑和"
-    },
-    {
-      "id": "麦哲伦",
-      "label": "麦哲伦"
-    },
-    {
-      "id": "马文·佩里",
-      "label": "马文·佩里"
-    },
-    {
-      "id": "白求恩",
-      "label": "白求恩"
-    },
-    {
-      "id": "柯棣华",
-      "label": "柯棣华"
-    },
-    {
-      "id": "汉斯·希伯",
-      "label": "汉斯·希伯"
-    },
-    {
-      "id": "小虫",
-      "label": "小虫"
-    },
-    {
-      "id": "侠女柠柠",
-      "label": "侠女柠柠"
-    },
-    {
-      "id": "司徒博士",
-      "label": "司徒博士"
-    },
-    {
-      "id": "杨树朋",
-      "label": "杨树朋"
-    },
-    {
-      "id": "张骞",
-      "label": "张骞"
-    },
-    {
-      "id": "乔纳森",
-      "label": "乔纳森"
-    },
-    {
-      "id": "李剑波",
-      "label": "李剑波"
-    },
-    {
-      "id": "蔡士魁",
-      "label": "蔡士魁"
-    },
-    {
-      "id": "梁衡",
-      "label": "梁衡"
-    },
-    {
-      "id": "苏金伞",
-      "label": "苏金伞"
-    },
-    {
-      "id": "周晔",
-      "label": "周晔"
-    },
-    {
-      "id": "苏舜钦",
-      "label": "苏舜钦"
-    },
-    {
-      "id": "朱熹",
-      "label": "朱熹"
-    },
-    {
-      "id": "老舍",
-      "label": "老舍"
-    },
-    {
-      "id": "盛锡珊",
-      "label": "盛锡珊"
-    },
-    {
-      "id": "斯妤",
-      "label": "斯妤"
-    },
-    {
-      "id": "马晨明",
-      "label": "马晨明"
-    },
-    {
-      "id": "唐东杰布",
-      "label": "唐东杰布"
-    },
-    {
-      "id": "萧统",
-      "label": "萧统"
-    },
-    {
-      "id": "韩翃",
-      "label": "韩翃"
-    },
-    {
-      "id": "沈从文",
-      "label": "沈从文"
-    },
-    {
-      "id": "张思德",
-      "label": "张思德"
-    },
-    {
-      "id": "司马迁",
-      "label": "司马迁"
-    },
-    {
-      "id": "李鼎铭",
-      "label": "李鼎铭"
-    },
-    {
-      "id": "张作霖",
-      "label": "张作霖"
-    },
-    {
-      "id": "阎振三",
-      "label": "阎振三"
-    },
-    {
-      "id": "李大钊",
-      "label": "李大钊"
-    },
-    {
-      "id": "瞿秋白",
-      "label": "瞿秋白"
-    },
-    {
-      "id": "陈延年",
-      "label": "陈延年"
-    },
-    {
-      "id": "杨靖宇",
-      "label": "杨靖宇"
-    },
-    {
-      "id": "赵一曼",
-      "label": "赵一曼"
-    },
-    {
-      "id": "江竹筠",
-      "label": "江竹筠"
-    },
-    {
-      "id": "黄继光",
-      "label": "黄继光"
-    },
-    {
-      "id": "董存瑞",
-      "label": "董存瑞"
-    },
-    {
-      "id": "郅顺义",
-      "label": "郅顺义"
-    },
-    {
-      "id": "齐肃",
-      "label": "齐肃"
-    },
-    {
-      "id": "刘开渠",
-      "label": "刘开渠"
-    },
-    {
-      "id": "虞世南",
-      "label": "虞世南"
-    },
-    {
-      "id": "李贺",
-      "label": "李贺"
-    },
-    {
-      "id": "郑燮",
-      "label": "郑燮"
-    },
-    {
-      "id": "史铁生",
-      "label": "史铁生"
-    },
-    {
-      "id": "刘少奇",
-      "label": "刘少奇"
-    },
-    {
-      "id": "宋庆龄",
-      "label": "宋庆龄"
-    },
-    {
-      "id": "李济深",
-      "label": "李济深"
-    },
-    {
-      "id": "张澜",
-      "label": "张澜"
-    },
-    {
-      "id": "高岗",
-      "label": "高岗"
-    },
-    {
-      "id": "聂荣臻",
-      "label": "聂荣臻"
-    },
-    {
-      "id": "班禅额尔德尼·确吉坚赞",
-      "label": "班禅额尔德尼·确吉坚赞"
-    },
-    {
-      "id": "阿沛·阿旺晋美",
-      "label": "阿沛·阿旺晋美"
-    },
-    {
-      "id": "田汉",
-      "label": "田汉"
-    },
-    {
-      "id": "聂耳",
-      "label": "聂耳"
-    },
-    {
-      "id": "曾联松",
-      "label": "曾联松"
-    },
-    {
-      "id": "梁思成",
-      "label": "梁思成"
-    },
-    {
-      "id": "林徽因",
-      "label": "林徽因"
-    },
-    {
-      "id": "彭德怀",
-      "label": "彭德怀"
-    },
-    {
-      "id": "麦克阿瑟",
-      "label": "麦克阿瑟"
-    },
-    {
-      "id": "邱少云",
-      "label": "邱少云"
-    },
-    {
-      "id": "杨根思",
-      "label": "杨根思"
-    },
-    {
-      "id": "罗盛教",
-      "label": "罗盛教"
-    },
-    {
-      "id": "陈友汉",
-      "label": "陈友汉"
-    },
-    {
-      "id": "刘青山",
-      "label": "刘青山"
-    },
-    {
-      "id": "张子善",
-      "label": "张子善"
-    },
-    {
-      "id": "乐松生",
-      "label": "乐松生"
-    },
-    {
-      "id": "陈伯达",
-      "label": "陈伯达"
-    },
-    {
-      "id": "江青",
-      "label": "江青"
-    },
-    {
-      "id": "康生",
-      "label": "康生"
-    },
-    {
-      "id": "张春桥",
-      "label": "张春桥"
-    },
-    {
-      "id": "林彪",
-      "label": "林彪"
-    },
-    {
-      "id": "王洪文",
-      "label": "王洪文"
-    },
-    {
-      "id": "姚文元",
-      "label": "姚文元"
-    },
-    {
-      "id": "华国锋",
-      "label": "华国锋"
-    },
-    {
-      "id": "叶剑英",
-      "label": "叶剑英"
-    },
-    {
-      "id": "王进喜",
-      "label": "王进喜"
-    },
-    {
-      "id": "焦裕禄",
-      "label": "焦裕禄"
-    },
-    {
-      "id": "雷锋",
-      "label": "雷锋"
+      "label": "文天祥",
+      "dynasty": "åå®"
     }
   ],
   "edges": [
     {
       "source": "隋炀帝",
       "target": "隋文帝",
-      "type": "same_book",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "隋炀帝 文本中提及 隋文帝（6 次）"
+    },
+    {
+      "source": "隋炀帝",
+      "target": "李世民",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "隋炀帝 文本中提及 李世民（1 次）"
+    },
+    {
+      "source": "隋炀帝",
+      "target": "唐太宗",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "隋炀帝 文本中提及 唐太宗（2 次）"
     },
     {
       "source": "隋文帝",
-      "target": "李密",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "李密",
-      "target": "罗隐",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "隋炀帝",
+      "type": "mentions",
+      "weight": 4,
+      "evidence": "隋文帝 文本中提及 隋炀帝（4 次）"
     },
     {
       "source": "罗隐",
-      "target": "李世民",
-      "type": "same_book",
+      "target": "白居易",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "罗隐 文本中提及 白居易（1 次）"
+    },
+    {
+      "source": "罗隐",
+      "target": "杜甫",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "罗隐 文本中提及 杜甫（2 次）"
+    },
+    {
+      "source": "罗隐",
+      "target": "钱镠",
+      "type": "mentions",
+      "weight": 7,
+      "evidence": "罗隐 文本中提及 钱镠（7 次）"
     },
     {
       "source": "李世民",
       "target": "李渊",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "type": "mentions",
+      "weight": 4,
+      "evidence": "李世民 文本中提及 李渊（4 次）"
+    },
+    {
+      "source": "李世民",
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 11,
+      "evidence": "李世民 文本中提及 唐太宗（11 次）"
+    },
+    {
+      "source": "李世民",
+      "target": "唐玄宗",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "李世民 文本中提及 唐玄宗（1 次）"
+    },
+    {
+      "source": "李世民",
+      "target": "文成公主",
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "李世民 文本中提及 文成公主（3 次）"
+    },
+    {
+      "source": "李世民",
+      "target": "松赞干布",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "李世民 文本中提及 松赞干布（1 次）"
+    },
+    {
+      "source": "李世民",
+      "target": "玄奘",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "李世民 文本中提及 玄奘（1 次）"
+    },
+    {
+      "source": "李渊",
+      "target": "隋炀帝",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "李渊 文本中提及 隋炀帝（1 次）"
+    },
+    {
+      "source": "李渊",
+      "target": "隋文帝",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "李渊 文本中提及 隋文帝（1 次）"
+    },
+    {
+      "source": "李渊",
+      "target": "李世民",
+      "type": "mentions",
+      "weight": 10,
+      "evidence": "李渊 文本中提及 李世民（10 次）"
     },
     {
       "source": "李渊",
       "target": "唐太宗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "李渊 文本中提及 唐太宗（1 次）"
     },
     {
       "source": "唐太宗",
-      "target": "武则天",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "李世民",
+      "type": "mentions",
+      "weight": 7,
+      "evidence": "唐太宗 文本中提及 李世民（7 次）"
+    },
+    {
+      "source": "唐太宗",
+      "target": "李渊",
+      "type": "mentions",
+      "weight": 5,
+      "evidence": "唐太宗 文本中提及 李渊（5 次）"
+    },
+    {
+      "source": "唐太宗",
+      "target": "文成公主",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "唐太宗 文本中提及 文成公主（1 次）"
+    },
+    {
+      "source": "武则天",
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "武则天 文本中提及 唐太宗（6 次）"
     },
     {
       "source": "武则天",
       "target": "唐高宗",
-      "type": "same_book",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "武则天 文本中提及 唐高宗（2 次）"
+    },
+    {
+      "source": "武则天",
+      "target": "唐玄宗",
+      "type": "mentions",
+      "weight": 2,
+      "evidence": "武则天 文本中提及 唐玄宗（2 次）"
     },
     {
       "source": "唐高宗",
-      "target": "唐玄宗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "李世民",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "唐高宗 文本中提及 李世民（1 次）"
+    },
+    {
+      "source": "唐高宗",
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "唐高宗 文本中提及 唐太宗（6 次）"
+    },
+    {
+      "source": "唐高宗",
+      "target": "武则天",
+      "type": "mentions",
+      "weight": 23,
+      "evidence": "唐高宗 文本中提及 武则天（23 次）"
     },
     {
       "source": "唐玄宗",
-      "target": "骆宾王",
-      "type": "same_book",
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "唐玄宗 文本中提及 唐太宗（1 次）"
+    },
+    {
+      "source": "唐玄宗",
+      "target": "武则天",
+      "type": "mentions",
+      "weight": 5,
+      "evidence": "唐玄宗 文本中提及 武则天（5 次）"
+    },
+    {
+      "source": "唐玄宗",
+      "target": "白居易",
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "唐玄宗 文本中提及 白居易（3 次）"
+    },
+    {
+      "source": "唐玄宗",
+      "target": "郭子仪",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "唐玄宗 文本中提及 郭子仪（1 次）"
+    },
+    {
+      "source": "唐玄宗",
+      "target": "黄巢",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "唐玄宗 文本中提及 黄巢（1 次）"
+    },
+    {
+      "source": "唐玄宗",
+      "target": "杜甫",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "唐玄宗 文本中提及 杜甫（2 次）"
+    },
+    {
+      "source": "唐玄宗",
+      "target": "李白",
+      "type": "mentions",
+      "weight": 2,
+      "evidence": "唐玄宗 文本中提及 李白（2 次）"
     },
     {
       "source": "骆宾王",
-      "target": "陆羽",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "武则天",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "骆宾王 文本中提及 武则天（6 次）"
+    },
+    {
+      "source": "骆宾王",
+      "target": "杜甫",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "骆宾王 文本中提及 杜甫（1 次）"
+    },
+    {
+      "source": "骆宾王",
+      "target": "李白",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "骆宾王 文本中提及 李白（1 次）"
     },
     {
       "source": "陆羽",
-      "target": "白居易",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "杜甫",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "陆羽 文本中提及 杜甫（1 次）"
+    },
+    {
+      "source": "陆羽",
+      "target": "李白",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "陆羽 文本中提及 李白（1 次）"
+    },
+    {
+      "source": "陆羽",
+      "target": "颜真卿",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "陆羽 文本中提及 颜真卿（6 次）"
     },
     {
       "source": "白居易",
-      "target": "崔融",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "元稹",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "白居易 文本中提及 元稹（1 次）"
     },
     {
       "source": "崔融",
-      "target": "郭子仪",
-      "type": "same_book",
+      "target": "武则天",
+      "type": "mentions",
+      "weight": 8,
+      "evidence": "崔融 文本中提及 武则天（8 次）"
+    },
+    {
+      "source": "崔融",
+      "target": "唐高宗",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "崔融 文本中提及 唐高宗（2 次）"
     },
     {
       "source": "郭子仪",
-      "target": "黄巢",
-      "type": "same_book",
+      "target": "武则天",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "郭子仪 文本中提及 武则天（1 次）"
+    },
+    {
+      "source": "郭子仪",
+      "target": "唐玄宗",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "郭子仪 文本中提及 唐玄宗（2 次）"
     },
     {
       "source": "黄巢",
       "target": "王仙芝",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "type": "mentions",
+      "weight": 8,
+      "evidence": "黄巢 文本中提及 王仙芝（8 次）"
     },
     {
-      "source": "王仙芝",
+      "source": "黄巢",
       "target": "唐僖宗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "黄巢 文本中提及 唐僖宗（3 次）"
     },
     {
-      "source": "唐僖宗",
+      "source": "黄巢",
       "target": "朱温",
-      "type": "same_book",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "朱温",
-      "target": "赵翼",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "赵翼",
-      "target": "杜甫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "杜甫",
-      "target": "钱镠",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "钱镠",
-      "target": "文成公主",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "文成公主",
-      "target": "松赞干布",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "松赞干布",
-      "target": "大祚荣",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "大祚荣",
-      "target": "皮逻阁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "皮逻阁",
-      "target": "王建",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "王建",
-      "target": "元稹",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "元稹",
-      "target": "释迦牟尼",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "释迦牟尼",
-      "target": "崔致远",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "崔致远",
-      "target": "玄奘",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "玄奘",
-      "target": "鉴真",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "鉴真",
-      "target": "王玠",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "王玠",
-      "target": "柳宗元",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "柳宗元",
-      "target": "李白",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "李白",
-      "target": "颜真卿",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "颜真卿",
-      "target": "柳公权",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "柳公权",
-      "target": "阎立本",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "阎立本",
-      "target": "吴道子",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "吴道子",
-      "target": "李春",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "李春",
-      "target": "王安石",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "王安石",
-      "target": "岳飞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "岳飞",
-      "target": "文天祥",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（history）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "温儒敏",
-      "target": "舒婷",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "舒婷",
-      "target": "方志敏",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "方志敏",
-      "target": "周恩来",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "周恩来",
-      "target": "鲁迅",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "鲁迅",
-      "target": "卞之琳",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "卞之琳",
-      "target": "芦荻",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "芦荻",
-      "target": "陈培迪",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "陈培迪",
-      "target": "聂鲁达",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "聂鲁达",
-      "target": "萧红",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "萧红",
-      "target": "陈实",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "陈实",
-      "target": "巴金",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "巴金",
-      "target": "夸父",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "夸父",
-      "target": "嫦娥",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "嫦娥",
-      "target": "女娲",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "女娲",
-      "target": "重耳",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "重耳",
-      "target": "卫文公",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "卫文公",
-      "target": "狐偃",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "狐偃",
-      "target": "胡居仁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "胡居仁",
-      "target": "孔乙己",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "孔乙己",
-      "target": "普洛诃尔",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "普洛诃尔",
-      "target": "赫留金",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "赫留金",
-      "target": "奥楚蔑洛夫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "奥楚蔑洛夫",
-      "target": "阿城",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "阿城",
-      "target": "一丈青大娘",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "一丈青大娘",
-      "target": "柳罐斗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "柳罐斗",
-      "target": "吉老秤",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "吉老秤",
-      "target": "郑端午",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "郑端午",
-      "target": "花鞋杜四",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文九年级下册 (ab06a72c-93e6-4135-b549-900db6783fa9)"
-    },
-    {
-      "source": "温儒敏",
-      "target": "鲁迅",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "鲁迅",
-      "target": "双喜",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "双喜",
-      "target": "迅哥儿",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "迅哥儿",
-      "target": "外祖母",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "外祖母",
-      "target": "母亲",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "母亲",
-      "target": "阿发",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "阿发",
-      "target": "桂生",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "桂生",
-      "target": "六一公公",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "六一公公",
-      "target": "贺敬之",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "贺敬之",
-      "target": "毛泽东",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "毛泽东",
-      "target": "莫耶",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "莫耶",
-      "target": "祁念曾",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "祁念曾",
-      "target": "曹靖华",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "曹靖华",
-      "target": "吴伯箫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "吴伯箫",
-      "target": "张中行",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "张中行",
-      "target": "叶圣陶",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "叶圣陶",
-      "target": "茅盾",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "茅盾",
-      "target": "茨威格",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "茨威格",
-      "target": "列夫·托尔斯泰",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "列夫·托尔斯泰",
-      "target": "莫顿·亨特",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "莫顿·亨特",
-      "target": "歌德",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "歌德",
-      "target": "萧伯纳",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "萧伯纳",
-      "target": "陈元方",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "陈元方",
-      "target": "周恩来",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "周恩来",
-      "target": "孔融",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "孔融",
-      "target": "陈韪",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "陈韪",
-      "target": "钱钟书",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "钱钟书",
-      "target": "阿道夫·门采尔",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "阿道夫·门采尔",
-      "target": "竺可桢",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "竺可桢",
-      "target": "阿西莫夫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "阿西莫夫",
-      "target": "孟庆任",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "孟庆任",
-      "target": "S.M.斯季绍夫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "S.M.斯季绍夫",
-      "target": "麦克霍恩",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "麦克霍恩",
-      "target": "利奥波德",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "利奥波德",
-      "target": "侯文蕙",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·语文八年级下册 (03491549-8712-48a3-8fc8-5a616e6f492e)"
-    },
-    {
-      "source": "袁鹰",
-      "target": "宗璞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "宗璞",
-      "target": "普希金",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "普希金",
-      "target": "弗罗斯特",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "弗罗斯特",
-      "target": "陈子昂",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "陈子昂",
-      "target": "杜甫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "杜甫",
-      "target": "王安石",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "王安石",
-      "target": "陆游",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "陆游",
-      "target": "龚自珍",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "龚自珍",
-      "target": "杨利伟",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "杨利伟",
-      "target": "许晨",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "许晨",
-      "target": "刘慈欣",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "刘慈欣",
-      "target": "沈括",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "沈括",
-      "target": "杜牧",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "杜牧",
-      "target": "李商隐",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "李商隐",
-      "target": "杨万里",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "杨万里",
-      "target": "赵师秀",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "赵师秀",
-      "target": "邓稼先",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "邓稼先",
-      "target": "杨振宁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "杨振宁",
-      "target": "张爱萍",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "张爱萍",
-      "target": "于敏",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "于敏",
-      "target": "奥本海默",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "奥本海默",
-      "target": "闻一多",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "闻一多",
-      "target": "臧克家",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "臧克家",
-      "target": "毛泽东",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "毛泽东",
-      "target": "颜回",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "颜回",
-      "target": "孔子",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "孔子",
-      "target": "闻立鹏",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "闻立鹏",
-      "target": "李公朴",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "李公朴",
-      "target": "蒋介石",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "蒋介石",
-      "target": "列夫·托尔斯泰",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "列夫·托尔斯泰",
-      "target": "茨威格",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "茨威格",
-      "target": "米开朗琪罗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "米开朗琪罗",
-      "target": "王雪飞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "王雪飞",
-      "target": "陀思妥耶夫斯基",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "陀思妥耶夫斯基",
-      "target": "托尔斯泰",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "托尔斯泰",
-      "target": "屠格涅夫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "屠格涅夫",
-      "target": "高尔基",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "高尔基",
-      "target": "朱德",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "朱德",
-      "target": "鲁迅",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "鲁迅",
-      "target": "爱因斯坦",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "爱因斯坦",
-      "target": "陆定一",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "陆定一",
-      "target": "杨得志",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "杨得志",
-      "target": "杨成武",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "杨成武",
-      "target": "魏巍",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "魏巍",
-      "target": "董希文",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "董希文",
-      "target": "毛主席",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "毛主席",
-      "target": "端木蕻良",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "端木蕻良",
-      "target": "狐仙姑",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
-    },
-    {
-      "source": "狐仙姑",
-      "target": "曹京平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文七年级下册 (d08cae24-887e-45bd-8ccb-b56af508a293)"
+      "evidence": "黄巢 文本中提及 朱温（2 次）"
     },
     {
       "source": "王仙芝",
       "target": "黄巢",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "type": "mentions",
+      "weight": 19,
+      "evidence": "王仙芝 文本中提及 黄巢（19 次）"
     },
     {
-      "source": "黄巢",
-      "target": "唐太宗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "唐僖宗",
+      "target": "黄巢",
+      "type": "mentions",
+      "weight": 13,
+      "evidence": "唐僖宗 文本中提及 黄巢（13 次）"
     },
     {
-      "source": "唐太宗",
-      "target": "鉴真",
-      "type": "same_book",
+      "source": "唐僖宗",
+      "target": "王仙芝",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "唐僖宗 文本中提及 王仙芝（2 次）"
     },
     {
-      "source": "鉴真",
-      "target": "玄奘",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "唐僖宗",
+      "target": "朱温",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "唐僖宗 文本中提及 朱温（1 次）"
     },
     {
-      "source": "玄奘",
-      "target": "隋炀帝",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "隋炀帝",
-      "target": "隋文帝",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "隋文帝",
-      "target": "李密",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "李密",
-      "target": "罗隐",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "罗隐",
-      "target": "李世民",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "李世民",
-      "target": "李渊",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "李渊",
-      "target": "唐高宗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "唐高宗",
-      "target": "武则天",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "武则天",
-      "target": "唐玄宗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "唐玄宗",
-      "target": "陆羽",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "陆羽",
-      "target": "白居易",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "白居易",
-      "target": "崔融",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "崔融",
-      "target": "赵翼",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "赵翼",
-      "target": "杜甫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "朱温",
+      "target": "黄巢",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "朱温 文本中提及 黄巢（6 次）"
     },
     {
       "source": "杜甫",
-      "target": "钱镠",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "李白",
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "杜甫 文本中提及 李白（3 次）"
     },
     {
       "source": "钱镠",
-      "target": "文成公主",
-      "type": "same_book",
+      "target": "黄巢",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "钱镠 文本中提及 黄巢（2 次）"
+    },
+    {
+      "source": "文成公主",
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 2,
+      "evidence": "文成公主 文本中提及 唐太宗（2 次）"
     },
     {
       "source": "文成公主",
       "target": "松赞干布",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "type": "mentions",
+      "weight": 10,
+      "evidence": "文成公主 文本中提及 松赞干布（10 次）"
+    },
+    {
+      "source": "文成公主",
+      "target": "释迦牟尼",
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "文成公主 文本中提及 释迦牟尼（3 次）"
     },
     {
       "source": "松赞干布",
-      "target": "骨力裴罗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "松赞干布 文本中提及 唐太宗（1 次）"
     },
     {
-      "source": "骨力裴罗",
-      "target": "大祚荣",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "松赞干布",
+      "target": "唐高宗",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "松赞干布 文本中提及 唐高宗（1 次）"
+    },
+    {
+      "source": "松赞干布",
+      "target": "文成公主",
+      "type": "mentions",
+      "weight": 5,
+      "evidence": "松赞干布 文本中提及 文成公主（5 次）"
     },
     {
       "source": "大祚荣",
-      "target": "皮逻阁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "武则天",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "大祚荣 文本中提及 武则天（1 次）"
+    },
+    {
+      "source": "大祚荣",
+      "target": "唐玄宗",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "大祚荣 文本中提及 唐玄宗（1 次）"
     },
     {
       "source": "皮逻阁",
-      "target": "王建",
-      "type": "same_book",
+      "target": "唐玄宗",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "皮逻阁 文本中提及 唐玄宗（2 次）"
     },
     {
       "source": "王建",
-      "target": "元稹",
-      "type": "same_book",
+      "target": "黄巢",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "王建 文本中提及 黄巢（6 次）"
+    },
+    {
+      "source": "王建",
+      "target": "唐僖宗",
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "王建 文本中提及 唐僖宗（3 次）"
+    },
+    {
+      "source": "王建",
+      "target": "朱温",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "王建 文本中提及 朱温（2 次）"
+    },
+    {
+      "source": "王建",
+      "target": "钱镠",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "王建 文本中提及 钱镠（1 次）"
     },
     {
       "source": "元稹",
-      "target": "释迦牟尼",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "白居易",
+      "type": "mentions",
+      "weight": 12,
+      "evidence": "元稹 文本中提及 白居易（12 次）"
     },
     {
       "source": "释迦牟尼",
-      "target": "阿倍仲麻吕",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
-    },
-    {
-      "source": "阿倍仲麻吕",
-      "target": "崔致远",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "玄奘",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "释迦牟尼 文本中提及 玄奘（1 次）"
     },
     {
       "source": "崔致远",
-      "target": "王玠",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "黄巢",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "崔致远 文本中提及 黄巢（1 次）"
     },
     {
-      "source": "王玠",
-      "target": "柳宗元",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "玄奘",
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "玄奘 文本中提及 唐太宗（3 次）"
     },
     {
-      "source": "柳宗元",
-      "target": "李白",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "玄奘",
+      "target": "唐高宗",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "玄奘 文本中提及 唐高宗（1 次）"
     },
     {
       "source": "李白",
-      "target": "颜真卿",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "杜甫",
+      "type": "mentions",
+      "weight": 5,
+      "evidence": "李白 文本中提及 杜甫（5 次）"
+    },
+    {
+      "source": "颜真卿",
+      "target": "陆羽",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "颜真卿 文本中提及 陆羽（1 次）"
     },
     {
       "source": "颜真卿",
       "target": "柳公权",
-      "type": "same_book",
+      "type": "mentions",
       "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "evidence": "颜真卿 文本中提及 柳公权（2 次）"
+    },
+    {
+      "source": "颜真卿",
+      "target": "吴道子",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "颜真卿 文本中提及 吴道子（1 次）"
     },
     {
       "source": "柳公权",
-      "target": "阎立本",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "颜真卿",
+      "type": "mentions",
+      "weight": 3,
+      "evidence": "柳公权 文本中提及 颜真卿（3 次）"
     },
     {
       "source": "阎立本",
-      "target": "吴道子",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "唐太宗",
+      "type": "mentions",
+      "weight": 6,
+      "evidence": "阎立本 文本中提及 唐太宗（6 次）"
+    },
+    {
+      "source": "阎立本",
+      "target": "唐高宗",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "阎立本 文本中提及 唐高宗（1 次）"
     },
     {
       "source": "吴道子",
-      "target": "李春",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "唐玄宗",
+      "type": "mentions",
+      "weight": 7,
+      "evidence": "吴道子 文本中提及 唐玄宗（7 次）"
     },
     {
-      "source": "李春",
-      "target": "王安石",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "吴道子",
+      "target": "释迦牟尼",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "吴道子 文本中提及 释迦牟尼（1 次）"
+    },
+    {
+      "source": "吴道子",
+      "target": "李白",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "吴道子 文本中提及 李白（1 次）"
     },
     {
       "source": "王安石",
-      "target": "岳飞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "target": "柳宗元",
+      "type": "mentions",
+      "weight": 1,
+      "evidence": "王安石 文本中提及 柳宗元（1 次）"
     },
     {
-      "source": "岳飞",
-      "target": "文天祥",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第二册 (957d4d13-3e45-4aef-8795-bce620d03ef3)"
+      "source": "唐太宗",
+      "target": "唐玄宗",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "齐世荣",
-      "target": "侯建新",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐太宗",
+      "target": "唐高宗",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "侯建新",
-      "target": "许斌",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐太宗",
+      "target": "崔融",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "许斌",
-      "target": "王婉旎",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐太宗",
+      "target": "李世民",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "王婉旎",
-      "target": "田涛",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐太宗",
+      "target": "李白",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "田涛",
-      "target": "任世江",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐太宗",
+      "target": "郭子仪",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "任世江",
-      "target": "杨西云",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐太宗",
+      "target": "颜真卿",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "杨西云",
-      "target": "张葳",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐玄宗",
+      "target": "唐高宗",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "张葳",
-      "target": "张玉兴",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐玄宗",
+      "target": "崔融",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "张玉兴",
-      "target": "赵文君",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐玄宗",
+      "target": "李世民",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "赵文君",
-      "target": "徐滨",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐玄宗",
+      "target": "李白",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "徐滨",
-      "target": "张蓓",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐玄宗",
+      "target": "郭子仪",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "张蓓",
-      "target": "列宁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐玄宗",
+      "target": "颜真卿",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "列宁",
-      "target": "罗斯福",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐高宗",
+      "target": "崔融",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "罗斯福",
-      "target": "玻利瓦尔",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐高宗",
+      "target": "李世民",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "玻利瓦尔",
-      "target": "圣马丁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐高宗",
+      "target": "李白",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "圣马丁",
-      "target": "章西女王",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐高宗",
+      "target": "郭子仪",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "章西女王",
-      "target": "伊丽莎白一世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "唐高宗",
+      "target": "颜真卿",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "伊丽莎白一世",
-      "target": "彼得一世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "崔融",
+      "target": "李世民",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "彼得一世",
-      "target": "亚历山大二世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "崔融",
+      "target": "李白",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "亚历山大二世",
-      "target": "伊凡四世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "崔融",
+      "target": "郭子仪",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "伊凡四世",
-      "target": "叶卡捷琳娜二世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "崔融",
+      "target": "颜真卿",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "叶卡捷琳娜二世",
-      "target": "拿破仑",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "李世民",
+      "target": "李白",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "拿破仑",
-      "target": "尼古拉一世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "李世民",
+      "target": "郭子仪",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "尼古拉一世",
-      "target": "塔布曼",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "李世民",
+      "target": "颜真卿",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "塔布曼",
-      "target": "林肯",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "李白",
+      "target": "郭子仪",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "林肯",
-      "target": "法拉第",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
+      "source": "李白",
+      "target": "颜真卿",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
-      "source": "法拉第",
-      "target": "爱迪生",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "爱迪生",
-      "target": "威尔伯·莱特",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "威尔伯·莱特",
-      "target": "奥维尔·莱特",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "奥维尔·莱特",
-      "target": "冯如",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "冯如",
-      "target": "诺贝尔",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "诺贝尔",
-      "target": "海厄特",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "海厄特",
-      "target": "夏尔多内",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "夏尔多内",
-      "target": "马尔萨斯",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "马尔萨斯",
-      "target": "阿萨·勃里格斯",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "阿萨·勃里格斯",
-      "target": "牛顿",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "牛顿",
-      "target": "达尔文",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "达尔文",
-      "target": "巴尔扎克",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "巴尔扎克",
-      "target": "托尔斯泰",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "托尔斯泰",
-      "target": "贝多芬",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "贝多芬",
-      "target": "梵高",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "梵高",
-      "target": "居里夫人",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "居里夫人",
-      "target": "尼古拉二世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "尼古拉二世",
-      "target": "劳合·乔治",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "劳合·乔治",
-      "target": "克里孟梭",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "克里孟梭",
-      "target": "威尔逊",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "威尔逊",
-      "target": "威廉二世",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·世界历史世界历史第二册 (5b4574c6-7c87-48db-b2bf-fef4bbac2723)"
-    },
-    {
-      "source": "朱小蔓",
-      "target": "陈大文",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "陈大文",
-      "target": "王敬波",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "王敬波",
-      "target": "张祖涛",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "张祖涛",
-      "target": "于文豪",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "于文豪",
-      "target": "王忠文",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "王忠文",
-      "target": "李红勃",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "李红勃",
-      "target": "吴又存",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "吴又存",
-      "target": "郑宁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "郑宁",
-      "target": "郎艳",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "郎艳",
-      "target": "唐银平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "唐银平",
-      "target": "曹鎏",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "曹鎏",
-      "target": "雷逸",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "雷逸",
-      "target": "余书芬",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "余书芬",
-      "target": "张广宇",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "张广宇",
-      "target": "于艳",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "于艳",
-      "target": "毛泽东",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "毛泽东",
-      "target": "周恩来",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "周恩来",
-      "target": "孙中山",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "孙中山",
-      "target": "柯先生",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "柯先生",
-      "target": "小眉",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "小眉",
-      "target": "王某",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "王某",
-      "target": "张某",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "张某",
-      "target": "习近平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "习近平",
-      "target": "马克思",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "马克思",
-      "target": "列宁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "列宁",
-      "target": "邓小平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "邓小平",
-      "target": "小刚",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "小刚",
-      "target": "小凡",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "小凡",
-      "target": "小华",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "小华",
-      "target": "小云",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "小云",
-      "target": "小岩",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "小岩",
-      "target": "罗先生",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "罗先生",
-      "target": "刘某",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "刘某",
-      "target": "严某",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "严某",
-      "target": "小郑",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "小郑",
-      "target": "晓明",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治八年级下册 (87605985-2343-4f12-b4bc-c51a17dff568)"
-    },
-    {
-      "source": "朱小蔓",
-      "target": "高国希",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "高国希",
-      "target": "吴蓉",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "吴蓉",
-      "target": "秦书珩",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "秦书珩",
-      "target": "王坤",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "王坤",
-      "target": "成平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "成平",
-      "target": "刘胡权",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "刘胡权",
-      "target": "闵凡祥",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "闵凡祥",
-      "target": "张尚达",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "张尚达",
-      "target": "陈春辉",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "陈春辉",
-      "target": "贾玮",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "贾玮",
-      "target": "杨学建",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "杨学建",
-      "target": "王承玥",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "王承玥",
-      "target": "王俊宏",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "王俊宏",
-      "target": "徐悲鸿",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "徐悲鸿",
-      "target": "老朱",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "老朱",
-      "target": "邓小平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "邓小平",
-      "target": "习近平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "习近平",
-      "target": "鉴真",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "鉴真",
-      "target": "郑和",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "郑和",
-      "target": "麦哲伦",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "麦哲伦",
-      "target": "马文·佩里",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "马文·佩里",
-      "target": "白求恩",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "白求恩",
-      "target": "柯棣华",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "柯棣华",
-      "target": "汉斯·希伯",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "汉斯·希伯",
-      "target": "小虫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "小虫",
-      "target": "侠女柠柠",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "侠女柠柠",
-      "target": "司徒博士",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "司徒博士",
-      "target": "杨树朋",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "杨树朋",
-      "target": "张骞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "张骞",
-      "target": "乔纳森",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·道德与法治九年级下册 (a6342782-d271-4dea-851f-f7c11b0d20ac)"
-    },
-    {
-      "source": "李剑波",
-      "target": "蔡士魁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "蔡士魁",
-      "target": "梁衡",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "梁衡",
-      "target": "苏金伞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "苏金伞",
-      "target": "鲁迅",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "鲁迅",
-      "target": "周晔",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "周晔",
-      "target": "臧克家",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "臧克家",
-      "target": "杜甫",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "郭子仪",
+      "target": "颜真卿",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åæ"
     },
     {
       "source": "杜甫",
-      "target": "苏舜钦",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "target": "柳宗元",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "苏舜钦",
-      "target": "朱熹",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "杜甫",
+      "target": "玄奘",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "朱熹",
-      "target": "老舍",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "杜甫",
+      "target": "白居易",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "老舍",
-      "target": "盛锡珊",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "杜甫",
+      "target": "鉴真",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "盛锡珊",
-      "target": "斯妤",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "杜甫",
+      "target": "陆羽",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "斯妤",
-      "target": "马晨明",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "柳宗元",
+      "target": "玄奘",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "马晨明",
-      "target": "唐东杰布",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "柳宗元",
+      "target": "白居易",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "唐东杰布",
-      "target": "萧统",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "柳宗元",
+      "target": "鉴真",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "萧统",
-      "target": "韩翃",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "柳宗元",
+      "target": "陆羽",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "韩翃",
-      "target": "王建",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "玄奘",
+      "target": "白居易",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "王建",
-      "target": "沈从文",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "玄奘",
+      "target": "鉴真",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "沈从文",
-      "target": "毛泽东",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "玄奘",
+      "target": "陆羽",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "毛泽东",
-      "target": "张思德",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "白居易",
+      "target": "鉴真",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "张思德",
-      "target": "司马迁",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
+      "source": "白居易",
+      "target": "陆羽",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
     },
     {
-      "source": "司马迁",
-      "target": "李鼎铭",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "李鼎铭",
-      "target": "张作霖",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "张作霖",
-      "target": "阎振三",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "阎振三",
-      "target": "李大钊",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "李大钊",
-      "target": "瞿秋白",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "瞿秋白",
-      "target": "陈延年",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "陈延年",
-      "target": "杨靖宇",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "杨靖宇",
-      "target": "赵一曼",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "赵一曼",
-      "target": "江竹筠",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "江竹筠",
-      "target": "黄继光",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "黄继光",
-      "target": "董存瑞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "董存瑞",
-      "target": "郅顺义",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "郅顺义",
-      "target": "齐肃",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "齐肃",
-      "target": "刘开渠",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "刘开渠",
-      "target": "虞世南",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "虞世南",
-      "target": "李贺",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "李贺",
-      "target": "郑燮",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "郑燮",
-      "target": "史铁生",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：（根据2022年版课程标准修订）义务教育教科书（五•四学制）·语文六年级下册 (a953eeec-db0c-4c8b-860f-aa94f4727b6b)"
-    },
-    {
-      "source": "毛泽东",
-      "target": "齐世荣",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "齐世荣",
-      "target": "朱德",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "朱德",
-      "target": "刘少奇",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "刘少奇",
-      "target": "宋庆龄",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "宋庆龄",
-      "target": "李济深",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "李济深",
-      "target": "张澜",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "张澜",
-      "target": "高岗",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "高岗",
-      "target": "聂荣臻",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "聂荣臻",
-      "target": "班禅额尔德尼·确吉坚赞",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "班禅额尔德尼·确吉坚赞",
-      "target": "阿沛·阿旺晋美",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "阿沛·阿旺晋美",
-      "target": "徐悲鸿",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "徐悲鸿",
-      "target": "周恩来",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "周恩来",
-      "target": "田汉",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "田汉",
-      "target": "聂耳",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "聂耳",
-      "target": "曾联松",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "曾联松",
-      "target": "梁思成",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "梁思成",
-      "target": "林徽因",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "林徽因",
-      "target": "彭德怀",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "彭德怀",
-      "target": "麦克阿瑟",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "麦克阿瑟",
-      "target": "黄继光",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "黄继光",
-      "target": "邱少云",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "邱少云",
-      "target": "杨根思",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "杨根思",
-      "target": "罗盛教",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "罗盛教",
-      "target": "陈友汉",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "陈友汉",
-      "target": "刘青山",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "刘青山",
-      "target": "张子善",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "张子善",
-      "target": "乐松生",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "乐松生",
-      "target": "陈伯达",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "陈伯达",
-      "target": "江青",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "江青",
-      "target": "康生",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "康生",
-      "target": "张春桥",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "张春桥",
-      "target": "林彪",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "林彪",
-      "target": "王洪文",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "王洪文",
-      "target": "姚文元",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "姚文元",
-      "target": "华国锋",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "华国锋",
-      "target": "叶剑英",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "叶剑英",
-      "target": "王进喜",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "王进喜",
-      "target": "焦裕禄",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "焦裕禄",
-      "target": "雷锋",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "雷锋",
-      "target": "习近平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
-    },
-    {
-      "source": "习近平",
-      "target": "邓小平",
-      "type": "same_book",
-      "weight": 2,
-      "evidence": "同册（junior）：义务教育教科书（五•四学制）·中国历史中国历史第四册 (c53534de-0a6d-44b1-a77b-def3dc971fbe)"
+      "source": "鉴真",
+      "target": "陆羽",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åä»£"
+    },
+    {
+      "source": "王仙芝",
+      "target": "黄巢",
+      "type": "same_dynasty",
+      "weight": 1,
+      "evidence": "同属 åææ«å¹´"
     }
-  ],
-  "meta": {
-    "nodes": 328,
-    "edges": 387,
-    "types": [
-      "same_book"
-    ]
-  }
+  ]
 }

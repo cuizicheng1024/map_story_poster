@@ -1,21 +1,37 @@
+# macOS
 .DS_Store
-.DS_Store?
-**/.DS_Store
+
+# env / secrets
 .env
-.env.*
-!.env.example
-data/.env
-.venv/
+
+# python cache
 __pycache__/
 *.pyc
 
-cache/
+# node
+node_modules/
+**/node_modules/
+dist/
+**/dist/
 
-storymap/examples/story_map/*.html
-storymap/examples/story_map/*.geojson
-storymap/examples/story_map/*.csv
+# local caches
+.cache/
+.cache_*/
+external/.cache/
 
-# Temp artifacts for historical location auditing
-.tmp/
-batch_runs/
-resolve_pending_historical_locations_tmp.py
+# generated outputs
+outputs/
+.cache_batch/
+.cache_demo/
+.cache_demo2/
+.cache_case1/
+.cache_case2/
+data/*_sample*.json
+data/sample_5_names.json
+data/people_knowledge_graph_sample5.json
+
+# generated audits/reports (reproducible, too large for repo)
+external/map_story_poster/data/validation_reports/
+
+# temp reports/logs
+*_tmp*.json

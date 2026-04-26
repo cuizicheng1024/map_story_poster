@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Production build
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+story/.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Cache
+.cache/
+.eslintcache
+
+# Project specific outputs (generated files)
+story_map/*.html
+story_map/*.geojson
+story_map/*.csv
+story_map/*.png
+story/*.md
+
+# Tests
+tests/
+test/
+.coverage
+htmlcov/
