@@ -21,10 +21,21 @@ def _project_root() -> str:
 
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env)
-root_env = os.path.abspath(os.path.join(_project_root(), ".env"))
-load_dotenv(dotenv_path=root_env)
-data_env = os.path.abspath(os.path.join(_project_root(), "data", ".env"))
-load_dotenv(dotenv_path=data_env)
+root = _project_root()
+env_candidates = [
+    os.path.join(root, ".env"),
+    os.path.join(root, "data", ".env"),
+    os.path.join(root, "map_story_poster", ".env"),
+    os.path.join(root, "external", "map_story_poster", ".env"),
+    os.path.abspath(os.path.join(root, "..", ".env")),
+    os.path.abspath(os.path.join(root, "..", "..", ".env")),
+]
+for p in env_candidates:
+    try:
+        if p and os.path.isfile(p):
+            load_dotenv(dotenv_path=p)
+    except Exception:
+        pass
 
 _MAX_TEXT_LEN = 200
 

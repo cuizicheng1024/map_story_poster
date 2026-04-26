@@ -49,10 +49,21 @@ def _project_root() -> str:
 
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env, override=True)
-root_env = os.path.abspath(os.path.join(_project_root(), ".env"))
-load_dotenv(dotenv_path=root_env, override=True)
-data_env = os.path.abspath(os.path.join(_project_root(), "data", ".env"))
-load_dotenv(dotenv_path=data_env, override=True)
+root = _project_root()
+env_candidates = [
+    os.path.join(root, ".env"),
+    os.path.join(root, "data", ".env"),
+    os.path.join(root, "map_story_poster", ".env"),
+    os.path.join(root, "external", "map_story_poster", ".env"),
+    os.path.abspath(os.path.join(root, "..", ".env")),
+    os.path.abspath(os.path.join(root, "..", "..", ".env")),
+]
+for p in env_candidates:
+    try:
+        if p and os.path.isfile(p):
+            load_dotenv(dotenv_path=p, override=True)
+    except Exception:
+        pass
 
 _LOGGER = logging.getLogger("story_map")
 if not _LOGGER.handlers:
@@ -2702,7 +2713,10 @@ def _append_progress(task_id: str, label: str, detail: str = "") -> None:
     # 进度写入必须持锁，避免并发写导致顺序错乱
     event = {"label": label, "time": time.strftime("%H:%M:%S", time.localtime())}
     if detail:
-        event["detail"] = detail
+        safe = str(detail)
+        safe = safe.encode("utf-8", "replace").decode("utf-8", "replace")
+        safe = re.sub(r"[\x00-\x1F]", " ", safe)
+        event["detail"] = safe
     with _TASK_LOCK:
         task = _TASKS.get(task_id)
         if not task:
@@ -2874,6 +2888,12 @@ def _submit_task(text: str) -> Dict[str, object]:
             _run_task(task_id, text, allow_cache=True)
         except Exception as e:
             error = str(e).strip() or "任务执行失败"
+            if "模型ID、API密钥和服务地址必须被提供或在.env文件中定义" in error:
+                error = (
+                    "缺少大模型配置：请在项目根目录创建 .env 并填写 "
+                    "MIMO_API_KEY、MIMO_BASE_URL、MODEL（或 LLM_API_KEY/LLM_BASE_URL/LLM_MODEL_ID），"
+                    "然后重启服务。"
+                )
             _update_task(task_id, status="failed", error=error)
             _append_progress(task_id, "失败", error)
             _append_progress(task_id, "完成", "失败")
@@ -3081,7 +3101,7 @@ class StoryMapServerHandler(BaseHTTPRequestHandler):
                 self.wfile.write(payload)
                 return
             snapshot = _snapshot_task(task_id)
-            payload = json.dumps(snapshot, ensure_ascii=False).encode("utf-8")
+            payload = json.dumps(snapshot, ensure_ascii=True).encode("utf-8", "replace")
             status = 200 if snapshot.get("ok") else 404
             self._set_headers(status, len(payload), allowed)
             self.wfile.write(payload)
