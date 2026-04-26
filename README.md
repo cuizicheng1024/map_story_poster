@@ -23,7 +23,6 @@
 ![人物页：人物要点 + 地图轨迹](docs/assets/moler_post_01.png)
 ![主页：人类群星闪耀时 + 时间轴联动](docs/assets/moler_post_03.png)
 ![人物页：地点连线与节点信息](docs/assets/moler_post_05.png)
-![历史人物的空间分布](docs/assets/moler_post_07.png)
 
 主页当前默认展示：
 - “人类群星闪耀时”关系图（支持悬停查看简介、点击进入人物页）
@@ -76,4 +75,3 @@ python3 storymap/script/story_map.py --serve --port 8765
 
 ![人物页：时间轴驱动的地点/事件弹窗](docs/assets/moler_post_04.png)
 ---
-

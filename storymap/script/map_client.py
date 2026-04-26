@@ -136,14 +136,12 @@ def _geocode_cache_set(name: str, coord: Tuple[float, float]) -> None:
     _save_geocode_cache(force=False)
 
 def _project_root() -> str:
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env)
 load_dotenv(dotenv_path=os.path.join(_project_root(), ".env"))
-load_dotenv(dotenv_path=os.path.join(_project_root(), "external", "map_story_poster", ".env"))
-load_dotenv(dotenv_path=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env")))
 load_dotenv(dotenv_path=os.path.join(_project_root(), "data", ".env"))
 _load_geocode_cache()
 

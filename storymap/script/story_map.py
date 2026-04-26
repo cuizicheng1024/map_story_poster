@@ -49,10 +49,8 @@ def _project_root() -> str:
 
 local_env = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=local_env, override=True)
-repo_env = os.path.abspath(os.path.join(_project_root(), "..", ".env"))
-load_dotenv(dotenv_path=repo_env, override=True)
-workspace_env = os.path.abspath(os.path.join(_project_root(), "..", "..", ".env"))
-load_dotenv(dotenv_path=workspace_env, override=True)
+root_env = os.path.abspath(os.path.join(_project_root(), ".env"))
+load_dotenv(dotenv_path=root_env, override=True)
 data_env = os.path.abspath(os.path.join(_project_root(), "data", ".env"))
 load_dotenv(dotenv_path=data_env, override=True)
 
@@ -99,7 +97,7 @@ def _historical_index_candidates() -> List[str]:
     # map_story_poster/map_story/storymap/script/story_map.py
     # map_story_poster/historical_places_index.jsonl
     here = os.path.dirname(os.path.abspath(__file__))
-    repo_root = os.path.abspath(os.path.join(here, "..", "..", ".."))
+    repo_root = _project_root()
     candidates.extend(
         [
             os.path.join(here, "historical_places_index.jsonl"),
@@ -107,7 +105,6 @@ def _historical_index_candidates() -> List[str]:
             os.path.join(here, "..", "..", "historical_places_index.jsonl"),
             os.path.join(repo_root, "historical_places_index.jsonl"),
             os.path.join(repo_root, "data", "historical_places_index.jsonl"),
-            os.path.join(here, "..", "..", "..", "..", "historical_places_index.jsonl"),
         ]
     )
     # Also consider CWD (useful when running scripts from repo root)

@@ -25,8 +25,6 @@ root_env = os.path.abspath(os.path.join(_project_root(), ".env"))
 load_dotenv(dotenv_path=root_env)
 data_env = os.path.abspath(os.path.join(_project_root(), "data", ".env"))
 load_dotenv(dotenv_path=data_env)
-workspace_env = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", ".env"))
-load_dotenv(dotenv_path=workspace_env)
 
 _MAX_TEXT_LEN = 200
 
